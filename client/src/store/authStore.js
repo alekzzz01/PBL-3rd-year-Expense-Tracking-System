@@ -1,0 +1,100 @@
+import { create } from 'zustand';
+import axios from 'axios';
+
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
+const useAuthStore = create((set) => ({
+  isAuthenticated: false,
+  user: null,
+
+
+
+
+  login: async (username, password) => {
+    try {
+      const response = await axios.post('http://localhost:5000/auth/login', {
+        username,
+        password,
+      });
+
+      if (response.status === 200) {
+        const { status, message, userId, lastLogin, token } = response.data;
+        if (status) {
+          // Login successful
+          set({
+            isAuthenticated: true,
+            user: {
+              userId,
+              lastLogin,
+              username,
+              token
+            }
+          });
+
+          localStorage.setItem('token', token);
+
+          // Show success toast
+          toast.success('Login successful');
+        } else {
+          // Login failed
+          console.error('Login failed:', message);
+          // Show error toast
+          toast.error(`Login failed: ${message}`);
+          return message;
+        }
+
+      } else {
+        console.error('Unexpected response status:', response.status);
+        // Show error toast
+        toast.error(`Unexpected response status: ${response.status}`);
+        return `Unexpected response status: ${response.status}`;
+      }
+      
+    } catch (error) {
+      console.error('Network error:', error);
+      // Show error toast
+      toast.error(`Network error: ${error}`);
+      return `Network error: ${error}`;
+    }
+  },
+
+
+
+
+  register: async (username, email, password) => {
+    try {
+      const response = await axios.post('http://localhost:5000/auth/register', {
+        username,
+        email,
+        password,
+      });
+
+      if (response.status === 200) {
+        const user = response.data;
+        set({ isAuthenticated: true, user });
+      } else {
+        console.error('Unexpected response status:', response.status);
+      }
+    } catch (error) {
+      console.error('Network error:', error);
+    }
+  },
+
+  logout: async () => {
+    try {
+      const response = await axios.post('/auth/logout');
+
+      if (response.status === 200) {
+        set({ isAuthenticated: false, user: null });
+      } else {
+        // Handle logout error
+      }
+    } catch (error) {
+      // Handle network error or other exceptions
+    }
+  },
+}));
+
+export default useAuthStore;
