@@ -3,11 +3,12 @@ import { Link } from 'react-router-dom';
 import useAuthStore from '../store/authStore';
 import PasswordChecklist from "react-password-checklist"
 
-import { useNavigate } from 'react-router-dom'; 
+// import { useNavigate } from 'react-router-dom'; 
 
 function Register() {
   const register = useAuthStore((state) => state.register);
   const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const [passwordValid, setPasswordValid] = useState(false); // State to track password validity
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -17,7 +18,7 @@ function Register() {
   };
 
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     username: '',
@@ -38,37 +39,42 @@ function Register() {
     setTermsAccepted(e.target.checked);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const { username, email, password, confirmPassword } = formData;
-    if (password !== confirmPassword) {
-      setErrorMessage('Passwords do not match.');
-      return;
-    }
-    if (!passwordValid) {
-      setErrorMessage('Please ensure the password meets all criteria.');
-      return;
-    }
 
-    if (!termsAccepted) {
-      setErrorMessage('Please accept the terms and conditions.');
-      return;
-    }
-    setErrorMessage('');
-    try {
-      await register(username, email, password);
-      localStorage.setItem('registrationMessage', 'User registered successfully. Please sign in.');
-      navigate('/login');
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  const { username, email, password } = formData;
+
+  setErrorMessage(''); // Clear any previous error message
+  setSuccessMessage(''); // Clear any previous success message
+
+  try {
+    const registrationResult = await register(username, email, password);
+    if (registrationResult.success) {
       setFormData({
         username: '',
         email: '',
         password: '',
         confirmPassword: '',
       });
-    } catch (error) {
-      setErrorMessage(error.message);
+      setSuccessMessage('Account created successfully!');
+    } else {
+      // Registration failed, display error message
+      setErrorMessage(registrationResult.errorMessage);
     }
-  };
+  } catch (error) {
+    // Handle error
+    if (error.response) {
+        // If server responds with an error, display the error message from the server
+        setErrorMessage(error.errorStatusMessage);
+    } else {
+        // If something else went wrong, display a generic error message
+        setErrorMessage('An unexpected error occurred. Please try again later.');
+    }
+}
+};
+
+  
+
 
   return (
     <>
@@ -177,8 +183,8 @@ function Register() {
          
 
 
-                <div>{errorMessage && <p className="text-red-500 text-sm text-center">{errorMessage}</p>}</div>
-
+                
+        
                    
               <PasswordChecklist
                     rules={["minLength","specialChar","number","capital","match"]}
@@ -201,6 +207,11 @@ function Register() {
                 <p className="text-sm font-light">
                   Already have an account? <Link to="/login" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Login here</Link>
                 </p>
+
+                
+                <div>{errorMessage && <p className="text-sm text-red-700 text-center rounded-md bg-red-100 border border-red-400 p-4">{errorMessage}</p>}</div>
+                <div>{successMessage && <p className="text-sm text-green-700 text-center rounded-md bg-green-100 border border-green-400 p-4">{successMessage}</p>}</div>
+
               </form>
             </div>
           </div>

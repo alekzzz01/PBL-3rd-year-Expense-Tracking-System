@@ -38,20 +38,22 @@ const login = asyncHandler(async (req, res) => {
 
 });
 
-
-
 const register = asyncHandler(async (req, res) => {
 
     const {username, email, password} = req.body;
 
     // console.log('Received registration request:', { username, email });
 
-    const user =  await User.findOne({email})
-    if (user) {
-        return res.json({
-            message: "User already exists"
-        })
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
+        return res.status(400).json({ message: "Username already exists" });
     }
+
+    const existingEmail = await User.findOne({ email });
+    if (existingEmail) {
+        return res.status(400).json({ message: "Email already exists" });
+    }
+
 
     const hashpassword = await bcrypt.hash(password, 10)
 

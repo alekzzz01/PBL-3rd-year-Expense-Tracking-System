@@ -62,7 +62,6 @@ const useAuthStore = create((set) => ({
 
 
 
-
   register: async (username, email, password) => {
     try {
       const response = await axios.post('http://localhost:5000/auth/register', {
@@ -70,17 +69,38 @@ const useAuthStore = create((set) => ({
         email,
         password,
       });
-
+  
       if (response.status === 200) {
         const user = response.data;
         set({ isAuthenticated: true, user });
+        return { success: true }; // Registration successful
       } else {
         console.error('Unexpected response status:', response.status);
+        return { success: false }; // Registration failed
       }
+      
     } catch (error) {
-      console.error('Network error:', error);
+      if (error.response) { 
+        // Server responded with an error status
+        if (error.response.status === 400) {
+          // Bad Request - Display error message from the server
+          console.error('Registration error:', error.response.data.message);
+          return { success: false, errorMessage: error.response.data.message }; // Registration failed
+        } else {
+          console.error('Unexpected response status:', error.response.status);
+          return { success: false, errorStatusMessage: error.response.data.message };
+        }
+      } else if (error.request) {
+        // Request made but no response received
+        console.error('No response received from the server');
+      } else {
+        // Something else went wrong
+        console.error('Error:', error.message);
+      }
+      return { success: false }; // Registration failed
     }
   },
+  
 
   logout: async () => {
     try {
