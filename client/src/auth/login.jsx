@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import useAuthStore from '../store/authStore';
-import SelectTheme from '../components/themeSelector';
+
 
 function Login() {
   const [errorMessage, setErrorMessage] = useState('');
   const [registrationMessage, setRegistrationMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   const login = useAuthStore(state => state.login);
  
   const navigate = useNavigate();
@@ -46,7 +52,7 @@ function Login() {
   return (
     <>
       <section className="">
-        <SelectTheme />
+    
         <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto h-screen lg:py-0">
           <div className="w-full rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0 bg-base-200">
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
@@ -56,10 +62,53 @@ function Login() {
                   <label htmlFor="username" className="block mb-2 text-sm font-medium">Username</label>
                   <input type="text" name="username" id="username" className="border border-gray-300 sm:text-sm rounded-lg block w-full p-2.5" placeholder="Username" required />
                 </div>
+
+
+
+
                 <div>
-                  <label htmlFor="password" className="block mb-2 text-sm font-medium">Password</label>
-                  <input type="password" name="password" id="password" placeholder="••••••••" className="border border-gray-300 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" required />
+                <label htmlFor="password" className="block mb-2 text-sm font-medium">Password</label>
+                      <div className="relative">
+                        <input
+                          type={showPassword ? 'text' : 'password'}
+                          name="password" id="password" placeholder="••••••••" className="border border-gray-300 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" required
+                        />
+                        <button
+                          type="button"
+                          onClick={togglePasswordVisibility}
+                          className="absolute top-0 end-0 p-3.5 rounded-e-md"
+                        >
+                          <svg
+                            className="flex-shrink-0 size-3.5 text-gray-400 dark:text-neutral-600"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            {showPassword ? (
+                              <>
+                                <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
+                                <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path>
+                                <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path>
+                                <line x1="2" x2="22" y1="2" y2="22"></line>
+                              </>
+                            ) : (
+                              <>
+                                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                              </>
+                            )}
+                          </svg>
+                        </button>
+                      </div>
                 </div>
+
+
+
                 <button type="submit" className="w-full text-white btn btn-primary focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Login</button>
                 <p className="text-sm font-light">Don't have an account? <Link to="/register" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Register</Link></p>
               </form>

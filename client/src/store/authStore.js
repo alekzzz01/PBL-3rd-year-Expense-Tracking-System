@@ -41,21 +41,21 @@ const useAuthStore = create((set) => ({
           // Login failed
           console.error('Login failed:', message);
           // Show error toast
-          toast.error(`Login failed: ${message}`);
+          // toast.error(`Login failed: ${message}`);
           return message;
         }
 
       } else {
         console.error('Unexpected response status:', response.status);
         // Show error toast
-        toast.error(`Unexpected response status: ${response.status}`);
+        // toast.error(`Unexpected response status: ${response.status}`);
         return `Unexpected response status: ${response.status}`;
       }
-      
+
     } catch (error) {
       console.error('Network error:', error);
       // Show error toast
-      toast.error(`Network error: ${error}`);
+      // toast.error(`Network error: ${error}`);
       return `Network error: ${error}`;
     }
   },
