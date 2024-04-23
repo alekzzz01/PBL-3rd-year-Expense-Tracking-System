@@ -1,8 +1,18 @@
 import React from 'react'
 import { BellDot, Settings, Menu } from "lucide-react"
 import SelectTheme from '../components/themeSelector';
+import useAuthStore from '../store/authStore';
+import { useNavigate } from 'react-router-dom'; 
 
-function header() {
+function Header() {
+
+    const navigate = useNavigate(); // Initialize useNavigate hook
+    const { logout } = useAuthStore(); // Get logout function from useAuthStore
+
+    const handleLogout = async () => {
+        await logout(navigate); // Call logout function and pass navigate
+    };
+    
   return (
     <div className='flex items-center justify-between gap-2  border-b px-8 py-2'>
 
@@ -52,7 +62,7 @@ function header() {
                                     <span className="badge">New</span>
                                 </a>
                                 </li>
-                                <li><a href='/'>Logout</a></li>
+                                <li><button onClick={handleLogout}>Logout</button></li>
                             </ul>
                         </div>
             </div>
@@ -62,4 +72,4 @@ function header() {
   )
 }
 
-export default header
+export default Header

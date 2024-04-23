@@ -1,13 +1,17 @@
-import React, {createContext, useContext, useState } from 'react'
+import React, {createContext, useContext, useState} from 'react'
 import { ChevronFirst, ChevronLast} from "lucide-react"
 import { Link } from 'react-router-dom';
 import { Sidebar_Links } from "../components/libs/navigation"
 import { useLocation } from 'react-router-dom';
-const SidebarContext = createContext();
+import useAuthStore from '../store/authStore';
 
+
+
+const SidebarContext = createContext();
 
 export default function Sidebar() {
 
+    const { isAuthenticated, user } = useAuthStore();
     const location = useLocation();
 
     const isActive = (path) => {
@@ -44,11 +48,17 @@ export default function Sidebar() {
                     <div className="border-t flex p-3">
                         <img src="https://previews.123rf.com/images/urfandadashov/urfandadashov1809/urfandadashov180902667/109317646-profile-pic-vector-icon-isolated-on-transparent-background-profile-pic-logo-concept.jpg" alt='profile' className="w-10 h-10 rounded-md" />
                         <div className={`flex justify-between items-center overflow-hidden transition-all ${expanded ? "w-52 ml-3" : "w-0"} `}>
+                            
+                        {isAuthenticated && user && (
                             <div className="leading-4">
-                                <h4 className="font-semibold">constGenius</h4>
-                                <span className="text-xs text-gray-600">constgenius@gmail.com</span>
+                                <h4 className="font-semibold">{user.username}</h4> 
+                                <span className="text-xs text-gray-600">{user.email}</span>
                             </div>
-                            {/* <MoreVertical size={20} /> */}
+                        )}
+
+                        {/* <MoreVertical size={20} /> */}
+
+
                         </div>
                     </div>
                 </nav>

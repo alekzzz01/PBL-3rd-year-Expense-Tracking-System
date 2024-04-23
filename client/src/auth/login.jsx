@@ -54,7 +54,7 @@ function Login() {
       <section className="">
     
         <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto h-screen lg:py-0">
-          <div className="w-full rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0 bg-base-200">
+          <div className="w-full rounded-lg md:mt-0 sm:max-w-md xl:p-0">
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
               <h1 className="text-xl font-bold leading-tight tracking-tight md:text-2xl">Login</h1>
               <form className="space-y-4 md:space-y-6" onSubmit={handleLogin}>
@@ -107,6 +107,11 @@ function Login() {
                       </div>
                 </div>
 
+                <div className="text-sm w-full text-end">
+                  
+                    <Link to="/forgotpassword" className="mr-3 font-medium text-primary hover:underline">Forgot Password ?</Link>
+                  </div>
+
 
 
                 <button type="submit" className="w-full text-white btn btn-primary focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Login</button>
@@ -116,13 +121,13 @@ function Login() {
           </div>
 
           {registrationMessage &&
-            <div className='mt-3 rounded-md bg-green-100 border border-green-400 p-4 mb-4'>
+            <div className='rounded-md bg-green-100 border border-green-400 p-4'>
               <p className='text-sm text-green-700'></p>
               {registrationMessage}
             </div>}
 
           {errorMessage &&
-            <div className='mt-3 rounded-md bg-red-100 border border-red-400 p-4 mb-4'>
+            <div className='rounded-md bg-red-100 border border-red-400 p-4'>
               <p className='text-sm text-red-700'></p>
               {errorMessage}
             </div>

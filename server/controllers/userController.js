@@ -22,13 +22,13 @@ const login = asyncHandler(async (req, res) => {
 
         // Update lastLogin field
         user.lastLogin = new Date();
-        await user.save();
+        await user.save();  
 
         // Include user ID in the JWT payload
         const token = jwt.sign({ userId: user._id }, process.env.KEY, { expiresIn: '1h' });
         res.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
 
-        return res.json({ status: true, message: "Login successful", userId: user._id, lastLogin: user.lastLogin, username: user.username, token });
+        return res.json({ status: true, message: "Login successful", userId: user._id, lastLogin: user.lastLogin, username: user.username, email: user.email, role: user.role, token });
 
     } catch (error) {
         console.error(error);
@@ -42,13 +42,6 @@ const register = asyncHandler(async (req, res) => {
 
     const {username, email, password} = req.body;
 
-    // console.log('Received registration request:', { username, email });
-
-    const existingUser = await User.findOne({ username });
-    if (existingUser) {
-        return res.status(400).json({ message: "Username already exists" });
-    }
-
     const existingEmail = await User.findOne({ email });
     if (existingEmail) {
         return res.status(400).json({ message: "Email already exists" });
@@ -60,7 +53,8 @@ const register = asyncHandler(async (req, res) => {
     const newUser = new User ({
         username,
         email,
-        password: hashpassword // Only store the hashed password
+        password: hashpassword, // Only store the hashed password
+        role: "user" 
     })
     
 
@@ -81,4 +75,16 @@ const logout = asyncHandler(async (req, res) => {
 });
 
 
-export { login, register, logout };
+
+const checkUsernameExists = asyncHandler(async (req, res) => {
+    const { username } = req.params;
+    try {
+      const existingUser = await User.findOne({ username });
+      res.json({ exists: !!existingUser }); // Return true if user exists, false otherwise
+    } catch (error) {
+      console.error('Error checking username:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+  
+export { login, register, logout, checkUsernameExists };

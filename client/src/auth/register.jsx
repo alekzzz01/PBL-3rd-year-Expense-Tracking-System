@@ -9,13 +9,33 @@ function Register() {
   const register = useAuthStore((state) => state.register);
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-  const [passwordValid, setPasswordValid] = useState(false); // State to track password validity
+  const { usernameExists, checkUsernameExists } = useAuthStore();
+
   const [termsAccepted, setTermsAccepted] = useState(false);
+  
   const [showPassword, setShowPassword] = useState(false);
+  const [passwordValid, setPasswordValid] = useState(false); // State to track password validity
+  const [passwordFocused, setPasswordFocused] = useState(false);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
+  const handlePasswordChange = (isValid) => {
+    setPasswordValid(isValid);
+  };
+
+
+  const handlePasswordFocus = () => {
+    setPasswordFocused(true);
+  };
+
+  
+  const handlePasswordBlur = () => {
+    setPasswordFocused(false);
+  };
+
+
 
 
   // const navigate = useNavigate();
@@ -27,12 +47,13 @@ function Register() {
     confirmPassword: '',
   });
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handlePasswordChange = (isValid) => {
-    setPasswordValid(isValid);
+  const handleChange = async (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    
+    if (name === 'username' && value.trim() !== '') {
+      await checkUsernameExists(value.trim());
+    }
   };
 
   const handleCheckboxChange = (e) => {
@@ -40,38 +61,38 @@ function Register() {
   };
 
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  const { username, email, password } = formData;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const { username, email, password } = formData;
 
-  setErrorMessage(''); // Clear any previous error message
-  setSuccessMessage(''); // Clear any previous success message
+    setErrorMessage(''); // Clear any previous error message
+    setSuccessMessage(''); // Clear any previous success message
 
-  try {
-    const registrationResult = await register(username, email, password);
-    if (registrationResult.success) {
-      setFormData({
-        username: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-      });
-      setSuccessMessage('Account created successfully!');
-    } else {
-      // Registration failed, display error message
-      setErrorMessage(registrationResult.errorMessage);
-    }
-  } catch (error) {
-    // Handle error
-    if (error.response) {
-        // If server responds with an error, display the error message from the server
-        setErrorMessage(error.errorStatusMessage);
-    } else {
-        // If something else went wrong, display a generic error message
-        setErrorMessage('An unexpected error occurred. Please try again later.');
-    }
-}
-};
+    try {
+      const registrationResult = await register(username, email, password);
+      if (registrationResult.success) {
+        setFormData({
+          username: '',
+          email: '',
+          password: '',
+          confirmPassword: '',
+        });
+        setSuccessMessage('Account created successfully!');
+      } else {
+        // Registration failed, display error message
+        setErrorMessage(registrationResult.errorMessage);
+      }
+    } catch (error) {
+      // Handle error
+      if (error.response) {
+          // If server responds with an error, display the error message from the server
+          setErrorMessage(error.errorStatusMessage);
+      } else {
+          // If something else went wrong, display a generic error message
+          setErrorMessage('An unexpected error occurred. Please try again later.');
+      }
+  }
+  };
 
   
 
@@ -81,15 +102,31 @@ const handleSubmit = async (e) => {
       <section className="">
       
         <div className="flex items-center justify-center px-6 py-8 h-screen">
-          <div className="w-full rounded-lg shadow sm:max-w-md bg-base-200">
+          <div className="w-full rounded-lg sm:max-w-md">
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
               <h1 className="text-xl font-bold leading-tight tracking-tight md:text-2xl">Create an account</h1>
               <form className="space-y-4 md:space-y-6" action="#" onSubmit={handleSubmit}>
 
                 <div>
                   <label htmlFor="username" className="block mb-2 text-sm font-medium">Username</label>
-                  <input type="text" name="username" id="username" value={formData.username} onChange={handleChange} className="border border-gray-300 sm:text-sm rounded-lg block w-full p-2.5" placeholder="Username" required />
+
+                  <input
+                    type="text"
+                    name="username"
+                    id="username" 
+                    value={formData.username}
+                    onChange={handleChange}
+                    className={`border ${formData.username && usernameExists ? 'ring-2 ring-red-500' : 'border-gray-300 focus:border-primary-600'} sm:text-sm rounded-lg block w-full p-2.5`}
+                    placeholder="Username"
+                    required
+                  />
+                  {/* IF USERNAME EXIST SHOW USERNAME ALREADY EXIST */}
+                  {/* IF USERNAME IS AVAILABLE SHOW USERNAME IS AVAILABLE */}
+                  <div className=' text-red-500 text-sm mt-2 '> {formData.username && usernameExists && <p className="text-red-500">Username already exists</p>}</div>
+                  <div className=' text-green-500 text-sm mt-2 '> {formData.username && !usernameExists && <p className="text-green-500">Username available</p>}</div>
+                 
                 </div>
+
                 <div>
                   <label htmlFor="email" className="block mb-2 text-sm font-medium">Email</label>
                   <input type="email" name="email" id="email" value={formData.email} onChange={handleChange} className="border border-gray-300 sm:text-sm rounded-lg block w-full p-2.5" placeholder="Email" required />
@@ -101,6 +138,8 @@ const handleSubmit = async (e) => {
                         <input
                           type={showPassword ? 'text' : 'password'}
                           name="password" id="password" value={formData.password} onChange={handleChange} placeholder="••••••••" className="border border-gray-300 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" required
+                          onFocus={handlePasswordFocus}
+                          onBlur={handlePasswordBlur}
                         />
                         <button
                           type="button"
@@ -144,6 +183,9 @@ const handleSubmit = async (e) => {
                         <input
                           type={showPassword ? 'text' : 'password'}
                           name="confirmPassword" id="confirm-password" value={formData.confirmPassword} onChange={handleChange} placeholder="••••••••" className="border border-gray-300 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" required
+                          onFocus={handlePasswordFocus}
+                          onBlur={handlePasswordBlur}                        
+
                         />
                         <button
                           type="button"
@@ -179,20 +221,18 @@ const handleSubmit = async (e) => {
                       </div>
                 </div>
 
-
-         
-
-
-                
-        
-                   
-              <PasswordChecklist
-                    rules={["minLength","specialChar","number","capital","match"]}
-                    minLength={8}
-                    value={formData.password}
-                    valueAgain={formData.confirmPassword}
-                    onChange={handlePasswordChange}
-                  />
+              {/* Conditionally render the PasswordChecklist only when password input is focused */}
+              {passwordFocused && (
+                  <div className='mt-3'>
+                    <PasswordChecklist
+                      rules={["minLength","specialChar","number","capital","match"]}
+                      minLength={8}
+                      value={formData.password}
+                      valueAgain={formData.confirmPassword}
+                      onChange={handlePasswordChange}
+                    />
+                  </div>
+                )}
 
       
                 <div className="flex items-start">
