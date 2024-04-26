@@ -1,7 +1,7 @@
 import React from 'react'
-import { BellDot, Settings, Menu } from "lucide-react"
-import SelectTheme from '../components/themeSelector';
-import useAuthStore from '../store/authStore';
+import { BellDot,  Menu } from "lucide-react"
+import SelectTheme from '../common/themeSelector';
+import useAuthStore from '../../store/authStore';
 import { useNavigate } from 'react-router-dom'; 
 
 function Header() {
@@ -18,8 +18,7 @@ function Header() {
 
 
             <div>
-                <div className='btn btn-ghost btn-circle'><Menu/></div>
-                
+                <div className='btn btn-ghost btn-circle'><Menu/></div>            
             </div>
 
 
@@ -41,9 +40,9 @@ function Header() {
                         </div>
 
 
-                        <div className="btn btn-ghost btn-circle avatar">
+                        {/* <div className="btn btn-ghost btn-circle avatar">
                                 <a href="/settings"><Settings /></a> 
-                        </div>
+                        </div> */}
 
 
                         <div className='border border-l h-8'></div>

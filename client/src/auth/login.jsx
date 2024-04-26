@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import useAuthStore from '../store/authStore';
 
 
 function Login() {
   const [errorMessage, setErrorMessage] = useState('');
-  const [registrationMessage, setRegistrationMessage] = useState('');
+
   const [showPassword, setShowPassword] = useState(false);
   
   const togglePasswordVisibility = () => {
@@ -14,7 +14,7 @@ function Login() {
 
   const login = useAuthStore(state => state.login);
  
-  const navigate = useNavigate();
+
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -27,9 +27,8 @@ function Login() {
         // If there's a message returned from the login function, set it as the error message
         setErrorMessage(message);
       } else {
-        // If login is successful, navigate to dashboard
-        navigate('/dashboard');
-        
+        // Clear error message if there's no specific error from the login function
+        setErrorMessage(null);
       }
     } catch (error) {
       console.error('Error during login:', error);
@@ -39,16 +38,7 @@ function Login() {
   };
   
   
-  useEffect(() => {
-    // Retrieve registration message from localStorage
-    const message = localStorage.getItem('registrationMessage');
-    if (message) {
-      setRegistrationMessage(message);
-      // Clear registration message from localStorage after displaying it
-      localStorage.removeItem('registrationMessage');
-    }
-  }, []);
-
+  
   return (
     <>
       <section className="">
@@ -120,11 +110,7 @@ function Login() {
             </div>
           </div>
 
-          {registrationMessage &&
-            <div className='rounded-md bg-green-100 border border-green-400 p-4'>
-              <p className='text-sm text-green-700'></p>
-              {registrationMessage}
-            </div>}
+       
 
           {errorMessage &&
             <div className='rounded-md bg-red-100 border border-red-400 p-4'>

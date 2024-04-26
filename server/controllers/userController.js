@@ -25,10 +25,24 @@ const login = asyncHandler(async (req, res) => {
         await user.save();  
 
         // Include user ID in the JWT payload
-        const token = jwt.sign({ userId: user._id }, process.env.KEY, { expiresIn: '1h' });
+        const token = jwt.sign({ userId: user._id, role: user.role, username: user.username, email: user.email, }, process.env.KEY, { expiresIn: '1h' });
         res.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
 
-        return res.json({ status: true, message: "Login successful", userId: user._id, lastLogin: user.lastLogin, username: user.username, email: user.email, role: user.role, token });
+        const responseObj = {
+            status: true,
+            message: "Login successful",
+            userId: user._id,
+            lastLogin: user.lastLogin,
+            username: user.username,
+            email: user.email,
+            role: user.role,
+            token
+        };
+
+        console.log("Response Object:", responseObj); // Log the response object
+        return res.json(responseObj);
+
+        
 
     } catch (error) {
         console.error(error);
@@ -86,5 +100,19 @@ const checkUsernameExists = asyncHandler(async (req, res) => {
       res.status(500).json({ error: 'Internal server error' });
     }
   });
+
+
+  const getAllUsers = asyncHandler(async (req, res) => {
+    try {
+        const users = await User.find({});
+        res.json(users);
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+
   
-export { login, register, logout, checkUsernameExists };
+  
+export { login, register, logout, checkUsernameExists, getAllUsers  };

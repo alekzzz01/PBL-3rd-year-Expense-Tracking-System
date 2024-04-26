@@ -5,8 +5,8 @@ import PasswordChecklist from "react-password-checklist"
 function Forgotpassword() {
 
 
-    const [errorMessage, setErrorMessage] = useState('');
-    const [successMessage, setSuccessMessage] = useState('');
+    const [errorMessage] = useState('');
+    const [successMessage] = useState('');
 
 
     const [showPassword, setShowPassword] = useState(false);

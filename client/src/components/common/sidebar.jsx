@@ -1,9 +1,9 @@
-import React, {createContext, useContext, useState} from 'react'
+import React, {createContext, useContext, useState, useEffect} from 'react'
 import { ChevronFirst, ChevronLast} from "lucide-react"
 import { Link } from 'react-router-dom';
-import { Sidebar_Links } from "../components/libs/navigation"
+import { Sidebar_Links } from "../libs/navigation"
 import { useLocation } from 'react-router-dom';
-import useAuthStore from '../store/authStore';
+import useAuthStore from '../../store/authStore';
 
 
 
@@ -11,7 +11,23 @@ const SidebarContext = createContext();
 
 export default function Sidebar() {
 
-    const { isAuthenticated, user } = useAuthStore();
+    const [userData, setUserData] = useState(null);
+
+    useEffect(() => {
+        // Function to fetch user data
+        const fetchUserData = async () => {
+            try {
+                const userData = await useAuthStore.getState().getUsernameAndEmail();
+                setUserData(userData);
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
+
+        // Call the fetchUserData function
+        fetchUserData();
+    }, []);
+
     const location = useLocation();
 
     const isActive = (path) => {
@@ -49,14 +65,21 @@ export default function Sidebar() {
                         <img src="https://previews.123rf.com/images/urfandadashov/urfandadashov1809/urfandadashov180902667/109317646-profile-pic-vector-icon-isolated-on-transparent-background-profile-pic-logo-concept.jpg" alt='profile' className="w-10 h-10 rounded-md" />
                         <div className={`flex justify-between items-center overflow-hidden transition-all ${expanded ? "w-52 ml-3" : "w-0"} `}>
                             
-                        {isAuthenticated && user && (
-                            <div className="leading-4">
-                                <h4 className="font-semibold">{user.username}</h4> 
-                                <span className="text-xs text-gray-600">{user.email}</span>
-                            </div>
-                        )}
-
+                     
+                    <div className="leading-4">
+                            {userData ? (
+                                <div>
+                                <h4 className="font-semibold">{userData.username}</h4>
+                                <span className="text-xs text-gray-600">{userData.email}</span>
+                                </div>
+                            ) : (
+                                <p>Loading user data...</p>
+                            )}
+                    </div>
+                      
                         {/* <MoreVertical size={20} /> */}
+
+                   
 
 
                         </div>
