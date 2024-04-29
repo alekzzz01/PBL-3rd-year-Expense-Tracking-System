@@ -42,4 +42,60 @@ const addExpense = asyncHandler(async (req, res) => {
     }
 });
 
-export { addExpense };
+// Controller method to delete an expense item
+const deleteExpenseItem = asyncHandler(async (req, res) => {
+    const { expenseItemId } = req.params; // Get the expense item ID from request parameters
+
+    try {
+        // Find the user's expense document
+        const expense = await ExpenseModel.findOne({ user: req.user._id });
+
+        // If the expense document exists, attempt to delete the expense item
+        if (expense) {
+            const deleted = await expense.deleteExpenseItem(expenseItemId);
+            if (deleted) {
+                return res.status(200).json({ success: true, message: 'Expense item deleted successfully' });
+            }
+        }
+        // If expense document or expense item not found, return error
+        return res.status(404).json({ success: false, message: 'Expense item not found' });
+    } catch (error) {
+        res.status(500).json({ success: false, error: 'Internal Server Error' });
+    }
+});
+
+// Controller method to update an expense item
+const updateExpenseItem = asyncHandler(async (req, res) => {
+    const { expenseItemId } = req.params; // Get the expense item ID from request parameters
+
+    try {
+        // Find the user's expense document
+        const expense = await ExpenseModel.findOne({ user: req.user._id });
+
+        // If the expense document exists, find and update the expense item
+        if (expense) {
+            const expenseItem = expense.expenseItems.id(expenseItemId);
+
+            if (expenseItem) {
+                // Update the expense item fields if provided in the request body
+                if (req.body.amount) expenseItem.amount = req.body.amount;
+                if (req.body.description) expenseItem.description = req.body.description;
+                if (req.body.expenseType) expenseItem.expenseType = req.body.expenseType;
+                if (req.body.date) expenseItem.date = req.body.date;
+
+                // Save the updated expense document
+                await expense.save();
+                return res.status(200).json({ success: true, message: 'Expense item updated successfully', data: expenseItem });
+            }
+            // If expense item not found, return error
+            return res.status(404).json({ success: false, message: 'Expense item not found' });
+        }
+        // If expense document not found, return error
+        return res.status(404).json({ success: false, message: 'Expense document not found' });
+    } catch (error) {
+        res.status(500).json({ success: false, error: 'Internal Server Error' });
+    }
+});
+
+export { addExpense, deleteExpenseItem, updateExpenseItem };
+
