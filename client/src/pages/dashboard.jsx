@@ -1,116 +1,75 @@
 import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie } from 'recharts';
-
-const data = [
-  {
-    name: 'Page A',
-    uv: 4000,
-    pv: 2400,
-    hv: 2800,
-    amt: 2400,
-  },
-  {
-    name: 'Page B',
-    uv: 3000,
-    pv: 1398,
-    hv: 2800,
-    amt: 2210,
-  },
-  {
-    name: 'Page C',
-    uv: 2000,
-    pv: 9800,
-    hv: 2800,
-    amt: 2290,
-  },
-  {
-    name: 'Page D',
-    uv: 2780,
-    pv: 3908,
-    hv: 2800,
-    amt: 2000,
-  },
-  {
-    name: 'Page E',
-    uv: 1890,
-    pv: 4800,
-    hv: 2800,
-    amt: 2181,
-  },
-  {
-    name: 'Page F',
-    uv: 2390,
-    pv: 3800,
-    hv: 2800,
-    amt: 2500,
-  },
-  {
-    name: 'Page G',
-    uv: 3490,
-    pv: 4300,
-    hv: 2800,
-    amt: 2100,
-  },
-];
-
-
-const data2 = [
-  { name: 'Group A', value: 400 },
-  { name: 'Group B', value: 300 },
-  { name: 'Group C', value: 300 },
-  { name: 'Group D', value: 200 },
-];
+import UserBarChart  from '../components/charts/userBarChart';
+import TransactionTable from '../components/tables/transactionTable';
 
 
 function dashboard() {
   return (
     <>
 
-    <div className='p-5 w-full'>
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5'>
+    <div className='p-5 w-full h-full'>
+        <div className='grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-5'>
 
-              <div className='p-3 border rounded-xl col-span-1 md:col-span-2 lg:col-span-2' style={{ height: 500 }}>
-                  <ResponsiveContainer>
-                      <BarChart
-                        width={500}
-                        height={300}
-                        data={data}
-                        margin={{
-                          top: 20,
-                          right: 30,
-                          left: 20,
-                          bottom: 5,
-                        }}
-                      >
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="name" />
-                        <YAxis yAxisId="left" orientation="left" stroke="#8884d8" />
-                        <YAxis yAxisId="right" orientation="right" stroke="#82ca9d" />
-                        <Tooltip />
-                        <Legend />
-                        <Bar yAxisId="left" dataKey="pv" fill="#8884d8" />
-                        <Bar yAxisId="left" dataKey="hv" fill="#964B00" />
-                        <Bar yAxisId="right" dataKey="uv" fill="#82ca9d" />
-                      </BarChart>
-                    </ResponsiveContainer>
-                </div>
+                <div className='flex flex-col gap-5 col-span-1 md:col-span-1 lg:col-span-2'>
+                    <div className='p-3 border rounded-xl bg-white' style={{ height: 500 }}>
+                          <UserBarChart />
+                        
+                    </div>
 
-                <div className='p-3 border rounded-xl'  style={{ height: 500 }}>
-
-                    <ResponsiveContainer>
-                      <PieChart>
-                        <Pie dataKey="value" data={data2} fill="#8884d8" label />
-                      </PieChart>
-                    </ResponsiveContainer>
+                    <div className='p-3 border rounded-xl bg-white'>
+                      <TransactionTable/>
+                    </div>
 
                 </div>
+                
 
-                <div className='p-3 border rounded-xl w-full  '>
-                        <p>1</p>
-                        <p>2</p>
-                        <p>3</p>
-                        <p>4</p>
+              <div className='flex flex-col gap-5'>
+                <div className='py-5 px-6 flex flex-col gap-5 border rounded-xl w-full'>  
+
+                      <div className='p-4 rounded-lg flex flex-col gap-6 ' style={{ backgroundColor:"#D8E2FD", color: "#35354E"}}>
+                              <p className='text-sm font-normal'>Total Income</p>
+                              <p className='text-2xl font-semibold'>$16,000.00</p>
+                      </div>
+
+                      <div className='p-4 rounded-lg flex flex-col gap-6' style={{ backgroundColor:"#F9E1E1", color: "#4E3535"}}>
+                              <p className='text-sm font-normal'>Total Expenses</p>
+                              <p className='text-2xl font-semibold'>$16,000.00</p>
+                      </div>
+
+                      <div className='p-4 rounded-lg flex flex-col gap-6' style={{ backgroundColor:"#D8EAEA", color: "#3D4E35"}}>
+                              <p className='text-sm font-normal'>Total Save</p>
+                              <p className='text-2xl font-semibold'>$16,000.00</p>
+                      </div>
+                       
+
+                      <div className='p-4 rounded-lg flex flex-col gap-6' style={{ backgroundColor:"#D8DCEA", color: "#35364E"}}>
+                              <p className='text-sm font-normal'>Transactions</p>
+                              <p className='text-2xl font-semibold'>$16,000.00</p>
+                      </div>
+                       
+         
                 </div>
+
+                <div className='py-5 px-6 flex flex-col gap-5 border rounded-xl w-full'> 
+                    <div className='p-4 rounded-lg flex flex-col border gap-2 '>
+                            <span className="badge">New</span>
+                              <p className='font-medium'>Savings 101 - BGC - 05, Sept. 2022</p>
+                              <p className='text-sm font-light'>Description of 101</p>
+                    </div>
+
+                    <div className='p-4 rounded-lg flex flex-col border gap-2 '>
+                            <span className="badge">New</span>
+                              <p className='font-medium'>Savings 101 - BGC - 05, Sept. 2022</p>
+                              <p className='text-sm font-light'>Description of 101</p>
+                    </div>
+
+                   
+                </div>
+
+              </div>
+
+
+              
 
 
             </div>

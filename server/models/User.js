@@ -6,6 +6,7 @@ const UserSchema = new mongoose.Schema({
     password: { type: String, required: true, minlength: 8 },
     role: {type: String, required: true},
     lastLogin: { type: Date, default: Date.now } // Adding lastLogin field
+    
 });
 
 const UserModel = mongoose.model("User", UserSchema);
