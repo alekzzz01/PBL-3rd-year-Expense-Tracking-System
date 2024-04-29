@@ -5,6 +5,9 @@ import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 import { UserRouter } from './routes/user-routes.js';
 
+// import ExpenseModel from './models/Expense.js'
+// import expenseData from './data/UserExpense.js';
+
 dotenv.config();
 
   const app = express();
@@ -20,6 +23,9 @@ dotenv.config();
   // Routes
   app.use('/auth', UserRouter);
 
+
+
+
   // Database connection
   mongoose.connect(process.env.DB_URI, {
     useNewUrlParser: true,
@@ -32,6 +38,15 @@ dotenv.config();
   .catch((error) => {
     console.error('Error connecting to MongoDB:', error);
   });
+
+
+  // try {
+  //   await ExpenseModel.deleteMany(); // Remove existing data
+  //   await ExpenseModel.insertMany(expenseData); // Insert mock data
+  //   console.log('Mock data inserted successfully');
+  // } catch (error) {
+  //   console.error('Error inserting mock data:', error);
+  // }
 
   // Start the server
   const PORT = process.env.PORT || 5000;
