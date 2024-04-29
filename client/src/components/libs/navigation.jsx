@@ -1,55 +1,35 @@
 
-import { LayoutDashboard, Settings } from "lucide-react";
+import {SquareMenu,  BadgeCent, ReceiptText } from "lucide-react";
 
 export const Sidebar_Links = [
   {
     key: 'dashboard',
     label: 'Dashboard',
     path: '/dashboard',
-    icon: <LayoutDashboard/>
+    icon: <SquareMenu />
   },
-
   {
-    key: 'settings',
-    label: 'Settings',
-    path: '/settings',
-    icon: <Settings/>
+    key: 'transactions',
+    label: 'Transactions',
+    path: '/transactions',
+    icon: <BadgeCent />
   },
-
-  // {
-  //   path: '', //no url needed as this has submenu
-  //   icon: <DocumentDuplicateIcon className={`${iconClasses} inline` }/>, // icon component
-  //   name: 'Pages', // name that appear in Sidebar
-  //   submenu : [
-  //     {
-  //       path: '/login',
-  //       icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
-  //       name: 'Login',
-  //     },
-  //     {
-  //       path: '/register', //url
-  //       icon: <UserIcon className={submenuIconClasses}/>, // icon component
-  //       name: 'Register', // name that appear in Sidebar
-  //     },
-  //     {
-  //       path: '/forgot-password',
-  //       icon: <KeyIcon className={submenuIconClasses}/>,
-  //       name: 'Forgot Password',
-  //     },
-  //     {
-  //       path: '/app/blank',
-  //       icon: <DocumentIcon className={submenuIconClasses}/>,
-  //       name: 'Blank Page',
-  //     },
-  //     {
-  //       path: '/app/404',
-  //       icon: <ExclamationTriangleIcon className={submenuIconClasses}/>,
-  //       name: '404',
-  //     },
-  //   ]
-  // },
-
- 
-
-
-]
+  {
+    key: 'budgeting',
+    label: 'Budgeting',
+    icon: <ReceiptText />,
+    submenu: [
+      {
+        key: 'categories',
+        label: 'Categories',
+        path: '/budgeting/categories'
+      },
+      {
+        key: 'reports',
+        label: 'Reports',
+        path: '/budgeting/reports'
+      }
+      // Add more submenu items as needed
+    ]
+  }
+];

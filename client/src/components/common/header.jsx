@@ -1,10 +1,11 @@
 import React from 'react'
-import { BellDot,  Menu } from "lucide-react"
 import SelectTheme from '../common/themeSelector';
 import useAuthStore from '../../store/authStore';
 import { useNavigate } from 'react-router-dom'; 
 
-function Header() {
+import { BellDot,  Menu } from "lucide-react"
+
+function Header({toggleSidebar}) {
 
     const navigate = useNavigate(); // Initialize useNavigate hook
     const { logout } = useAuthStore(); // Get logout function from useAuthStore
@@ -14,15 +15,14 @@ function Header() {
     };
     
   return (
-    <div className='flex items-center justify-between gap-2  border-b px-8 py-2'>
+    <div className='flex items-center justify-between gap-2  border-b px-8 py-2 '>
 
 
             <div>
-                <div className='btn btn-ghost btn-circle'><Menu/></div>            
+                <button onClick={() => toggleSidebar(true)} className='btn btn-ghost btn-circle sm:hidden md:hidden'>
+                    <Menu />
+                </button>    
             </div>
-
-
-
 
             <div className='flex items-center gap-2'>
                         <div><SelectTheme/></div>

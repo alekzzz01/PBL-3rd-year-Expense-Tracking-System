@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Layout from './layout/Layout';
 import Dashboard from './pages/dashboard';
+import Transactions from './pages/transactions';
 import Settings from './pages/settings';
 
 
@@ -40,7 +41,9 @@ function App() {
         <Route path="/" element={<Layout />}>
 
             <Route path="/dashboard" element={<Dashboard/>} />
+            <Route path="/transactions" element={<Transactions />} />
             <Route path="/settings" element={<Settings/>} />
+
 
         </Route>
 
