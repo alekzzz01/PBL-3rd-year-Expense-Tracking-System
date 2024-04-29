@@ -33,7 +33,7 @@ export default function Sidebar({ isSideMenu }) {
   return (
        
 
-    <aside className={`h-screen ${isSideMenu ? '' : 'hidden'}  sm:hidden md:hidden lg:block `}>
+    <aside className={`h-screen ${isSideMenu ? '' : 'hidden'}   sm:hidden  lg:block `}>
       <nav className="h-full flex flex-col border-r shadow-sm">
         <div className="p-4 pb-2 flex justify-between items-center">
           <p className={`text-2xl font-bold overflow-hidden transition-all ${expanded ? 'w-32' : 'w-0'}`}>

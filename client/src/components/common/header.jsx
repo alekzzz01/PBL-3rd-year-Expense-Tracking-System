@@ -19,7 +19,7 @@ function Header({toggleSidebar}) {
 
 
             <div>
-                <button onClick={() => toggleSidebar(true)} className='btn btn-ghost btn-circle sm:hidden md:hidden'>
+                <button onClick={() => toggleSidebar(true)} className='btn btn-ghost btn-circle sm:block md:block lg:hidden'>
                     <Menu />
                 </button>    
             </div>
