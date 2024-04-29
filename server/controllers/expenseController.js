@@ -1,7 +1,10 @@
 import ExpenseModel from '../models/Expense.js';
 import asyncHandler from '../middleWare/asyncHandler.js';
 
+
 const addExpense = asyncHandler(async (req, res) => {
+
+    console.log("User:", req.user);
     // Check if req.user exists and has the _id property
     if (!req.user || !req.user._id) {
         return res.status(401).json({ success: false, message: 'Unauthorized' });
