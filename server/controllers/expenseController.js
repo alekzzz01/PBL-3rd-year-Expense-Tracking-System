@@ -1,29 +1,37 @@
 import ExpenseModel from '../models/Expense.js';
 import asyncHandler from '../middleWare/asyncHandler.js';
-import jwt from 'jsonwebtoken';
 
 const addExpense = asyncHandler(async (req, res) => {
-    // Assuming the user ID is stored in the token
-    const token = req.headers.authorization; // Assuming the token is passed in the Authorization header
+    // Check if req.user exists and has the _id property
+    if (!req.user || !req.user._id) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+    }
 
-    // Verify and decode the token to extract the user ID
-    const decodedToken = jwt.verify(token, 'your_secret_key');
-    const userId = decodedToken.userId;
+    // Extract necessary information from the request body or parameters
+    const { amount, description, expenseType, date } = req.body;
 
-    // Your logic to create the expense using the user ID
-    const { expenseData } = req.body; // Assuming expenseData is sent in the request body
+    // Get the user ID from the authenticated user
+    const userId = req.user._id;
 
-    // Create the expense with the user ID
-    const newExpense = new ExpenseModel({
-        ...expenseData,
-        userId: userId
-    });
+    try {
+        // Create a new expense document
+        const newExpense = new ExpenseModel({
+            amount,
+            description,
+            expenseType,
+            date,
+            user: userId
+        });
 
-    // Save the expense to the database
-    await newExpense.save();
+        // Save the new expense document to the database
+        await newExpense.save();
 
-    // Send a response
-    res.status(201).json({ success: true, data: newExpense });
+        // Send a success response
+        res.status(201).json({ success: true, data: newExpense });
+    } catch (error) {
+        // If an error occurs during the process, send an error response
+        res.status(500).json({ success: false, error: error.message });
+    }
 });
 
 export { addExpense };
