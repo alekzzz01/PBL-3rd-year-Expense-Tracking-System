@@ -12,6 +12,7 @@ const ExpenseSchema = new mongoose.Schema({
       },
 });
 
+
 const ExpenseModel = mongoose.model("Expense", ExpenseSchema);
 
 export default ExpenseModel;
