@@ -4,9 +4,10 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 import { UserRouter } from './routes/user-routes.js';
+import { ExpenseRouter } from './routes/expense-routes.js';
 
-// import ExpenseModel from './models/Expense.js'
-// import expenseData from './data/UserExpense.js';
+// import ExpenseModel from './models/Expense.js' // for inserting expense
+// import expenseData from './data/UserExpense.js'; // for inserting expense
 
 dotenv.config();
 
@@ -20,8 +21,10 @@ dotenv.config();
     credentials: true, 
   }));
 
+
   // Routes
   app.use('/auth', UserRouter);
+  app.use('/expense', ExpenseRouter)
 
 
 
@@ -40,6 +43,15 @@ dotenv.config();
   });
 
 
+  // Start the server
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+
+
+  
+// for inserting expense
   // try {
   //   await ExpenseModel.deleteMany(); // Remove existing data
   //   await ExpenseModel.insertMany(expenseData); // Insert mock data
@@ -48,8 +60,3 @@ dotenv.config();
   //   console.error('Error inserting mock data:', error);
   // }
 
-  // Start the server
-  const PORT = process.env.PORT || 5000;
-  app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-  });

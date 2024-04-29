@@ -40,8 +40,8 @@ export default function Sidebar() {
             <aside className="h-screen">
                 <nav className="h-full flex flex-col border-r shadow-sm">
                     <div className="p-4 pb-2 flex justify-between items-center">
-                        <img src="https://unglobalcompact.org.au/wp-content/uploads/2023/10/MONEYME-logo.png" alt='logo' className={`overflow-hidden transition-all ${expanded ? "w-32" : "w-0"}`} />
-
+                        {/* <img src="https://unglobalcompact.org.au/wp-content/uploads/2023/10/MONEYME-logo.png" alt='logo' className={`overflow-hidden transition-all ${expanded ? "w-32" : "w-0"}`} /> */}
+                        <p className={`text-2xl font-bold overflow-hidden transition-all ${expanded ? "w-32" : "w-0"}`} >Company</p>
                         <button onClick={() => setExpanded((curr) => !curr)} className="p-1.5 btn">
                             {expanded ? <ChevronFirst /> : <ChevronLast />}
                         </button>
@@ -77,13 +77,14 @@ export default function Sidebar() {
                             )}
                     </div>
                       
-                        {/* <MoreVertical size={20} /> */}
-
+    
                    
 
 
                         </div>
                     </div>
+
+                    
                 </nav>
             </aside>
         </>
