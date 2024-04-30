@@ -14,7 +14,7 @@ function AdminLayout() {
         <div><Header/></div>
         <div>
           {/* Wrap the Outlet with the PrivateRoute component */}
-          <PrivateRoute />
+          <PrivateRoute /> 
           <Outlet />
         </div>
       </div>

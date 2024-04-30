@@ -18,11 +18,11 @@ function Login() {
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    const username = event.target.username.value;
+    const email = event.target.email.value;
     const password = event.target.password.value;
   
     try {
-      const message = await login(username, password);
+      const message = await login(email, password);
       if (message) {
         // If there's a message returned from the login function, set it as the error message
         setErrorMessage(message);
@@ -49,8 +49,8 @@ function Login() {
               <h1 className="text-xl font-bold leading-tight tracking-tight md:text-2xl">Login</h1>
               <form className="space-y-4 md:space-y-6" onSubmit={handleLogin}>
                 <div>
-                  <label htmlFor="username" className="block mb-2 text-sm font-medium">Username</label>
-                  <input type="text" name="username" id="username" className="border border-gray-300 sm:text-sm rounded-lg block w-full p-2.5" placeholder="Username" required />
+                  <label htmlFor="email" className="block mb-2 text-sm font-medium">Email</label>
+                  <input type="email" name="email" id="email" className="border border-gray-300 sm:text-sm rounded-lg block w-full p-2.5" placeholder="Email Address" required />
                 </div>
 
 

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from '../components/common/sidebar';
 import Header from '../components/common/header';
-import Authenticated from '../components/helpers/Authenticated';
+import PrivateRoute from '../components/helpers/PrivateRoute';
 import SessionTimeout from '../components/helpers/SessionTimeout'; // Import the SessionTimeout component
 
 function Layout() {
@@ -19,9 +19,7 @@ function Layout() {
       <div className='flex-1'>
         <div><Header toggleSidebar={toggleSidebar}/></div>
         <div>
-          {/* Wrap the Outlet with the PrivateRoute component */}
-          <Authenticated />
-         
+          <PrivateRoute /> 
           <Outlet />
         </div>
       </div>

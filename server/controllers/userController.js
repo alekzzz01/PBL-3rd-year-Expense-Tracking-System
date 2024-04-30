@@ -7,10 +7,10 @@ import asyncHandler from '../middleWare/asyncHandler.js';
 
 const login = asyncHandler(async (req, res) => {
 
-    const { username, password } = req.body;
+    const { email, password } = req.body;
     try {
 
-        const user = await User.findOne({ username });
+        const user = await User.findOne({ email });
         if (!user) {
             return res.json({ status: false, message: "User is not registered" });
         }

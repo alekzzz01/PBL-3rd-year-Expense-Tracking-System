@@ -13,15 +13,37 @@
     user: null,
     usernameExists: false,
 
+    initializeUserFromLocalStorage: async () => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        // Fetch user role from the server
+        try {
+          const role = await useAuthStore.getState().getUserRole();
+          // Redirect based on user's role
+          if (role === "admin" && window.location.pathname !== '/admindashboard') {
+            window.location.href = '/admindashboard';
+          } else if (role !== "admin" && window.location.pathname !== '/dashboard') {
+            window.location.href = '/dashboard';
+          }
+        } catch (error) {
+          console.error("Error fetching user role:", error);
+          // Handle error fetching user role or redirect to login page
+          // For example:
+          window.location.href = '/login';
+        }
+      }
+    },
     
-    login: async (username, password) => {
+
+    
+    login: async (email, password) => {
       try {
         const response = await axios.post('http://localhost:5000/auth/login', {
-          username,
+          email,
           password,
         });
   
-        const { status, message, userId, lastLogin, email, role, token } = response.data;
+        const { status, message, userId, lastLogin, username , role, token } = response.data;
           if (status) {
             // Login successful
             set({
@@ -29,7 +51,7 @@
               user: {
                 userId,
                 lastLogin,
-                username, 
+                username,
                 email,
                 role,
                 token
@@ -38,7 +60,7 @@
     
             localStorage.setItem('token', token);
             localStorage.setItem('IsLoggedIn', true)
-            localStorage.setItem('role', role)
+          
             
         
             // Redirect based on role
@@ -194,5 +216,7 @@
 
 
   }));
+
+  useAuthStore.getState().initializeUserFromLocalStorage();
 
   export default useAuthStore;
