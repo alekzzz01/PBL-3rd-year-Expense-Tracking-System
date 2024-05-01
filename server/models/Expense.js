@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 
 const ExpenseItemSchema = new mongoose.Schema({
-  expenseType: { type: String, required: true },
-  paymentMethod: { type: String, required: true },
+  expenseType: { type: String },
+  paymentMethod: { type: String },
   category: { type: String },
-  amount: { type: Number, required: true },
+  amount: { type: Number },
   fullName: { type: String },
   date: { type: Date, default: Date.now }
 });

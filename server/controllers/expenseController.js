@@ -11,7 +11,7 @@ const addExpense = asyncHandler(async (req, res) => {
     const userId = req.user._id;
 
     // Extract necessary fields from the request body
-    const {expenseType, paymentMethod, category, amount, fullName  } = req.body;
+    const {expenseType, paymentMethod, category, amount, fullName, date  } = req.body;
 
     try {
         // Find the user's expense document
@@ -34,6 +34,7 @@ const addExpense = asyncHandler(async (req, res) => {
             fullName: fullName,
             date: date || new Date() // Use provided date or current date if not provided
         };
+
         expense.expenseItems.push(newExpenseItem);
 
         // Save the updated expense document
