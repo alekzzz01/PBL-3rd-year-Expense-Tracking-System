@@ -10,11 +10,7 @@ function transactionTable() {
         selector: row => row.category,
         sortable: true
     }, 
-    {
-      name: 'Amount',
-      selector: row => row.amount,
-      sortable: true
-    }, 
+    
     {
       name: 'Date',
       selector: row => row.date,
@@ -23,6 +19,12 @@ function transactionTable() {
     {
       name: 'Type',
       selector: row => row.type,
+      sortable: true
+    }, 
+
+    {
+      name: 'Amount',
+      selector: row => row.amount,
       sortable: true
     }, 
  
@@ -45,17 +47,17 @@ function transactionTable() {
     },
     {
       id: 1,
-      category: 'Food',
+      category: 'Snacks',
       amount: '1000.00',
       date: '04/21/2024',
-      type: 'Wants',
+      type: 'Expenses',
     },
     {
       id: 1,
-      category: 'Food',
+      category: 'Income',
       amount: '1000.00',
       date: '04/21/2024',
-      type: 'Wants',
+      type: 'Income',
     },
 
 
