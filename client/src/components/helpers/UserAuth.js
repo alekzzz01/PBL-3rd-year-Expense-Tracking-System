@@ -2,11 +2,9 @@ import React, {useEffect} from 'react';
 import { Navigate } from 'react-router-dom';
 import useAuthStore from '../../store/authStore';
 
-const PrivateRoute = () => {
 
-    useEffect(() => {
-        useAuthStore.getState().checkAdminAccess();
-    }, []);
+const UserAuth = () => {
+
 
     useEffect(() => {
         useAuthStore.getState().isLoggedIn();
@@ -18,9 +16,9 @@ const PrivateRoute = () => {
         return <Navigate to="/login" />;
     }
 
-    
+   
    
 
 };
 
-export default PrivateRoute;
+export default UserAuth;

@@ -1,21 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import useAuthStore from '../store/authStore';
 
 
 function Login() {
-  const [errorMessage, setErrorMessage] = useState('');
 
+  // Automatic login if token is provided
+  useEffect(() => {
+    // Call initializeUserFromLocalStorage when the login page component mounts
+    useAuthStore.getState().initializeUserFromLocalStorage();
+  }, []);
+
+
+  // Toggle password functionality
+
+  const [errorMessage, setErrorMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
+  // Authstore Login
+
   const login = useAuthStore(state => state.login);
  
-
-
   const handleLogin = async (event) => {
     event.preventDefault();
     const email = event.target.email.value;

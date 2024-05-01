@@ -13,6 +13,9 @@
     user: null,
     usernameExists: false,
 
+  
+    // for automatic login it checks if the user is already logged in
+
     initializeUserFromLocalStorage: async () => {
       const token = localStorage.getItem("token");
       if (token) {
@@ -33,7 +36,6 @@
         }
       }
     },
-    
 
     
     login: async (email, password) => {
@@ -176,12 +178,47 @@
 
 
     isLoggedIn: async () => {
-        const token = localStorage.getItem('token'); // Retrieves the token from localStorage
-        if(token){
-            const payLoad = jwtDecode(token); // Decodes the JWT token to extract payload
-            const isLogin = Date.now() < payLoad.exp * 1000; // Checks if the token expiration time (in milliseconds) is in the future
-            return isLogin; // Returns true if the token is not expired, otherwise false
+      const token = localStorage.getItem('token'); // Retrieves the token from localStorage
+      if(token){
+        const payLoad = jwtDecode(token); // Decodes the JWT token to extract payload
+        const isExpired = Date.now() >= payLoad.exp * 1000; // Checks if the token expiration time (in milliseconds) is in the past
+        if (isExpired) {
+          // Token is expired, redirect to login
+          localStorage.removeItem('token'); // Remove the expired token
+          toast.error('Your session has expired. Please log in again.'); // Display toast notification
+          window.location.href = '/login'; // Redirect to the login page
+          return false; // Return false since the token is expired
         }
+        return true; // Return true if the token is not expired
+      }
+      // No token found, redirect to login
+      toast.error('Please log in to access this page.'); // Display toast notification
+      window.location.href = '/login';
+      return false; // Return false if no token is found
+    },
+
+
+
+
+    // Admin Private route, user can't access Admin routes
+
+    checkAdminAccess: async () => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        // Fetch user role from the server
+        try {
+          const role = await useAuthStore.getState().getUserRole();
+          // Redirect if the user is not an admin
+          if (role !== "admin") {
+            window.location.href = '/forbidden';
+          }
+        } catch (error) {
+          console.error("Error fetching user role:", error);
+          // Handle error fetching user role or redirect to login page
+          // For example:
+          window.location.href = '/login';
+        }
+      }
     },
 
     
@@ -194,6 +231,6 @@
 
   }));
 
-  useAuthStore.getState().initializeUserFromLocalStorage();
+  // useAuthStore.getState().initializeUserFromLocalStorage();
 
   export default useAuthStore;
