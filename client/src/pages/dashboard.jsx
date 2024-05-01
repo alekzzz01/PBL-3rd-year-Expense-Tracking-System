@@ -11,12 +11,12 @@ function dashboard() {
         <div className='grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-5 '>
 
                 <div className='flex flex-col gap-5 col-span-1 md:col-span-1 lg:col-span-2'>
-                    <div className='p-3 border rounded-xl bg-white' style={{ height: 500 }}>
+                    <div className='p-3 border rounded-xl bg-base-100' style={{ height: 500 }}>
                           <UserBarChart />
                         
                     </div>
 
-                    <div className='p-3 border rounded-xl bg-white'>
+                    <div className='p-3 border rounded-xl bg-base-100'>
                       <TransactionTable/>
                     </div>
 
