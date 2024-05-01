@@ -25,8 +25,8 @@ const login = asyncHandler(async (req, res) => {
         await user.save();  
 
         // Include user ID in the JWT payload
-        const token = jwt.sign({ userId: user._id, role: user.role, username: user.username, email: user.email, }, process.env.KEY, { expiresIn: '10s' });
-        res.cookie('token', token, { httpOnly: true, maxAge: 10000 });
+        const token = jwt.sign({ userId: user._id, role: user.role, username: user.username, email: user.email, }, process.env.KEY, { expiresIn: '1h' });
+        res.cookie('token', token, { httpOnly: true, maxAge: 3600000});
 
         const responseObj = {
             status: true,

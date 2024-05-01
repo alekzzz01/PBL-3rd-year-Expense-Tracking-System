@@ -1,9 +1,11 @@
 import mongoose from "mongoose";
 
 const ExpenseItemSchema = new mongoose.Schema({
-  amount: { type: Number, required: true },
-  description: { type: String },
   expenseType: { type: String, required: true },
+  paymentMethod: { type: String, required: true },
+  category: { type: String },
+  amount: { type: Number, required: true },
+  fullName: { type: String },
   date: { type: Date, default: Date.now }
 });
 

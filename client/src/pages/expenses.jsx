@@ -1,7 +1,44 @@
-import React from 'react'
+import React, {useState} from 'react'
 import UserBarChart  from '../components/charts/userBarChart';
+import useExpenseStore from '../store/expenseStore';
 
-function expenses() {
+
+function Expenses() {
+
+    const addExpense = useExpenseStore((state) => state.addExpense); // Access the addExpense function from the store
+    const [formData, setFormData] = useState({
+    expenseType: '',
+    paymentMethod: '',
+    category: '',
+    amount: '',
+    fullName: '',
+    // Add more fields as needed
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const result = await addExpense(formData); // Call addExpense function with form data
+      if (result.success) {
+        // Handle success, e.g., show a success message
+        console.log('Expense added successfully:', result.data);
+      } else {
+        // Handle error, e.g., show an error message
+        console.error('Failed to add expense:', result.error);
+      }
+    } catch (error) {
+      console.error('Error adding expense:', error);
+    }
+  };
 
   const options = {
     month: 'short',
@@ -149,8 +186,8 @@ function expenses() {
 
                 
             
-                  <form action="" className='flex flex-col gap-3'>
-                    <select className='p-3 border rounded-xl w-full' name="" id="">
+                  <form action="" className='flex flex-col gap-3' onSubmit={handleSubmit}>
+                    <select className='p-3 border rounded-xl w-full' name="type" value={formData.type} onChange={handleChange}>
                         <option selected>Type</option>
                         <option value="necessities">Necessities</option>
                         <option value="savings">Savings</option>
@@ -158,7 +195,7 @@ function expenses() {
                        
                     </select>
 
-                    <select className='p-3 border rounded-xl w-full' name="" id="">
+                    <select className='p-3 border rounded-xl w-full' name="paymentMethod" value={formData.paymentMethod} onChange={handleChange}>
                         <option selected>Payment Method</option>
                         <option value="cash">Cash</option>
                         <option value="creditcard">Credit Card</option>
@@ -168,12 +205,12 @@ function expenses() {
                     </select>
 
 
-                    <input className='p-3 border rounded-xl w-full' name='category' type="text" placeholder='Category (e.g. Food, Transportation, Bills)' /> 
+                    <input className='p-3 border rounded-xl w-full' name='category' value={formData.category} onChange={handleChange} type="text" placeholder='Category (e.g. Food, Transportation, Bills)' /> 
 
 
-                    <input className='p-3 border rounded-xl w-full' name='amount' type="text" placeholder='Amount' /> 
+                    <input className='p-3 border rounded-xl w-full' name='amount' value={formData.amount} onChange={handleChange} type="text" placeholder='Amount' /> 
 
-                    <input className='p-3 border rounded-xl w-full' name='name' type="text" placeholder='Full Name' /> 
+                    <input className='p-3 border rounded-xl w-full' name='name' value={formData.name} onChange={handleChange} type="text" placeholder='Full Name' /> 
 
 
                     <div className='flex justify-between items-center px-4'>
@@ -198,4 +235,4 @@ function expenses() {
   )
 }
 
-export default expenses
+export default Expenses

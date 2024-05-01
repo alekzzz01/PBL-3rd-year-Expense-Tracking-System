@@ -11,7 +11,7 @@ const addExpense = asyncHandler(async (req, res) => {
     const userId = req.user._id;
 
     // Extract necessary fields from the request body
-    const { amount, description, expenseType, date } = req.body;
+    const {expenseType, paymentMethod, category, amount, fullName  } = req.body;
 
     try {
         // Find the user's expense document
@@ -27,9 +27,11 @@ const addExpense = asyncHandler(async (req, res) => {
 
         // Create a new expense item and push it to the expense document's expenseItems array
         const newExpenseItem = {
-            amount: amount,
-            description: description,
             expenseType: expenseType,
+            paymentMethod: paymentMethod,
+            category: category,
+            amount: amount,
+            fullName: fullName,
             date: date || new Date() // Use provided date or current date if not provided
         };
         expense.expenseItems.push(newExpenseItem);
