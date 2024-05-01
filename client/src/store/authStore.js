@@ -20,8 +20,8 @@
         try {
           const role = await useAuthStore.getState().getUserRole();
           // Redirect based on user's role
-          if (role === "admin" && window.location.pathname !== '/admindashboard') {
-            window.location.href = '/admindashboard';
+          if (role === "admin" && window.location.pathname !== '/home') {
+            window.location.href = '/home';
           } else if (role !== "admin" && window.location.pathname !== '/dashboard') {
             window.location.href = '/dashboard';
           }
@@ -131,40 +131,17 @@
     
 
     logout: async (navigate) => {
-      try {
-          // Retrieve token from local storage
-          const token = localStorage.getItem('token');
-
-          if (!token) {
-              // Token not found, handle as needed (e.g., redirect to login)
-              console.error("Token not found. Cannot log out.");
-              return;
-          }
-
-          const response = await axios.post('http://localhost:5000/auth/logout', {}, {
-              headers: {
-                  Authorization: `Bearer ${token}` // Include token in Authorization header
-              }
-          });
-
-          if (response.status === 200) {
-              // Logout successful
+     
               set({ isAuthenticated: false, user: null });
               localStorage.removeItem('token');
-              localStorage.removeItem('IsLoggedIn')
-              localStorage.removeItem('role'); 
+              localStorage.removeItem('IsLoggedIn');
+              
               toast.success('Logged out successfully');
               navigate('/login'); // Redirect to login page
-          } else {
-              // Handle logout error
-              console.error("Logout failed:", response.statusText);
-          }
-      } catch (error) {
-          // Handle network error or other exceptions
-          console.error("Logout error:", error.message);
-      }
-
-    },
+    
+  },
+  
+  
 
     checkUsernameExists: async (username) => {
       try {

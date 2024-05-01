@@ -17,13 +17,16 @@ import {
   ChevronLeft,
   ChevronRightOutlined,
   HomeOutlined,
-  CurrencyExchangeOutlined,
+  ShoppingCartOutlined,
+  Groups2Outlined,
+  ReceiptLongOutlined,
+  PublicOutlined,
   PointOfSaleOutlined,
- Notifications,
-  AddOutlined,
-  BarChartOutlined,
-  Settings
-
+  TodayOutlined,
+  CalendarMonthOutlined,
+  AdminPanelSettingsOutlined,
+  TrendingUpOutlined,
+  PieChartOutlined,
 } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -32,62 +35,62 @@ import FlexBetween from "./FlexBetween";
 
 const navItems = [
   {
-    text: "Dashboard",
+    text: "Home",
     icon: <HomeOutlined />,
   
   },
-
-  
   {
-    text: "Transaction",
+    text: "Client Facing",
     icon: null,
   },
-
+  {
+    text: "Products",
+    icon: <ShoppingCartOutlined />,
+  },
+  {
+    text: "Customers",
+    icon: <Groups2Outlined />,
+  },
   {
     text: "Transactions",
-    icon: <CurrencyExchangeOutlined />,
-  
+    icon: <ReceiptLongOutlined />,
   },
-
-
   {
-    text: "Budgeting",
+    text: "Geography",
+    icon: <PublicOutlined />,
+  },
+  {
+    text: "Sales",
     icon: null,
   },
-
-  
   {
-    text: "Setup",
-    icon: <AddOutlined />,
-  
-  },
-
-  {
-    text: "Expenses",
+    text: "Overview",
     icon: <PointOfSaleOutlined />,
   },
- 
   {
-    text: "Analytics",
-    icon: <BarChartOutlined />,
+    text: "Daily",
+    icon: <TodayOutlined />,
   },
- 
-
   {
-    text: "Settings",
+    text: "Monthly",
+    icon: <CalendarMonthOutlined />,
+  },
+  {
+    text: "Breakdown",
+    icon: <PieChartOutlined />,
+  },
+  {
+    text: "Management",
     icon: null,
   },
-
   {
-    text: "Notifications",
-    icon: <Notifications/>,
+    text: "Users",
+    icon: <AdminPanelSettingsOutlined />,
   },
-
   {
-    text: "Settings",
-    icon: <Settings/>,
+    text: "Performance",
+    icon: <TrendingUpOutlined />,
   },
-
 ];
 
 const Sidebar = ({
@@ -117,7 +120,7 @@ const Sidebar = ({
             width: drawerWidth,
             "& .MuiDrawer-paper": {
             // color: theme.palette.secondary[200],
-              backgroundColor: "white",
+                backgroundColor: "transparent",
               boxSixing: "border-box",
               borderWidth: isNonMobile ? 0 : "2px",
               width: drawerWidth,
@@ -131,7 +134,7 @@ const Sidebar = ({
               <FlexBetween >
                 <Box display="flex" alignItems="center" gap="0.5rem">
                   <Typography variant="h4" fontWeight="bold">
-                      Company
+                  
                   </Typography>
                 </Box>
                 {!isNonMobile && (

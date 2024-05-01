@@ -1,26 +1,42 @@
-import React from 'react';
+import React, { useState } from "react";
+import { Box, useMediaQuery } from "@mui/material";
 import { Outlet } from 'react-router-dom';
-import Sidebar from '../components/common/sidebar';
-import Header from '../components/common/header';
+import Sidebar from '../admincomponents/adminsidebar';
+import Navbar from '../admincomponents/adminheader';
 import PrivateRoute from '../components/helpers/PrivateRoute'; // Import your PrivateRoute component
 import SessionTimeout from '../components/helpers/SessionTimeout';
 
 
 function AdminLayout() {
+
+  const isNonMobile = useMediaQuery("(min-width: 600px)");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+
   return (
-    <div className='flex flex-row w-screen h-screen'>
-      <div><Sidebar/></div>
-      <div className='flex-1'>
-        <div><Header/></div>
-        <div>
-          {/* Wrap the Outlet with the PrivateRoute component */}
-          <PrivateRoute /> 
-          <Outlet />
-        </div>
-      </div>
+ 
+
+
+ <Box display={isNonMobile ? "flex" : "block"} width="100%" height="100%">
+      <Sidebar
+       
+        isNonMobile={isNonMobile}
+        drawerWidth="250px"
+        isSidebarOpen={isSidebarOpen}
+        setIsSidebarOpen={setIsSidebarOpen}
+      />
+      <Box flexGrow={1}>
+        <Navbar
+       
+          isSidebarOpen={isSidebarOpen}
+          setIsSidebarOpen={setIsSidebarOpen}
+        />
+            <PrivateRoute /> 
+            <Outlet />
+      </Box>
 
       <SessionTimeout />
-    </div>
+    </Box>
   );
 }
 

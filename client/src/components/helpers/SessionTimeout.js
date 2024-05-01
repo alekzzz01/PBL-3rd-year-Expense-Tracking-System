@@ -26,7 +26,7 @@ const SessionTimeout = () => {
     };
 
     const { reset: resetIdleTimer } = useIdleTimer({
-        timeout: 3600000, 
+        timeout: 30 * 60 * 1000, // 30 minutes in milliseconds
         onIdle: handleOnIdle,
     });
 

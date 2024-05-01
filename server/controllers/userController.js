@@ -25,8 +25,8 @@ const login = asyncHandler(async (req, res) => {
         await user.save();  
 
         // Include user ID in the JWT payload
-        const token = jwt.sign({ userId: user._id, role: user.role, username: user.username, email: user.email, }, process.env.KEY, { expiresIn: '1h' });
-        res.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
+        const token = jwt.sign({ userId: user._id, role: user.role, username: user.username, email: user.email, }, process.env.KEY, { expiresIn: '10s' });
+        res.cookie('token', token, { httpOnly: true, maxAge: 10000 });
 
         const responseObj = {
             status: true,
@@ -78,15 +78,14 @@ const register = asyncHandler(async (req, res) => {
 
 });
 
+
 const logout = asyncHandler(async (req, res) => {
-    try {
-        res.cookie("token", "", { httpOnly: true, expires: new Date(0) });
-        res.status(200).json({ message: "Logout successfully" });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Internal server error" });
-    }
+    // Clear the token cookie
+    res.clearCookie('token');
+    res.json({ status: true, message: "Logout successful" });
 });
+
+
 
 
 

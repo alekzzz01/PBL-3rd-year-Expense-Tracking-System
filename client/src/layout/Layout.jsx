@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { Box, useMediaQuery } from "@mui/material";
 import { Outlet } from 'react-router-dom';
 import Sidebar from '../components/common/sidebar';
 import Header from '../components/common/header';
@@ -7,25 +8,32 @@ import SessionTimeout from '../components/helpers/SessionTimeout'; // Import the
 
 function Layout() {
 
-  const [isSideMenu, setSideMenu] = useState(true);
+  const isNonMobile = useMediaQuery("(min-width: 600px)");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
-  const toggleSidebar = () => {
-    setSideMenu((prev) => !prev);
-  };
 
   return (
-    <div className='flex flex-row w-screen h-screen'>
-      <div><Sidebar isSideMenu={isSideMenu}/></div>
-      <div className='flex-1'>
-        <div><Header toggleSidebar={toggleSidebar}/></div>
-        <div>
-          <PrivateRoute /> 
-          <Outlet />
-        </div>
-      </div>
-      {/* Add the SessionTimeout component here */}
-      <SessionTimeout />
-    </div>
+    
+ <Box display={isNonMobile ? "flex" : "block"} width="100%" height="100%">
+ <Sidebar
+  
+   isNonMobile={isNonMobile}
+   drawerWidth="250px"
+   isSidebarOpen={isSidebarOpen}
+   setIsSidebarOpen={setIsSidebarOpen}
+ />
+ <Box flexGrow={1}>
+   <Header
+  
+     isSidebarOpen={isSidebarOpen}
+     setIsSidebarOpen={setIsSidebarOpen}
+   />
+       <PrivateRoute /> 
+       <Outlet />
+ </Box>
+
+ <SessionTimeout />
+</Box>
   );
 }
 

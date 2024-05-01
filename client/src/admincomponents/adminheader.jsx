@@ -1,11 +1,11 @@
 import React from 'react'
-import SelectTheme from '../common/themeSelector';
-import useAuthStore from '../../store/authStore';
+import SelectTheme from '../components/common/themeSelector';
+import useAuthStore from '../store/authStore';
 import { useNavigate } from 'react-router-dom'; 
 
 import { BellDot,  Menu } from "lucide-react"
 
-function Header({isSidebarOpen, setIsSidebarOpen}) {
+function Adminheader({isSidebarOpen, setIsSidebarOpen}) {
 
     const navigate = useNavigate(); // Initialize useNavigate hook
     const { logout } = useAuthStore(); // Get logout function from useAuthStore
@@ -19,7 +19,7 @@ function Header({isSidebarOpen, setIsSidebarOpen}) {
 
 
             <div>
-                <button onClick={() => setIsSidebarOpen(!isSidebarOpen)}  className='btn btn-ghost btn-circle'>
+                <button onClick={() => setIsSidebarOpen(!isSidebarOpen)}  className='btn btn-ghost btn-circle sm:block md:block lg:hidden'>
                     <Menu />
                 </button>    
             </div>
@@ -71,4 +71,4 @@ function Header({isSidebarOpen, setIsSidebarOpen}) {
   )
 }
 
-export default Header
+export default Adminheader
