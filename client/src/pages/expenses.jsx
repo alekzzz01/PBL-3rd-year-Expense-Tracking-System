@@ -5,6 +5,18 @@ import useExpenseStore from '../store/expenseStore';
 
 function Expenses() {
 
+    const options = {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true
+    };
+    
+    const currentDate = new Date().toLocaleString('en-US', options);
+
+
     const addExpense = useExpenseStore((state) => state.addExpense); // Access the addExpense function from the store
     const [formData, setFormData] = useState({
     expenseType: '',
@@ -14,6 +26,8 @@ function Expenses() {
     fullName: '',
     // Add more fields as needed
   });
+
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -31,6 +45,13 @@ function Expenses() {
       if (result.success) {
         // Handle success, e.g., show a success message
         console.log('Expense added successfully:', result.data);
+        setFormData({
+          expenseType: '',
+          paymentMethod: '',
+          category: '',
+          amount: '',
+          fullName: '',
+        });
       } else {
         // Handle error, e.g., show an error message
         console.error('Failed to add expense:', result.error);
@@ -40,16 +61,8 @@ function Expenses() {
     }
   };
 
-  const options = {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
-    hour12: true
-  };
-  
-  const currentDate = new Date().toLocaleString('en-US', options);
+  const isFormComplete = Object.values(formData).every((value) => value.trim() !== '');
+
 
 
   return (
@@ -185,46 +198,45 @@ function Expenses() {
                   <h3 className="font-bold text-lg mb-6">Add Expense</h3>
 
                 
-            
-                  <form action="" className='flex flex-col gap-3' onSubmit={handleSubmit}>
-                    <select className='p-3 border rounded-xl w-full' name="type" value={formData.type} onChange={handleChange}>
+              
+                    <form action="" className='flex flex-col gap-3' onSubmit={handleSubmit}>
+
+
+                      <select className='p-3 border rounded-xl w-full' name="expenseType" value={formData.expenseType} onChange={handleChange}>
                         <option selected>Type</option>
-                        <option value="necessities">Necessities</option>
-                        <option value="savings">Savings</option>
-                        <option value="wants">Wants</option>
-                       
-                    </select>
+                        <option value="Necessities">Necessities</option>
+                        <option value="Savings">Savings</option>
+                        <option value="Wants">Wants</option>
+                      </select>
 
-                    <select className='p-3 border rounded-xl w-full' name="paymentMethod" value={formData.paymentMethod} onChange={handleChange}>
+                      <select className='p-3 border rounded-xl w-full' name="paymentMethod" value={formData.paymentMethod} onChange={handleChange}>
                         <option selected>Payment Method</option>
-                        <option value="cash">Cash</option>
-                        <option value="creditcard">Credit Card</option>
-                        <option value="debitcard">Debit Card</option>
-                        <option value="e-wallet">E-Wallet</option>
-                       
-                    </select>
+                        <option value="Cash">Cash</option>
+                        <option value="Credit Card">Credit Card</option>
+                        <option value="Debit Card">Debit Card</option>
+                        <option value="E-wallet">E-Wallet</option>
+                      </select>
+
+                      <input className='p-3 border rounded-xl w-full' name='category' value={formData.category} onChange={handleChange} type="text" placeholder='Category (e.g. Food, Transportation, Bills)' /> 
+
+                      <input className='p-3 border rounded-xl w-full' name='amount' value={formData.amount} onChange={handleChange} type="text" placeholder='Amount' /> 
+
+                      <input className='p-3 border rounded-xl w-full' name='fullName' value={formData.fullName} onChange={handleChange} type="text" placeholder='Full Name' /> 
 
 
-                    <input className='p-3 border rounded-xl w-full' name='category' value={formData.category} onChange={handleChange} type="text" placeholder='Category (e.g. Food, Transportation, Bills)' /> 
+
+                      <div className='flex justify-between items-center px-4 mt-6'>
+                          <p className='font-medium'>Date and Time:</p>
+                          <p className='font-normal'>{currentDate}</p>
+                      </div>
 
 
-                    <input className='p-3 border rounded-xl w-full' name='amount' value={formData.amount} onChange={handleChange} type="text" placeholder='Amount' /> 
-
-                    <input className='p-3 border rounded-xl w-full' name='name' value={formData.name} onChange={handleChange} type="text" placeholder='Full Name' /> 
-
-
-                    <div className='flex justify-between items-center px-4'>
-                        <p className='font-medium'>Date and Time:</p>
-                        <p className='font-normal'>{currentDate}</p>
-                    </div>
+                      <button className='btn' disabled={!isFormComplete}>Save</button>
+                    
+                    
 
 
-                    <button className='btn'>Save</button>
-                  
-                  
-
-
-                  </form>
+                    </form>
 
 
                 </div>

@@ -32,7 +32,8 @@ const addExpense = asyncHandler(async (req, res) => {
             category: category,
             amount: amount,
             fullName: fullName,
-            date: date || new Date() // Use provided date or current date if not provided
+            date: date,
+            // date: date || new Date() // Use provided date or current date if not provided
         };
 
         expense.expenseItems.push(newExpenseItem);
@@ -55,8 +56,13 @@ const deleteExpenseItem = asyncHandler(async (req, res) => {
 
         // If the expense document exists, attempt to delete the expense item
         if (expense) {
-            const deleted = await expense.deleteExpenseItem(expenseItemId);
-            if (deleted) {
+            // Find the index of the expense item with the given ID
+            const index = expense.expenseItems.findIndex(item => item._id.toString() === expenseItemId);
+
+            // If the expense item exists, remove it from the array
+            if (index !== -1) {
+                expense.expenseItems.splice(index, 1);
+                await expense.save(); // Save the updated expense document
                 return res.status(200).json({ success: true, message: 'Expense item deleted successfully' });
             }
         }
