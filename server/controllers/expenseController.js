@@ -104,7 +104,40 @@ const updateExpenseItem = asyncHandler(async (req, res) => {
     } catch (error) {
         res.status(500).json({ success: false, error: 'Internal Server Error' });
     }
+
+    
 });
 
-export { addExpense, deleteExpenseItem, updateExpenseItem };
+
+// Controller method to fetch expenses by expense type
+const getExpensesByType = asyncHandler(async (req, res) => {
+    // Check if req.user exists and has the _id property
+    if (!req.user || !req.user._id) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+    }
+
+    // Get the user ID from the authenticated user
+    const userId = req.user._id;
+
+    // Extract expense type from request parameters
+    const { expenseType } = req.params;
+
+    try {
+        // Find the user's expense document
+        const expense = await ExpenseModel.findOne({ user: userId });
+
+        // If the expense document exists, filter expense items by expense type
+        if (expense) {
+            const expensesOfType = expense.expenseItems.filter(item => item.expenseType === expenseType);
+            return res.status(200).json({ success: true, data: expensesOfType });
+        }
+
+        // If expense document not found, return error
+        return res.status(404).json({ success: false, message: 'Expense document not found' });
+    } catch (error) {
+        res.status(500).json({ success: false, error: 'Internal Server Error' });
+    }
+});
+
+export { addExpense, deleteExpenseItem, updateExpenseItem, getExpensesByType };
 

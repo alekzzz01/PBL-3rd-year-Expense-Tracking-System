@@ -12,19 +12,37 @@ import {
   Typography,
 
 } from "@mui/material";
-import {
-  
-  ChevronLeft,
-  ChevronRightOutlined,
-  HomeOutlined,
-  CurrencyExchangeOutlined,
-  PointOfSaleOutlined,
- Notifications,
-  AddOutlined,
-  BarChartOutlined,
-  Settings
 
-} from "@mui/icons-material";
+import { 
+  
+  LayoutDashboard,
+  Wallet, 
+  CirclePlus,
+  Coins,
+  Bell,
+  Bolt,
+  ChevronRight,
+  ChevronLeft 
+
+
+
+ } from 'lucide-react';
+
+
+// // import {
+  
+//   ChevronLeft,
+//   ChevronRightOutlined,
+//    HomeOutlined,
+//   CurrencyExchangeOutlined,
+//   PointOfSaleOutlined,
+//   Notifications,
+//   AddOutlined,
+
+//   Settings
+//  } from "@mui/icons-material";
+
+
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import FlexBetween from "./FlexBetween";
@@ -32,7 +50,7 @@ import FlexBetween from "./FlexBetween";
 const navItems = [
   {
     text: "Dashboard",
-    icon: <HomeOutlined />,
+    icon: <LayoutDashboard />,
   
   },
 
@@ -44,7 +62,7 @@ const navItems = [
 
   {
     text: "Transactions",
-    icon: <CurrencyExchangeOutlined />,
+    icon: <Wallet />,
   
   },
 
@@ -57,18 +75,13 @@ const navItems = [
   
   {
     text: "Setup",
-    icon: <AddOutlined />,
+    icon: <CirclePlus />,
   
   },
 
   {
     text: "Expenses",
-    icon: <PointOfSaleOutlined />,
-  },
- 
-  {
-    text: "Analytics",
-    icon: <BarChartOutlined />,
+    icon: <Coins />,
   },
  
 
@@ -79,12 +92,12 @@ const navItems = [
 
   {
     text: "Notifications",
-    icon: <Notifications/>,
+    icon: <Bell />,
   },
 
   {
     text: "Settings",
-    icon: <Settings/>,
+    icon: <Bolt />,
   },
 
 ];
@@ -121,6 +134,7 @@ const Sidebar = ({
               borderWidth: isNonMobile ? 0 : "2px",
               width: drawerWidth,
               borderRight: "1px solid #e0e0e0", 
+              zIndex: 10,
              
             },
           }}
@@ -182,7 +196,7 @@ const Sidebar = ({
                       </ListItemIcon>
                       <ListItemText primary={text} />
                       {active === lcText && (
-                        <ChevronRightOutlined sx={{ ml: "auto" }} />
+                        <ChevronRight sx={{ ml: "auto" }} />
                       )}
                     </ListItemButton>
                   </ListItem>

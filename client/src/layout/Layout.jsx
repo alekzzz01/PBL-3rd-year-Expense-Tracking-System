@@ -13,27 +13,38 @@ function Layout() {
 
 
   return (
-    
-  <Box display={isNonMobile ? "flex" : "block"} width="100%" height="100%">
-  <Sidebar
-    
-    isNonMobile={isNonMobile}
-    drawerWidth="250px"
-    isSidebarOpen={isSidebarOpen}
-    setIsSidebarOpen={setIsSidebarOpen}
-  />
-  <Box flexGrow={1}>
-    <Header
-      
-      isSidebarOpen={isSidebarOpen}
-      setIsSidebarOpen={setIsSidebarOpen}
-    />
-        <CheckToken /> 
-        <Outlet />
-  </Box>
+  
+    <Box>
 
-  <SessionTimeout />
-  </Box>
+
+      <Box display={isNonMobile ? "flex" : "block"} width="100%" height="100%">
+     
+        
+      <SessionTimeout />
+
+        <Sidebar
+        
+        isNonMobile={isNonMobile}
+        drawerWidth="250px"
+        isSidebarOpen={isSidebarOpen}
+        setIsSidebarOpen={setIsSidebarOpen}
+    
+      />
+
+      <Box flexGrow={1}>
+        <Header
+          
+          isSidebarOpen={isSidebarOpen}
+          setIsSidebarOpen={setIsSidebarOpen}
+        />
+            <CheckToken /> 
+            <Outlet />
+      </Box>
+
+    
+      </Box>
+
+    </Box>
   );
 }
 

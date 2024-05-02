@@ -100,7 +100,7 @@ function setupBudget() {
 
 
         <div className='w-full mt-6 flex justify-end'>
-            <button className='btn btn-primary px-10' >Save</button>
+            <button className='btn btn-neutral btn-wide' >Save</button>
         </div>           
 
     </form>

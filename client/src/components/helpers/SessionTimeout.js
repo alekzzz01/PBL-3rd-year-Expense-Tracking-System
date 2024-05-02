@@ -26,7 +26,7 @@ const SessionTimeout = () => {
     };
 
     const { reset: resetIdleTimer } = useIdleTimer({
-        timeout: 30 * 60 * 1000, // 30 minutes in milliseconds
+        timeout: 3600000, // 30 minutes in milliseconds
         onIdle: handleOnIdle,
     });
 
@@ -36,7 +36,7 @@ const SessionTimeout = () => {
                 <Modal onClose={handleStayLoggedIn}>
                     <p className="text-gray-700">Your session will expire soon. Do you want to stay logged in?</p>
                     <div className="flex justify-end mt-4">
-                        <button onClick={handleStayLoggedIn} className="mr-2 btn btn-info text-white px-4 py-2 rounded focus:outline-none">Stay Logged In</button>
+                        <button onClick={handleStayLoggedIn} className="mr-2 btn btn-neutral text-white px-4 py-2 rounded focus:outline-none">Stay Logged In</button>
                         <button onClick={handleLogout} className="btn btn-error text-white px-4 py-2 rounded 0 focus:outline-none">Logout</button>
                     </div>
                 </Modal>

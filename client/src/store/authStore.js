@@ -15,7 +15,6 @@
 
   
     // for automatic login it checks if the user is already logged in
-
     initializeUserFromLocalStorage: async () => {
       const token = localStorage.getItem("token");
       if (token) {
@@ -61,7 +60,7 @@
             });
     
             localStorage.setItem('token', token);
-            localStorage.setItem('IsLoggedIn', true)
+        
           
             
         
@@ -136,8 +135,6 @@
      
               set({ isAuthenticated: false, user: null });
               localStorage.removeItem('token');
-              localStorage.removeItem('IsLoggedIn');
-              
               toast.success('Logged out successfully');
               navigate('/login'); // Redirect to login page
     
@@ -214,8 +211,7 @@
           }
         } catch (error) {
           console.error("Error fetching user role:", error);
-          // Handle error fetching user role or redirect to login page
-          // For example:
+        
           window.location.href = '/login';
         }
       }

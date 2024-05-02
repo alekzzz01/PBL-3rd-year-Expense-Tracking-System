@@ -11,12 +11,12 @@ function dashboard() {
         <div className='grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-5 '>
 
                 <div className='flex flex-col gap-5 col-span-1 md:col-span-1 lg:col-span-2'>
-                    <div className='p-3 border rounded-xl bg-base-100' style={{ height: 500 }}>
-                          <UserBarChart />
+                    <div className='p-3 border rounded-xl' style={{ height: 500 }}>
                         
+                          <UserBarChart />
                     </div>
 
-                    <div className='p-3 border rounded-xl bg-base-100'>
+                    <div className='p-3 border border-base-300 rounded-xl'>
                       <TransactionTable/>
                     </div>
 
@@ -43,7 +43,7 @@ function dashboard() {
                        
 
                       <div className='p-4 rounded-lg flex flex-col gap-6' style={{ backgroundColor:"#D8DCEA", color: "#35364E"}}>
-                              <p className='text-sm font-normal'>Transactions</p>
+                              <p className='text-sm font-normal'>Goals</p>
                               <p className='text-2xl font-semibold'>$16,000.00</p>
                       </div>
                        

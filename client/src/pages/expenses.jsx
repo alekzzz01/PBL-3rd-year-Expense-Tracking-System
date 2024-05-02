@@ -66,10 +66,10 @@ function Expenses() {
 
 
   return (
-    <div className=' p-9 w-full flex flex-col gap-6'>
+    <div className='p-9 w-full flex flex-col gap-6'>
 
               <div className='flex items-center justify-between'>
-                  <p className='text-xl font-bold'>EXPENSES</p>
+                  <p className='text-xl font-bold'>EXPENSES BREAKDOWN</p>
                   <button className='btn' onClick={()=>document.getElementById('my_modal_3').showModal()}>Add Expense</button>
               </div>
 
