@@ -114,13 +114,13 @@ function userBarChart() {
           }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis yAxisId="left" orientation="left" stroke="#35364E" />
-          <YAxis yAxisId="right" orientation="right" stroke="#35354E" />
+          <XAxis dataKey="name" tick={{ fill: '#82ca9d' }} />
+          <YAxis yAxisId="left" orientation="left" stroke="#82ca9d" />
+          <YAxis yAxisId="right" orientation="right" stroke="#82ca9d" />
           <Tooltip />
-          <Legend />
-          <Bar yAxisId="left" dataKey="income" fill="#7469B6" />
-          <Bar yAxisId="left" dataKey="expense" fill="#AD88C6" />
+          <Legend  />
+          <Bar yAxisId="left" dataKey="income" fill="#8884d8" />
+          <Bar yAxisId="left" dataKey="expense" fill="#82ca9d" />
       
         </BarChart>
       </ResponsiveContainer>

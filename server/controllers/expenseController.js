@@ -108,7 +108,6 @@ const updateExpenseItem = asyncHandler(async (req, res) => {
     
 });
 
-
 // Controller method to fetch expenses by expense type
 const getExpensesByType = asyncHandler(async (req, res) => {
     // Check if req.user exists and has the _id property
@@ -138,6 +137,8 @@ const getExpensesByType = asyncHandler(async (req, res) => {
         res.status(500).json({ success: false, error: 'Internal Server Error' });
     }
 });
+
+
 
 export { addExpense, deleteExpenseItem, updateExpenseItem, getExpensesByType };
 

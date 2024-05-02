@@ -1,5 +1,5 @@
 import express from 'express';
-import { addExpense, deleteExpenseItem, updateExpenseItem } from "../controllers/expenseController.js"; 
+import { addExpense, deleteExpenseItem, updateExpenseItem, getExpensesByType } from "../controllers/expenseController.js"; 
 import authMiddleware from '../middleWare/checkAuth.js';
 
 const router = express.Router();

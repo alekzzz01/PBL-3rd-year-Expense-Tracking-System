@@ -5,6 +5,8 @@ import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 import { UserRouter } from './routes/user-routes.js';
 import { ExpenseRouter } from './routes/expense-routes.js';
+import { TransactionRouter } from './routes/transaction-routes.js';
+import { IncomeRouter } from './routes/income-routes.js';
 
 // import ExpenseModel from './models/Expense.js' // for inserting expense
 // import expenseData from './data/UserExpense.js'; // for inserting expense
@@ -24,7 +26,9 @@ dotenv.config();
 
   // Routes
   app.use('/auth', UserRouter);
-  app.use('/expense', ExpenseRouter)
+  app.use('/expense', ExpenseRouter);
+  app.use('/income', IncomeRouter);
+  app.use('/transaction', TransactionRouter);
 
 
 

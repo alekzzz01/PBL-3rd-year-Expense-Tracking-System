@@ -6,6 +6,7 @@ const ExpenseItemSchema = new mongoose.Schema({
   category: { type: String },
   amount: { type: Number },
   fullName: { type: String },
+  tabletype: { type: String, default: "Expense" },
   date: { type: Date, default: Date.now }
 });
 

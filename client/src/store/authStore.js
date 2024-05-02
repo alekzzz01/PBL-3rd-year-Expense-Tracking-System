@@ -66,7 +66,7 @@
         
             // Redirect based on role
             if (role === "admin") {
-              window.location.href = '/admindashboard';
+              window.location.href = '/home';
             } else {
               window.location.href = '/dashboard';
             }
