@@ -16,9 +16,11 @@ function transactions() {
    
             <div className='grid grid-cols-1 lg:grid-cols-3 gap-5'>
 
+              {/* Card UI */}
+
                 <div className='py-5 px-6 border border-base-300 rounded-xl'>
 
-                      {/* Card UI */}
+                    
                       <div class="w-full h-56 rounded-xl relative text-white transition-transform transform hover:scale-105">
                       
                       <img class="relative object-cover w-full h-full rounded-xl"  alt="bg" src="https://i.imgur.com/kGkSg1v.png"/>
@@ -90,61 +92,24 @@ function transactions() {
 
                 </div>
 
-    
-                <div className='py-5 px-6 border border-base-300 rounded-xl flex flex-col col-span-1 lg:col-span-2'>
+               
+                <div className='col-span-1 lg:col-span-2 flex flex-col gap-5'>
 
-                    <p className='font-bold'>Activities</p>
+                        <div className=' border border-base-300 rounded-xl py-5 px-6 '>
+                            <p>Transactions</p>
+                            <TransactionTable/>
+                          </div>
 
-                    <div className='flex flex-wrap gap-10 mt-8'>   
+                        <div className='col-span-1 lg:col-span-3 py-5 px-6 border border-base-300 rounded-xl'>
+                            <p>Loans</p>
+                            <TransactionTable/>
+                        </div>
 
-                            <div>
-                                <p className='font-medium'>Income Activity</p>
-                            
-                                <div className='flex items-center gap-3 mt-3'>
-                                    <p className='text-4xl'>$5,200.10</p>
-                                    <p className='px-2 py-1 bg-green-100 text-green-600 border border-green-300  rounded-xl'>+12%</p>
-                                </div>
-                            </div>
-
-                            <div>
-                                <p className='font-medium'>Expense Activity</p>
-                            
-                                <div className='flex items-center gap-3 mt-3'>
-                                    <p className='text-4xl'>$5,200.10</p>
-                                    <p className='px-2 py-1 bg-green-100 text-green-600 border border-green-300  rounded-xl'>+12%</p>
-                                </div>
-                            </div>
-
-                            <div>
-                                <p className='font-medium'>Goal Activity</p>
-                            
-                                <div className='flex items-center gap-3 mt-3'>
-                                    <p className='text-4xl'>$5,200.10</p>
-                                    <p className='px-2 py-1 bg-red-100 text-red-600 border border-red-300 rounded-xl'>+12%</p>
-                                </div>
-                            </div>
-
-
-                    </div>
-
-                    <div className='mt-10' style={{ height: 180 }}>
-                            <UserBarChart />
-                    </div>
-
-                </div>
-
-                {/* <div className='col-span-1 lg:col-span-3'>
-                        <UserPieChart/>
-                </div>
-             */}
-                <div className='col-span-1 lg:col-span-3 p-3 border border-base-300 rounded-xl'>
-                          <TransactionTable/>
+                         
                 </div>
 
                 
-                <div className='col-span-1 lg:col-span-3 py-5 px-6 border border-base-300 rounded-xl'>
-                <p>Loans</p>
-                </div>
+                
 
             </div>
 
