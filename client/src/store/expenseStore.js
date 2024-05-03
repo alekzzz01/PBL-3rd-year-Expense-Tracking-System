@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const useExpenseStore = create((set) => ({
   expenses: [],
+  totalExpensePerMonth: [], 
 
   addExpense: async (expenseData) => {
     try {
@@ -69,6 +70,33 @@ getExpenseItemsForUser: async () => {
     return { success: false, error: 'Failed to fetch expense items' };
   }
 },
+
+getTotalExpensePerMonth: async () => {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await axios.get('http://localhost:5000/expense/monthly-total', {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      }
+    });
+
+    console.log('Fetched total expense per month:', response.data);
+
+    if (response.data && response.data.success) {
+      const totalExpensePerMonthData = response.data.data || []; // Ensure data is an array
+      set((state) => ({
+        ...state,
+        totalExpensePerMonth: totalExpensePerMonthData,
+      }));
+      return { success: true, data: totalExpensePerMonthData };
+    } else {
+      return { success: false, error: 'Failed to fetch total expense per month' };
+    }
+  } catch (error) {
+    console.error('Error fetching total expense per month:', error);
+    return { success: false, error: 'Failed to fetch total expense per month' };
+  }
+}
 
 
 

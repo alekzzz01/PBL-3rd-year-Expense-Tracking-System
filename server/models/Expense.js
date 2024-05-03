@@ -7,7 +7,10 @@ const ExpenseItemSchema = new mongoose.Schema({
   amount: { type: Number },
   fullName: { type: String },
   tabletype: { type: String, default: "Expense" },
-  date: { type: Date, default: Date.now }
+  date: { type: Date, default: Date.now },
+  // Add fields for month and year
+  month: { type: Number, default: () => new Date().getMonth() + 1 },
+  year: { type: Number, default: () => new Date().getFullYear() }
 });
 
 const ExpenseSchema = new mongoose.Schema({

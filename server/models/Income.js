@@ -7,7 +7,9 @@ const IncomeItemSchema = new mongoose.Schema({
   amount: { type: Number },
   fullName: { type: String },
   tabletype: { type: String, default: "Income" }, // Specify type as String, and default value
-  date: { type: Date, default: Date.now }
+  date: { type: Date, default: Date.now },
+  month: { type: Number, default: () => new Date().getMonth() + 1 },
+  year: { type: Number, default: () => new Date().getFullYear() }
 });
 
 const IncomeSchema = new mongoose.Schema({
