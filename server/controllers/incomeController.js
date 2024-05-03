@@ -137,7 +137,6 @@ const fetchIncome = asyncHandler(async (req, res) => {
     }
 });
 
-export { addIncome, deleteIncome, updateIncome, fetchIncome };
 
 const getTotalIncomePerMonth = asyncHandler(async (req, res) => {
     // Check if req.user exists and has the _id property
@@ -195,6 +194,9 @@ const getTotalIncomePerMonth = asyncHandler(async (req, res) => {
 });
 
 
+export { addIncome, deleteIncome, updateIncome, fetchIncome, getTotalIncomePerMonth };
 
-export { addIncome, getTotalIncomePerMonth  };
+
+
+
 
