@@ -1,7 +1,7 @@
 import React from 'react'
 import TransactionTable from '../components/tables/transactionTable';
 import UserPieChart from '../components/charts/userPieChart';
-import UserBarChart  from '../components/charts/userBarChart';
+
 
 function transactions() {
   return (
