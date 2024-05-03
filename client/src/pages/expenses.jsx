@@ -1,10 +1,29 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import UserBarChart  from '../components/charts/userBarChart';
 import useExpenseStore from '../store/expenseStore';
 
 
 function Expenses() {
 
+    const { getExpenseItemsForUser } = useExpenseStore(); // Destructure the method from the hook
+    const [expenses, setExpenses] = useState([]); // State for all expenses
+
+    useEffect(() => {
+      // Fetch expense items when the component mounts
+      const fetchExpenseItems = async () => {
+        const { success, data, error } = await getExpenseItemsForUser();
+        if (success) {
+          // Update state with fetched expenses
+          setExpenses(data);
+        } else {
+          // Handle error case
+          console.error('Failed to fetch expense items:', error);
+        }
+      };
+
+      fetchExpenseItems(); // Call the fetch function
+    }, [getExpenseItemsForUser]);
+ 
     const options = {
       month: 'short',
       day: 'numeric',
@@ -52,6 +71,8 @@ function Expenses() {
           amount: '',
           fullName: '',
         });
+
+        
       } else {
         // Handle error, e.g., show an error message
         console.error('Failed to add expense:', result.error);
@@ -81,104 +102,65 @@ function Expenses() {
               <div className='grid grid-cols-1 lg:grid-cols-3 gap-9'>
 
 
-                          <div className='flex flex-col gap-6'> 
-                                <p className='font-bold'>Necessities</p>
+                      {/* NECESSITIES SECTION */}
 
-                                <div className='p-3 border rounded-xl'>
-                                          <div className='flex flex-row items-center justify-between font-medium'>
-                                              <p>Grocery</p>
-                                              <p>04/26/2024</p>
-                                          </div>
-                                          <div className='flex flex-row items-center justify-between font-light'>
-                                              <p>Budget: 10000</p>
-                                              <p>Expense: 1000</p>
-                                          </div>
-                                </div>
+                        <div className='flex flex-col gap-6'>
+                          <p className='font-bold'>Necessities</p>
+                          {expenses.filter(expense => expense.expenseType === 'Necessities').map((expense, index) => (
+                            <div key={index} className='p-3 border rounded-xl'>
+                              {/* Render expense details */}
+                              <div className='flex flex-row items-center justify-between font-medium'>
+                                <p>Category: {expense.category}</p>
+                                <p>{expense.date}</p>
+                              </div>
+                              <div className='flex flex-row items-center justify-between font-light'>
+                                <p>Payment: {expense.paymentMethod}</p>
+                                <p>Expense: {expense.amount}</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
 
-                                <div className='p-3 border rounded-xl'>
-                                          <div className='flex flex-row items-center justify-between font-medium'>
-                                              <p>Grocery</p>
-                                              <p>04/26/2024</p>
-                                          </div>
-                                          <div className='flex flex-row items-center justify-between font-light'>
-                                              <p>Budget: 10000</p>
-                                              <p>Expense: 1000</p>
-                                          </div>
-                                </div>
+                        {/* SAVINGS SECTION */}
 
-                                <div className='p-3 border rounded-xl'>
-                                          <div className='flex flex-row items-center justify-between font-medium'>
-                                              <p>Grocery</p>
-                                              <p>04/26/2024</p>
-                                          </div>
-                                          <div className='flex flex-row items-center justify-between font-light'>
-                                              <p>Budget: 10000</p>
-                                              <p>Expense: 1000</p>
-                                          </div>
-                                </div>
+                        <div className='flex flex-col gap-6'>
+                          <p className='font-bold'>Savings</p>
+                          {expenses.filter(expense => expense.expenseType === 'Savings').map((expense, index) => (
+                            <div key={index} className='p-3 border rounded-xl'>
+                              {/* Render expense details */}
+                              <div className='flex flex-row items-center justify-between font-medium'>
+                                <p>Category: {expense.category}</p>
+                                <p>{expense.date}</p>
+                              </div>
+                              <div className='flex flex-row items-center justify-between font-light'>
+                                <p>Payment: {expense.paymentMethod}</p>
+                                <p>Expense: {expense.amount}</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
 
-                                <div className='p-3 border rounded-xl'>
-                                          <div className='flex flex-row items-center justify-between font-medium'>
-                                              <p>Grocery</p>
-                                              <p>04/26/2024</p>
-                                          </div>
-                                          <div className='flex flex-row items-center justify-between font-light'>
-                                              <p>Budget: 10000</p>
-                                              <p>Expense: 1000</p>
-                                          </div>
-                                </div>
+                        {/* WANTS SECTION */}
 
-                                <div className='p-3 border rounded-xl'>
-                                          <div className='flex flex-row items-center justify-between font-medium'>
-                                              <p>Grocery</p>
-                                              <p>04/26/2024</p>
-                                          </div>
-                                          <div className='flex flex-row items-center justify-between font-light'>
-                                              <p>Budget: 10000</p>
-                                              <p>Expense: 1000</p>
-                                          </div>
-                                </div>
-
+                        <div className='flex flex-col gap-6'>
+                          <p className='font-bold'>Wants</p>
+                          {expenses.filter(expense => expense.expenseType === 'Wants').map((expense, index) => (
+                            <div key={index} className='p-3 border rounded-xl'>
+                              {/* Render expense details */}
+                              <div className='flex flex-row items-center justify-between font-medium'>
+                                <p>Category: {expense.category}</p>
+                                <p>{expense.date}</p>
+                              </div>
+                              <div className='flex flex-row items-center justify-between font-light'>
+                                <p>Payment: {expense.paymentMethod}</p>
+                                <p>Expense: {expense.amount}</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
 
 
-                          </div>
-
-                          <div className='flex flex-col gap-6'> 
-                                <p className='font-bold'>Savings</p>
-
-                                <div className='p-3 border rounded-xl'>
-                                          <div className='flex flex-row items-center justify-between font-medium'>
-                                              <p>Grocery</p>
-                                              <p>04/26/2024</p>
-                                          </div>
-                                          <div className='flex flex-row items-center justify-between font-light'>
-                                              <p>Budget: 10000</p>
-                                              <p>Expense: 1000</p>
-                                          </div>
-                                </div>
-
-
-
-                          </div>
-
-                          <div className='flex flex-col gap-6'> 
-                                <p className='font-bold'>Wants</p>
-
-                                <div className='p-3 border rounded-xl'>
-                                          <div className='flex flex-row items-center justify-between font-medium'>
-                                              <p>Grocery</p>
-                                              <p>04/26/2024</p>
-                                          </div>
-                                          <div className='flex flex-row items-center justify-between font-light'>
-                                              <p>Budget: 10000</p>
-                                              <p>Expense: 1000</p>
-                                          </div>
-                                </div>
-
-
-
-                          </div>
-
+    
 
 
 

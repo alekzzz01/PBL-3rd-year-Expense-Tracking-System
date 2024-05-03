@@ -119,8 +119,8 @@ function userBarChart() {
           <YAxis yAxisId="right" orientation="right" stroke="#82ca9d" />
           <Tooltip />
           <Legend  />
-          <Bar yAxisId="left" dataKey="income" fill="#8884d8" />
-          <Bar yAxisId="left" dataKey="expense" fill="#82ca9d" />
+          <Bar yAxisId="left" dataKey="income" fill="#268bd2" />
+          <Bar yAxisId="left" dataKey="expense" fill="#2aa198" />
       
         </BarChart>
       </ResponsiveContainer>

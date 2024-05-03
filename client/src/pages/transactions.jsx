@@ -1,6 +1,7 @@
 import React from 'react'
 import TransactionTable from '../components/tables/transactionTable';
-import UserPieChart from '../components/charts/userPieChart';
+
+import UserBarChart from '../components/charts/userBarChart'
 
 
 function transactions() {
@@ -126,8 +127,8 @@ function transactions() {
 
                     </div>
 
-                    <div className='mt-10'>
-                            <UserPieChart/>
+                    <div className='mt-10' style={{ height: 180 }}>
+                            <UserBarChart />
                     </div>
 
                 </div>
@@ -136,7 +137,7 @@ function transactions() {
                         <UserPieChart/>
                 </div>
              */}
-                <div className='col-span-1 lg:col-span-3 p-3 border border-base-300 rounded-xl bg-white'>
+                <div className='col-span-1 lg:col-span-3 p-3 border border-base-300 rounded-xl'>
                           <TransactionTable/>
                 </div>
 

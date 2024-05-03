@@ -35,6 +35,53 @@ const useExpenseStore = create((set) => ({
       return { success: false, error: 'Internal Server Error' };
     }
   },
+
+getExpenseItemsForUser: async () => {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await axios.get('http://localhost:5000/expense/expenseitems', {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      }
+    });
+
+    console.log('Fetched expense items:', response.data);
+
+    if (response.data && response.data.success) {
+      const expensesData = response.data.data || []; // Ensure data is an array
+      const mappedExpenses = expensesData.map((expense) => ({
+        expenseType: expense.expenseType,
+        paymentMethod: expense.paymentMethod,
+        category: expense.category,
+        amount: expense.amount,
+        fullName: expense.fullName,
+        date: new Date(expense.date).toLocaleDateString(),
+        _id: expense._id,
+      }));
+      console.log('Mapped expenses:', mappedExpenses); 
+
+      return { success: true, data: mappedExpenses };
+    } else {
+      return { success: false, error: 'Failed to fetch expense items' };
+    }
+  } catch (error) {
+    console.error('Error fetching expense items:', error);
+    return { success: false, error: 'Failed to fetch expense items' };
+  }
+},
+
+
+
+
+
+
 }));
 
+
+
+
+
 export default useExpenseStore;
+
+
+

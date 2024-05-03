@@ -19,7 +19,7 @@ const formatDate = (dateString) => {
 
 const useTransactionStore = create((set) => ({
 
-transactions: [],
+  transactions: [],
   isLoading: false,
   isError: false,
   errorMessage: '',

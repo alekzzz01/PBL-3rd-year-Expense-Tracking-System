@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import DataTable from 'react-data-table-component';
+import DataTable, { createTheme } from 'react-data-table-component';
 import useTransactionStore from '../../store/transactionStore'; // Import your Zustand store
 
 function TransactionTable() {
@@ -39,6 +39,28 @@ function TransactionTable() {
    
   ];
 
+  createTheme('solarized', {
+    text: {
+      primary: '#268bd2',
+      secondary: '#2aa198',
+    },
+    background: {
+      default: 'transparent',
+    },
+    context: {
+      background: '#cb4b16',
+      text: '#FFFFFF',
+    },
+    divider: {
+      default: '#bababa',
+    },
+    action: {
+      button: 'rgba(0,0,0,.54)',
+      hover: 'rgba(0,0,0,.08)',
+      disabled: 'rgba(0,0,0,.12)',
+    },
+  }, 'dark');
+
   // const handleDeleteItem = async () => {
   //   try {
   //     if (tableType === 'expense') {
@@ -66,6 +88,7 @@ function TransactionTable() {
           selectableRows
           fixedHeader
           pagination
+          theme="solarized"
         />
       )}
     </>

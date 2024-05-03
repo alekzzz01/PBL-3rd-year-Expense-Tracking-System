@@ -109,7 +109,7 @@ const updateExpenseItem = asyncHandler(async (req, res) => {
 });
 
 // Controller method to fetch expenses by expense type
-const getExpensesByType = asyncHandler(async (req, res) => {
+const getExpenseItemsForUser = asyncHandler(async (req, res) => {
     // Check if req.user exists and has the _id property
     if (!req.user || !req.user._id) {
         return res.status(401).json({ success: false, message: 'Unauthorized' });
@@ -118,17 +118,13 @@ const getExpensesByType = asyncHandler(async (req, res) => {
     // Get the user ID from the authenticated user
     const userId = req.user._id;
 
-    // Extract expense type from request parameters
-    const { expenseType } = req.params;
-
     try {
         // Find the user's expense document
         const expense = await ExpenseModel.findOne({ user: userId });
 
-        // If the expense document exists, filter expense items by expense type
+        // If the expense document exists, return all expense items
         if (expense) {
-            const expensesOfType = expense.expenseItems.filter(item => item.expenseType === expenseType);
-            return res.status(200).json({ success: true, data: expensesOfType });
+            return res.status(200).json({ success: true, data: expense.expenseItems });
         }
 
         // If expense document not found, return error
@@ -140,5 +136,7 @@ const getExpensesByType = asyncHandler(async (req, res) => {
 
 
 
-export { addExpense, deleteExpenseItem, updateExpenseItem, getExpensesByType };
+
+
+export { addExpense, deleteExpenseItem, updateExpenseItem, getExpenseItemsForUser};
 
