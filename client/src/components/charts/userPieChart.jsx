@@ -50,9 +50,9 @@ const data = [
 
 function userPieChart() {
   return (
-    <div className='p-3 border border-base-300 rounded-xl'>
+    <div className=''>
 
-      <LineChart width={1500} height={320} data={data}
+      <LineChart width={1000} height={180} data={data}
         margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="name" />

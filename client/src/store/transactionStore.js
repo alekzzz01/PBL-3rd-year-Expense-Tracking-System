@@ -3,6 +3,19 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+const formatDate = (dateString) => {
+  const dateObject = new Date(dateString);
+  const months = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May', 'Jun.', 'Jul.', 'Aug.', 'Sep.', 'Oct.', 'Nov.', 'Dec.'];
+  const month = months[dateObject.getMonth()];
+  const day = dateObject.getDate();
+  const year = dateObject.getFullYear();
+  let hours = dateObject.getHours();
+  const minutes = dateObject.getMinutes();
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12 || 12;
+  const formattedDate = `${month} ${day}, ${year} | ${hours}:${minutes < 10 ? '0' : ''}${minutes} ${ampm}`;
+  return formattedDate;
+};
 
 const useTransactionStore = create((set) => ({
 
@@ -30,7 +43,7 @@ transactions: [],
           category: expenseItem.category,
           paymentMethod: expenseItem.paymentMethod,
           amount: expenseItem.amount,
-          date: expenseItem.date
+          date: formatDate(expenseItem.date)
         }));
       }).concat(response.data.data.incomes.flatMap(income => {
         return income.incomeItems.map(incomeItem => ({
@@ -38,7 +51,7 @@ transactions: [],
           category: incomeItem.category,
           paymentMethod: incomeItem.paymentMethod,
           amount: incomeItem.amount,
-          date: incomeItem.date
+          date: formatDate(incomeItem.date)
         }));
       }));
   

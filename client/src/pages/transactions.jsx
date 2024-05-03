@@ -126,17 +126,16 @@ function transactions() {
 
                     </div>
 
-                    <div className='mt-10'  style={{ height: 180 }}>
-                        <UserBarChart/>
-                        
+                    <div className='mt-10'>
+                            <UserPieChart/>
                     </div>
 
                 </div>
 
-                <div className='col-span-1 lg:col-span-3'>
+                {/* <div className='col-span-1 lg:col-span-3'>
                         <UserPieChart/>
                 </div>
-            
+             */}
                 <div className='col-span-1 lg:col-span-3 p-3 border border-base-300 rounded-xl bg-white'>
                           <TransactionTable/>
                 </div>

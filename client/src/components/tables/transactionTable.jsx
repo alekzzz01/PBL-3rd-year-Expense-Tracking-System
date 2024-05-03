@@ -35,8 +35,24 @@ function TransactionTable() {
       name: 'Date',
       selector: row => row.date,
       sortable: true
-    }
+    },
+   
   ];
+
+  // const handleDeleteItem = async () => {
+  //   try {
+  //     if (tableType === 'expense') {
+  //       await deleteExpenseItem(itemId);
+  //     } else if (tableType === 'income') {
+  //       await deleteIncomeItem(itemId);
+  //     }
+  //     // Handle success (e.g., update state, show notification)
+  //   } catch (error) {
+  //     // Handle error (e.g., show error message)
+  //   }
+  // };
+
+  
   return (
     <>
       {isLoading ? (
