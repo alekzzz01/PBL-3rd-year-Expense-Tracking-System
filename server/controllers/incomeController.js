@@ -1,5 +1,6 @@
 import IncomeModel from '../models/Income.js';
 import asyncHandler from '../middleWare/asyncHandler.js';
+import mongoose from "mongoose";
 
 
 const addIncome = asyncHandler(async (req, res) => {
@@ -157,7 +158,7 @@ const getTotalIncomePerMonth = asyncHandler(async (req, res) => {
 
     try {
         // Aggregate expenses for the user
-        const income = await ExpenseModel.aggregate([
+        const income = await IncomeModel.aggregate([
             // Match expenses for the user
             { $match: { user: userObjectId } },
 

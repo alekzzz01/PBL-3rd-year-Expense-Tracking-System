@@ -1,15 +1,16 @@
 import React, { useEffect } from 'react';
-
 import useExpenseStore from '../../store/expenseStore'; 
+import useIncomeStore from '../../store/incomeStore';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 function UserBarChart() {
-  const { totalExpensePerMonth, getTotalExpensePerMonth } = useExpenseStore(); // Destructure totalExpensePerMonth and getTotalExpensePerMonth from your Zustand store
+  const { totalExpensePerMonth, getTotalExpensePerMonth } = useExpenseStore(); 
+  const { totalIncomePerMonth, getTotalIncomePerMonth } = useIncomeStore(); 
 
   useEffect(() => {
-    // Fetch total expenses per month when the component mounts
     getTotalExpensePerMonth();
-  }, [getTotalExpensePerMonth]);
+    getTotalIncomePerMonth();
+  }, [getTotalExpensePerMonth, getTotalIncomePerMonth]);
 
   // Define the initial data with placeholders
   const initialData = [
@@ -30,15 +31,17 @@ function UserBarChart() {
   // Merge the fetched total expenses per month into the initial data
   const updatedData = initialData.map((monthData, index) => {
     const totalExpenseData = totalExpensePerMonth.find(expense => expense._id.month === index + 1);
+    const totalIncomeData = totalIncomePerMonth.find(income => income._id.month === index + 1);
+
     return {
       ...monthData,
-      expense: totalExpenseData ? totalExpenseData.totalExpense : 0
+      expense: totalExpenseData ? totalExpenseData.totalExpense : 0,
+      income: totalIncomeData ? totalIncomeData.totalIncome : 0
     };
   });
 
   return (
-    <>
-      <div className='relative w-full h-full'>
+    <div className='relative w-full h-full'>
       <ResponsiveContainer>
         <BarChart
           width={500}
@@ -60,12 +63,7 @@ function UserBarChart() {
           <Bar yAxisId="left" dataKey="expense" fill="#2aa198" />
         </BarChart>
       </ResponsiveContainer>
-      </div>
-
-
-  
-  
-    </>
+    </div>
   );
 }
 
