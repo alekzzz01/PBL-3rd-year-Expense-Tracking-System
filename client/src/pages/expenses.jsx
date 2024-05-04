@@ -94,7 +94,7 @@ function Expenses() {
                   <button className='btn' onClick={()=>document.getElementById('my_modal_3').showModal()}>Add Expense</button>
               </div>
 
-              <div className='p-3 border rounded-xl bg-white' style={{ height: 500 }}>
+              <div className='p-3 border border-base-300 rounded-xl' style={{ height: 500 }}>
                     <UserBarChart />
               </div>
 
@@ -107,7 +107,7 @@ function Expenses() {
                         <div className='flex flex-col gap-6'>
                           <p className='font-bold'>Necessities</p>
                           {expenses.filter(expense => expense.expenseType === 'Necessities').map((expense, index) => (
-                            <div key={index} className='p-3 border rounded-xl'>
+                            <div key={index} className='p-3 border border-base-300 rounded-xl'>
                               {/* Render expense details */}
                               <div className='flex flex-row items-center justify-between font-medium'>
                                 <p>Category: {expense.category}</p>
@@ -126,7 +126,7 @@ function Expenses() {
                         <div className='flex flex-col gap-6'>
                           <p className='font-bold'>Savings</p>
                           {expenses.filter(expense => expense.expenseType === 'Savings').map((expense, index) => (
-                            <div key={index} className='p-3 border rounded-xl'>
+                            <div key={index} className='p-3 border border-base-300 rounded-xl'>
                               {/* Render expense details */}
                               <div className='flex flex-row items-center justify-between font-medium'>
                                 <p>Category: {expense.category}</p>
@@ -145,7 +145,7 @@ function Expenses() {
                         <div className='flex flex-col gap-6'>
                           <p className='font-bold'>Wants</p>
                           {expenses.filter(expense => expense.expenseType === 'Wants').map((expense, index) => (
-                            <div key={index} className='p-3 border rounded-xl'>
+                            <div key={index} className='p-3 border border-base-300 rounded-xl'>
                               {/* Render expense details */}
                               <div className='flex flex-row items-center justify-between font-medium'>
                                 <p>Category: {expense.category}</p>

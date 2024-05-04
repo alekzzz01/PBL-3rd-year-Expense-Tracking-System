@@ -10,8 +10,9 @@ function dashboard() {
     <div className='p-9  w-full'>
         <div className='grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-5 '>
 
-                <div className='flex flex-col gap-5 col-span-1 md:col-span-1 lg:col-span-2'>
-                    <div className='p-3 border rounded-xl' style={{ height: 500 }}>
+              <div className='flex flex-col gap-5 col-span-1 md:col-span-1 lg:col-span-2'>
+
+                    <div className='p-3 border border-base-300 rounded-xl' style={{ height: 500 }}>
                         
                           <UserBarChart />
                     </div>
@@ -21,11 +22,11 @@ function dashboard() {
                       <TransactionTable/>
                     </div>
 
-                </div>
+              </div>
                 
 
               <div className='flex flex-col gap-5'>
-                <div className='py-5 px-6 flex flex-col gap-5 border rounded-xl w-full'>  
+                <div className='py-5 px-6 flex flex-col gap-5 border border-base-300 rounded-xl w-full'>  
 
                       <p className='text-lg font-medium'>Assets</p>
 
@@ -53,17 +54,17 @@ function dashboard() {
          
                 </div>  
 
-                <div className='py-5 px-6 flex flex-col gap-5 border rounded-xl w-full'> 
+                <div className='py-5 px-6 flex flex-col gap-5 border border-base-300 rounded-xl w-full'> 
 
                   <p className='text-lg font-medium'>Events</p>
 
-                    <div className='p-4 rounded-lg flex flex-col border gap-2 '>
+                    <div className='p-4 rounded-lg flex flex-col border border-base-300 gap-2 '>
                             <span className="badge">New</span>
                               <p className='font-medium'>Savings 101 - BGC - 05, Sept. 2022</p>
                               <p className='text-sm font-light'>Description of 101</p>
                     </div>
 
-                    <div className='p-4 rounded-lg flex flex-col border gap-2 '>
+                    <div className='p-4 rounded-lg flex flex-col border border-base-300 gap-2 '>
                             <span className="badge">New</span>
                               <p className='font-medium'>Savings 101 - BGC - 05, Sept. 2022</p>
                               <p className='text-sm font-light'>Description of 101</p>

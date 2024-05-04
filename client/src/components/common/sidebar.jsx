@@ -54,19 +54,6 @@ const navItems = [
   
   },
 
-  
-  {
-    text: "Transaction",
-    icon: null,
-  },
-
-  {
-    text: "Transactions",
-    icon: <Wallet />,
-  
-  },
-
-
   {
     text: "Wallet",
     icon: null,
@@ -82,6 +69,12 @@ const navItems = [
   {
     text: "Expenses",
     icon: <Coins />,
+  },
+
+  {
+    text: "Transactions",
+    icon: <Wallet />,
+  
   },
  
 
