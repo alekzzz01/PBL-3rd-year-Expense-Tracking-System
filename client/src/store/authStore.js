@@ -217,8 +217,52 @@
       }
     },
 
+    forgotPassword: async (email) => {
+      try {
+        const response = await axios.post('http://localhost:5000/auth/forgetpassword', { email });
+  
+        if (response.status === 200) {
+          toast.success('Password reset email sent successfully. Check your inbox.');
+          return { success: true };
+        } else {
+          console.error('Unexpected response status:', response.status);
+          return { success: false, errorMessage: 'Failed to send reset password email' };
+        }
+      } catch (error) {
+        console.error('Error sending reset password email:', error);
+        if (error.response && error.response.status === 404) {
+          return { success: false, errorMessage: 'User not found' };
+        } else {
+          return { success: false, errorMessage: 'Failed to send reset password email' };
+        }
+      }
+    },
+
+    resetPassword: async (token, newPassword, confirmPassword) => {
+      try {
+        const response = await axios.post(`http://localhost:5000/auth/resetpassword/${token}`, {
+          newPassword,
+          confirmPassword,
+        });
     
+        if (response.status === 200) {
+          toast.success('Password reset successfully');
+          return { success: true };
+        } else {
+          console.error('Unexpected response status:', response.status);
+          return { success: false, errorMessage: 'Failed to reset password' };
+        }
+      } catch (error) {
+        console.error('Error resetting password:', error);
+        if (error.response && error.response.status === 400) {
+          return { success: false, errorMessage: error.response.data.message };
+        } else {
+          return { success: false, errorMessage: 'Failed to reset password' };
+        }
+      }
+    },
     
+
     
 
 

@@ -3,7 +3,7 @@ import SelectTheme from '../common/themeSelector';
 import useAuthStore from '../../store/authStore';
 import { useNavigate } from 'react-router-dom'; 
 
-import { BellDot,  Menu } from "lucide-react"
+import { BellDot } from "lucide-react"
 
 function Header({isSidebarOpen, setIsSidebarOpen}) {
 
