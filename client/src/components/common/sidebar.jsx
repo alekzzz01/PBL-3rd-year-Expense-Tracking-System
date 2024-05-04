@@ -68,7 +68,7 @@ const navItems = [
 
 
   {
-    text: "Budgeting",
+    text: "Wallet",
     icon: null,
   },
 
