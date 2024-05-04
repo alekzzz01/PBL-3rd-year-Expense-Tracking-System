@@ -5,7 +5,7 @@ const UserSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true, minlength: 8 },
     role: {type: String, required: true},
-    lastLogin: { type: Date, default: Date.now } // Adding lastLogin field
+    lastLogin: { type: Date, default: Date.now }, // Adding lastLogin field
     
 });
 
