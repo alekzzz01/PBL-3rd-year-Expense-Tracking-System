@@ -21,6 +21,7 @@ import Unauthorized from './pages/unauthorized';
 
 
 import Forgotpassword from './auth/forgotpassword';
+import Resetpassword from './auth/resetpassword';
 
 function App() {
 
@@ -39,6 +40,8 @@ function App() {
         <Route path="/login" element={<SignIn />} />
         <Route path="/register" element={<SignUp />} />
         <Route path="/forgotpassword" element={<Forgotpassword/>}></Route>
+        <Route path="/resetpassword" element={<Resetpassword/>}></Route>
+
         <Route path="/forbidden" element={<Unauthorized />}/>
 
       {/* USER LAYOUT */}
