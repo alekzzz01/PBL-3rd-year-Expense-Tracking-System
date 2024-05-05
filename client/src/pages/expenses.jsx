@@ -8,6 +8,7 @@ function Expenses() {
 
 
   // FOR GETTINGS AND SETTING EXPENSES
+  const {getTotalExpensePerMonth } = useExpenseStore(); 
 
   const { getExpenseItemsForUser, addExpense } = useExpenseStore();
   const [expenses, setExpenses] = useState([]);
@@ -29,6 +30,13 @@ function Expenses() {
     fetchExpenseItems();
       // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getExpenseItemsForUser]);
+
+  useEffect(() => {
+
+    getTotalExpensePerMonth();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
 
 
   const [formData, setFormData] = useState({
@@ -65,7 +73,8 @@ function Expenses() {
           amount: '',
           fullName: '',
         });
-        fetchExpenseItems(); // Fetch expenses again after successful submission
+        fetchExpenseItems();
+        await getTotalExpensePerMonth(); // Fetch expenses again after successful submission
       } else {
         console.error('Failed to add expense:', result.error);
       }

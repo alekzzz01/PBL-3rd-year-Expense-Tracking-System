@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import LineChart from '../components/charts/userIncome';
 import CardComponent from '../components/common/cardComponent'
-import TransactionTable from '../components/tables/transactionTable';
+import IncomeTable from '../components/tables/incomeTable';
 import useTransactionStore from '../store/transactionStore';
 
 import useIncomeStore from '../store/incomeStore';
@@ -17,11 +17,12 @@ function SetupBudget() {
   useEffect(() => {
     fetchTransactions(); // Fetch transactions when component mounts
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Empty dependency array to ensure it only runs once
+  }, []);
 
 
   // GET TOTAL BALANCE
 
+  const { getTotalIncomePerMonth } = useIncomeStore(); 
   const { totalIncome, getTotalIncome } = useIncomeStore();
   const { totalExpenses, getTotalExpenses } = useExpenseStore(); // Destructure the totalIncome state variable and getTotalIncome action
 
@@ -29,6 +30,7 @@ function SetupBudget() {
     // Fetch total income when the component mounts
     getTotalIncome();
     getTotalExpenses();
+    getTotalIncomePerMonth();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -69,6 +71,7 @@ function SetupBudget() {
         await fetchTransactions();
         await getTotalIncome();
         await  getTotalExpenses();
+        await    getTotalIncomePerMonth();
 
         
       } else {
@@ -120,8 +123,8 @@ function SetupBudget() {
                   </div>
 
                   <div className=' border border-base-300 rounded-xl py-5 px-6'>
-                      <p className='mb-6 text-lg font-medium'>Transactions List</p>
-                      <TransactionTable/>
+                      <p className='mb-6 text-lg font-medium'>Income List</p>
+                      <IncomeTable/>
                   </div>
 
 
