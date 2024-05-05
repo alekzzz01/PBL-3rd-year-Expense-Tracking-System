@@ -111,13 +111,13 @@ const checkUsernameExists = asyncHandler(async (req, res) => {
 
 
 const getAllUsers = asyncHandler(async (req, res) => {
-    try {
-        const users = await User.find({});
-        res.json(users);
-    } catch (error) {
-        console.error('Error fetching users:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
+  try {
+      const users = await User.find({}, 'firstName lastName email username bio');
+      res.json(users);
+  } catch (error) {
+      console.error('Error fetching users:', error);
+      res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 
@@ -259,9 +259,31 @@ const resetPassword = asyncHandler(async (req, res) => {
   }
 });
 
+const updateUserProfile = asyncHandler(async (req, res) => {
+  const { firstName, lastName, bio } = req.body;
+  const userId = req.user._id; // Assuming you have middleware to authenticate and extract user ID from the token
 
+  try {
+      const user = await User.findById(userId);
+
+      if (!user) {
+          return res.status(404).json({ message: "User not found" });
+      }
+
+      // Update user profile fields
+      user.firstName = firstName;
+      user.lastName = lastName;
+      user.bio = bio;
+
+      await user.save();
+
+      return res.json({ status: true, message: "User profile updated successfully", user });
+  } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Internal server error" });
+  }
+});
 
 
   
-  
-export { login, register, logout, checkUsernameExists, getAllUsers, forgetPassword, resetPassword };
+export { login, register, logout, checkUsernameExists, getAllUsers, forgetPassword, resetPassword, updateUserProfile };
