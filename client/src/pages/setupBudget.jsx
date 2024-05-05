@@ -155,11 +155,11 @@ function SetupBudget() {
 
                      
 
-                      <input className='p-3 border rounded-xl w-full' name='category' value={formData.category} onChange={handleChange} type="text" placeholder='Category' /> 
+                      <input className='input input-bordered w-full' name='category' value={formData.category} onChange={handleChange} type="text" placeholder='Category' /> 
 
-                      <input className='p-3 border rounded-xl w-full' name='amount' value={formData.amount} onChange={handleChange} type="text" placeholder='Amount' /> 
+                      <input className='input input-bordered w-full' name='amount' value={formData.amount} onChange={handleChange} type="text" placeholder='Amount' /> 
 
-                      <input className='p-3 border rounded-xl w-full' name='fullName' value={formData.fullName} onChange={handleChange} type="text" placeholder='Full Name' /> 
+                      <input className='input input-bordered w-full' name='fullName' value={formData.fullName} onChange={handleChange} type="text" placeholder='Full Name' /> 
 
                       <button className='btn' disabled={!isFormComplete}>Save</button>
                     

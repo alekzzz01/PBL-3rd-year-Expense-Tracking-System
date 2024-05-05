@@ -201,14 +201,14 @@ function Expenses() {
                     <form action="" className='flex flex-col gap-3' onSubmit={handleSubmit}>
 
 
-                      <select className='p-3 border rounded-xl w-full' name="expenseType" value={formData.expenseType} onChange={handleChange}>
-                        <option selected>Type</option>
+                      <select className='select select-bordered w-full' name="expenseType" value={formData.expenseType} onChange={handleChange}>
+                        <option selected  >Type</option>
                         <option value="Necessities">Necessities</option>
                         <option value="Savings">Savings</option>
                         <option value="Wants">Wants</option>
                       </select>
 
-                      <select className='p-3 border rounded-xl w-full' name="paymentMethod" value={formData.paymentMethod} onChange={handleChange}>
+                      <select className='select select-bordered w-full' name="paymentMethod" value={formData.paymentMethod} onChange={handleChange}>
                         <option selected>Payment Method</option>
                         <option value="Cash">Cash</option>
                         <option value="Credit Card">Credit Card</option>
@@ -216,11 +216,11 @@ function Expenses() {
                         <option value="E-wallet">E-Wallet</option>
                       </select>
 
-                      <input className='p-3 border rounded-xl w-full' name='category' value={formData.category} onChange={handleChange} type="text" placeholder='Category (e.g. Food, Transportation, Bills)' /> 
+                      <input className='input input-bordered w-full' name='category' value={formData.category} onChange={handleChange} type="text" placeholder='Category (e.g. Food, Transportation, Bills)' /> 
 
-                      <input className='p-3 border rounded-xl w-full' name='amount' value={formData.amount} onChange={handleChange} type="text" placeholder='Amount' /> 
+                      <input className='input input-bordered w-full' name='amount' value={formData.amount} onChange={handleChange} type="text" placeholder='Amount' /> 
 
-                      <input className='p-3 border rounded-xl w-full' name='fullName' value={formData.fullName} onChange={handleChange} type="text" placeholder='Full Name' /> 
+                      <input className='input input-bordered w-full' name='fullName' value={formData.fullName} onChange={handleChange} type="text" placeholder='Full Name' /> 
 
 
 
