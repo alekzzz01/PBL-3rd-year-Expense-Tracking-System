@@ -206,51 +206,50 @@ const forgetPassword = asyncHandler(async (req, res) => {
 });
 
 const resetPassword = asyncHandler(async (req, res) => {
-    try {
-        // Extract the token from the URL parameter
-        const token = req.params.token;
+  try {
+      // Extract the token from the URL parameter
+      const token = req.params.token;
 
-        // console.log('Token:', token); 
-
-        // Verify the token sent by the user
-        const decodedToken = jwt.verify(
-          token,
-          process.env.SECRET_KEY
-        );
-    
-        // If the token is invalid, return an error
-        if (!decodedToken) {
-          return res.status(401).send({ message: "Invalid token" });
-        }
-    
-        // find the user with the id from the token
-        const user = await User.findOne({ _id: decodedToken.userId });
-        if (!user) {
-          return res.status(401).send({ message: "No user found" });
-        }
-
-        // Extract newPassword and confirmPassword from the request body
-        const { newPassword, confirmPassword } = req.body;
-
-        // Check if newPassword and confirmPassword match
-        if (newPassword !== confirmPassword) {
-          return res.status(400).send({ message: "New password and confirm password do not match" });
-        }
-
-        // Hash the new password
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(newPassword, salt);
-    
-        // Update user's password, clear reset token and expiration time
-        user.password = hashedPassword;
-        await user.save();
-    
-        // Send success response
-        res.status(200).send({ message: "Password updated" });
-      } catch (err) {
-        // Send error response if any error occurs
-        res.status(500).send({ message: err.message });
+      // Verify the token sent by the user
+      const decodedToken = jwt.verify(
+        token,
+        process.env.SECRET_KEY
+      );
+  
+      // If the token is invalid, return an error
+      if (!decodedToken) {
+        return res.status(401).send({ message: "Invalid token" });
       }
+  
+      // find the user with the id from the token
+      const user = await User.findOne({ _id: decodedToken.userId });
+      if (!user) {
+        return res.status(401).send({ message: "No user found" });
+      }
+
+      // Extract newPassword and confirmPassword from the request body
+      const { newPassword, confirmPassword } = req.body;
+
+      // Check if newPassword and confirmPassword match
+      if (newPassword !== confirmPassword) {
+        return res.status(400).send({ message: "New password and confirm password do not match" });
+      }
+
+      // Hash the new password
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(newPassword, salt);
+  
+      // Update user's password, clear reset token and expiration time
+      user.password = hashedPassword;
+      user.isLocked = false; // Unlock the account
+      await user.save();
+  
+      // Send success response
+      res.status(200).send({ message: "Password updated" });
+    } catch (err) {
+      // Send error response if any error occurs
+      res.status(500).send({ message: err.message });
+    }
 });
 
 
