@@ -61,7 +61,7 @@ const navItems = [
 
   
   {
-    text: "Setup",
+    text: "Income",
     icon: <CirclePlus />,
   
   },

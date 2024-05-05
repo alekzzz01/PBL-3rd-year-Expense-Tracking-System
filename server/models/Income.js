@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const IncomeItemSchema = new mongoose.Schema({
   incomeType: { type: String, default: "Income" },
   paymentMethod: { type: String },
-  category: { type: String, default: "Income" },
+  category: { type: String },
   amount: { type: Number },
   fullName: { type: String },
   tabletype: { type: String, default: "Income" }, // Specify type as String, and default value

@@ -1,52 +1,56 @@
 import React, {useState, useEffect} from 'react'
-import UserBarChart  from '../components/charts/userBarChart';
+
+import LineChart from '../components/charts/userExpense';
 import useExpenseStore from '../store/expenseStore';
 
 
 function Expenses() {
 
-    const { getExpenseItemsForUser } = useExpenseStore(); // Destructure the method from the hook
-    const [expenses, setExpenses] = useState([]); // State for all expenses
 
-    useEffect(() => {
-      // Fetch expense items when the component mounts
-      const fetchExpenseItems = async () => {
-        const { success, data, error } = await getExpenseItemsForUser();
-        if (success) {
-          // Update state with fetched expenses
-          setExpenses(data);
-        } else {
-          // Handle error case
-          console.error('Failed to fetch expense items:', error);
-        }
-      };
+  // FOR GETTINGS AND SETTING EXPENSES
+  const {getTotalExpensePerMonth } = useExpenseStore(); 
 
-      fetchExpenseItems(); // Call the fetch function
-    }, [getExpenseItemsForUser]);
- 
-    const options = {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      hour12: true
-    };
-    
-    const currentDate = new Date().toLocaleString('en-US', options);
+  const { getExpenseItemsForUser, addExpense } = useExpenseStore();
+  const [expenses, setExpenses] = useState([]);
+
+  const fetchExpenseItems = async () => {
+    try {
+      const { success, data, error } = await getExpenseItemsForUser();
+      if (success) {
+        setExpenses(data);
+      } else {
+        console.error('Failed to fetch expense items:', error);
+      }
+    } catch (error) {
+      console.error('Error fetching expense items:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchExpenseItems();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getExpenseItemsForUser]);
+
+  useEffect(() => {
+
+    getTotalExpensePerMonth();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
 
-    const addExpense = useExpenseStore((state) => state.addExpense); // Access the addExpense function from the store
-    const [formData, setFormData] = useState({
+
+  const [formData, setFormData] = useState({
     expenseType: '',
     paymentMethod: '',
     category: '',
     amount: '',
     fullName: '',
-    // Add more fields as needed
   });
 
-  
+
+
+  // HANDLE SUBMIT OF EXPENSES TO SERVER
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -56,13 +60,11 @@ function Expenses() {
     }));
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const result = await addExpense(formData); // Call addExpense function with form data
+      const result = await addExpense(formData);
       if (result.success) {
-        // Handle success, e.g., show a success message
         console.log('Expense added successfully:', result.data);
         setFormData({
           expenseType: '',
@@ -71,10 +73,9 @@ function Expenses() {
           amount: '',
           fullName: '',
         });
-
-        
+        fetchExpenseItems();
+        await getTotalExpensePerMonth(); // Fetch expenses again after successful submission
       } else {
-        // Handle error, e.g., show an error message
         console.error('Failed to add expense:', result.error);
       }
     } catch (error) {
@@ -82,7 +83,23 @@ function Expenses() {
     }
   };
 
+
+  // CHECK THE FORMDATA IS ALL FILLED OUT
+
   const isFormComplete = Object.values(formData).every((value) => value.trim() !== '');
+
+  // FORMAT DATE AND SET THE CURRENT DATE
+
+  const options = {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+  };
+
+  const currentDate = new Date().toLocaleString('en-US', options);
 
 
 
@@ -95,7 +112,7 @@ function Expenses() {
               </div>
 
               <div className='p-3 border border-base-300 rounded-xl' style={{ height: 500 }}>
-                    <UserBarChart />
+                    <LineChart />
               </div>
 
 

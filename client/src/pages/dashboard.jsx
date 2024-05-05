@@ -1,9 +1,27 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import UserBarChart  from '../components/charts/userBarChart';
 import TransactionTable from '../components/tables/transactionTable';
 
+import useIncomeStore from '../store/incomeStore';
+import useExpenseStore from '../store/expenseStore';
 
-function dashboard() {
+
+function Dashboard() {
+
+  const { totalIncome, getTotalIncome } = useIncomeStore();
+  const { totalExpenses, getTotalExpenses } = useExpenseStore(); // Destructure the totalIncome state variable and getTotalIncome action
+
+  useEffect(() => {
+    // Fetch total income when the component mounts
+    getTotalIncome();
+    getTotalExpenses();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const formattedTotalIncome = totalIncome.toFixed(2);
+  const formattedTotalExpenses = totalExpenses.toFixed(2);
+
+
   return (
     <>
 
@@ -32,12 +50,12 @@ function dashboard() {
 
                       <div className='p-4 rounded-lg flex flex-col gap-6 ' style={{ backgroundColor:"#D8E2FD", color: "#35354E"}}>
                               <p className='text-sm font-normal'>Total Income</p>
-                              <p className='text-2xl font-semibold'>$16,000.00</p>
+                              <p className='text-2xl font-semibold'>$ {formattedTotalIncome}</p>
                       </div>
 
                       <div className='p-4 rounded-lg flex flex-col gap-6' style={{ backgroundColor:"#F9E1E1", color: "#4E3535"}}>
                               <p className='text-sm font-normal'>Total Expenses</p>
-                              <p className='text-2xl font-semibold'>$16,000.00</p>
+                              <p className='text-2xl font-semibold'>$ {formattedTotalExpenses}</p>
                       </div>
 
                       <div className='p-4 rounded-lg flex flex-col gap-6' style={{ backgroundColor:"#D8EAEA", color: "#3D4E35"}}>
@@ -87,4 +105,4 @@ function dashboard() {
   )
 }
 
-export default dashboard
+export default Dashboard

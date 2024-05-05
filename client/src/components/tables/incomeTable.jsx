@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import DataTable, { createTheme } from 'react-data-table-component';
 import useTransactionStore from '../../store/transactionStore'; // Import your Zustand store
 
-function TransactionTable() {
+function IncomeTable() {
   const { transactions, fetchTransactions, isLoading, isError, errorMessage } = useTransactionStore(); // Access state and actions from the store
 
   useEffect(() => {
@@ -21,11 +21,7 @@ function TransactionTable() {
       selector: row => row.category,
       sortable: true
     },
-    {
-      name: 'Payment Method',
-      selector: row => row.paymentMethod,
-      sortable: true
-    },
+   
     {
       name: 'Amount',
       selector: row => row.amount,
@@ -74,6 +70,9 @@ function TransactionTable() {
   //   }
   // };
 
+
+  const incomeTransactions = transactions.filter(transaction => transaction.tableType === 'Income');
+
   
   return (
     <>
@@ -84,7 +83,7 @@ function TransactionTable() {
       ) : (
         <DataTable
           columns={columns}
-          data={transactions}
+          data={incomeTransactions}
           selectableRows
           fixedHeader
           pagination
@@ -95,4 +94,4 @@ function TransactionTable() {
   );
 }
 
-export default TransactionTable;
+export default IncomeTable;

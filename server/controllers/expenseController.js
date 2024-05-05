@@ -194,8 +194,37 @@ const getTotalExpensePerMonth = asyncHandler(async (req, res) => {
 
 
 
+const getTotalExpenses = asyncHandler(async (req, res) => {
+    // Check if req.user exists and has the _id property
+    if (!req.user || !req.user._id) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+    }
+
+    // Get the user ID from the authenticated user
+    const userId = req.user._id;
+
+    try {
+        // Find the income document belonging to the user
+        const expenses = await ExpenseModel.findOne({ user: userId });
+
+        if (!expenses) {
+            return res.status(404).json({ success: false, message: 'Expenses not found' });
+        }
+
+      
+        const totalExpenses = expenses.expenseItems.reduce((total, item) => total + item.amount, 0);
+
+        res.status(200).json({ success: true, totalExpenses });
+    } catch (error) {
+        console.error("Error in get totalExpenses:", error); // Log the error
+        res.status(500).json({ success: false, error: 'Internal Server Error' });
+    }
+});
 
 
 
-export { addExpense, deleteExpenseItem, updateExpenseItem, getExpenseItemsForUser, getTotalExpensePerMonth};
+
+
+
+export { addExpense, deleteExpenseItem, updateExpenseItem, getExpenseItemsForUser, getTotalExpensePerMonth, getTotalExpenses};
 
