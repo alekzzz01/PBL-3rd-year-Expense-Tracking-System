@@ -6,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const useExpenseStore = create((set) => ({
   expenses: [],
   totalExpensePerMonth: [], 
+  totalExpenses: 0,
 
   addExpense: async (expenseData) => {
     try {
@@ -37,66 +38,97 @@ const useExpenseStore = create((set) => ({
     }
   },
 
-getExpenseItemsForUser: async () => {
-  try {
-    const token = localStorage.getItem('token');
-    const response = await axios.get('http://localhost:5000/expense/expenseitems', {
-      headers: {
-        'Authorization': `Bearer ${token}`,
+  getExpenseItemsForUser: async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get('http://localhost:5000/expense/expenseitems', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        }
+      });
+
+      console.log('Fetched expense items:', response.data);
+
+      if (response.data && response.data.success) {
+        const expensesData = response.data.data || []; // Ensure data is an array
+        const mappedExpenses = expensesData.map((expense) => ({
+          expenseType: expense.expenseType,
+          paymentMethod: expense.paymentMethod,
+          category: expense.category,
+          amount: expense.amount,
+          fullName: expense.fullName,
+          date: new Date(expense.date).toLocaleDateString(),
+          _id: expense._id,
+        }));
+        console.log('Mapped expenses:', mappedExpenses); 
+
+        return { success: true, data: mappedExpenses };
+      } else {
+        return { success: false, error: 'Failed to fetch expense items' };
       }
-    });
-
-    console.log('Fetched expense items:', response.data);
-
-    if (response.data && response.data.success) {
-      const expensesData = response.data.data || []; // Ensure data is an array
-      const mappedExpenses = expensesData.map((expense) => ({
-        expenseType: expense.expenseType,
-        paymentMethod: expense.paymentMethod,
-        category: expense.category,
-        amount: expense.amount,
-        fullName: expense.fullName,
-        date: new Date(expense.date).toLocaleDateString(),
-        _id: expense._id,
-      }));
-      console.log('Mapped expenses:', mappedExpenses); 
-
-      return { success: true, data: mappedExpenses };
-    } else {
+    } catch (error) {
+      console.error('Error fetching expense items:', error);
       return { success: false, error: 'Failed to fetch expense items' };
     }
-  } catch (error) {
-    console.error('Error fetching expense items:', error);
-    return { success: false, error: 'Failed to fetch expense items' };
-  }
-},
+  },
 
-getTotalExpensePerMonth: async () => {
-  try {
-    const token = localStorage.getItem('token');
-    const response = await axios.get('http://localhost:5000/expense/monthly-total', {
-      headers: {
-        'Authorization': `Bearer ${token}`,
+  getTotalExpensePerMonth: async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get('http://localhost:5000/expense/monthly-total', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        }
+      });
+
+      // console.log('Fetched total expense per month:', response.data);
+
+      if (response.data && response.data.success) {
+        const totalExpensePerMonthData = response.data.data || []; // Ensure data is an array
+        set((state) => ({
+          ...state,
+          totalExpensePerMonth: totalExpensePerMonthData,
+        }));
+        return { success: true, data: totalExpensePerMonthData };
+      } else {
+        return { success: false, error: 'Failed to fetch total expense per month' };
       }
-    });
-
-    console.log('Fetched total expense per month:', response.data);
-
-    if (response.data && response.data.success) {
-      const totalExpensePerMonthData = response.data.data || []; // Ensure data is an array
-      set((state) => ({
-        ...state,
-        totalExpensePerMonth: totalExpensePerMonthData,
-      }));
-      return { success: true, data: totalExpensePerMonthData };
-    } else {
+    } catch (error) {
+      console.error('Error fetching total expense per month:', error);
       return { success: false, error: 'Failed to fetch total expense per month' };
     }
-  } catch (error) {
-    console.error('Error fetching total expense per month:', error);
-    return { success: false, error: 'Failed to fetch total expense per month' };
+  },
+
+  
+  getTotalExpenses: async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get('http://localhost:5000/expense/totalExpenses', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        }
+      });
+
+      // console.log('Fetched total expense:', response.data);
+
+      if (response.data && response.data.success) {
+        const totalExpenses = response.data.totalExpenses || 0;
+        set((state) => ({
+          ...state,
+          totalExpenses,
+        }));
+        return { success: true, totalExpenses };
+      } else {
+        return { success: false, error: 'Failed to fetch total expenses' };
+      }
+    } catch (error) {
+      console.error('Error fetching total expenses:', error);
+      return { success: false, error: 'Failed to fetch total expenses' };
+    }
   }
-}
+
+
+
 
 
 

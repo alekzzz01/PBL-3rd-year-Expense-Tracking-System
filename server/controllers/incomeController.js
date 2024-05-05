@@ -13,7 +13,7 @@ const addIncome = asyncHandler(async (req, res) => {
     const userId = req.user._id;
 
     // Extract necessary fields from the request body
-    const {incomeType, paymentMethod, category, amount, fullName, date  } = req.body;
+    const {  category, amount, fullName, date  } = req.body;
 
     try {
      
@@ -27,8 +27,8 @@ const addIncome = asyncHandler(async (req, res) => {
         }
 
         const newIncomeItem = {
-            incomeType: incomeType,
-            paymentMethod: paymentMethod,
+         
+            
             category: category,
             amount: amount,
             fullName: fullName,
@@ -195,7 +195,37 @@ const getTotalIncomePerMonth = asyncHandler(async (req, res) => {
 });
 
 
-export { addIncome, deleteIncome, updateIncome, fetchIncome, getTotalIncomePerMonth };
+const getTotalIncome = asyncHandler(async (req, res) => {
+    // Check if req.user exists and has the _id property
+    if (!req.user || !req.user._id) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+    }
+
+    // Get the user ID from the authenticated user
+    const userId = req.user._id;
+
+    try {
+        // Find the income document belonging to the user
+        const income = await IncomeModel.findOne({ user: userId });
+
+        if (!income) {
+            return res.status(404).json({ success: false, message: 'Income not found' });
+        }
+
+        // Calculate total income
+        const totalIncome = income.incomeItems.reduce((total, item) => total + item.amount, 0);
+
+        // Return the total income
+        res.status(200).json({ success: true, totalIncome });
+    } catch (error) {
+        console.error("Error in getTotalIncome:", error); // Log the error
+        res.status(500).json({ success: false, error: 'Internal Server Error' });
+    }
+});
+
+
+
+export { addIncome, deleteIncome, updateIncome, fetchIncome, getTotalIncomePerMonth, getTotalIncome };
 
 
 

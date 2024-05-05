@@ -41,8 +41,8 @@ function TransactionTable() {
 
   createTheme('solarized', {
     text: {
-      primary: '#268bd2',
-      secondary: '#2aa198',
+      primary: '#7F6EFF',
+      secondary: '#7F6EFF',
     },
     background: {
       default: 'transparent',
