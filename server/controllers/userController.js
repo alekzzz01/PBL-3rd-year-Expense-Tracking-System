@@ -207,49 +207,56 @@ const forgetPassword = asyncHandler(async (req, res) => {
 
 const resetPassword = asyncHandler(async (req, res) => {
   try {
-      // Extract the token from the URL parameter
-      const token = req.params.token;
+    const token = req.params.token;
+    const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
 
-      // Verify the token sent by the user
-      const decodedToken = jwt.verify(
-        token,
-        process.env.SECRET_KEY
-      );
-  
-      // If the token is invalid, return an error
-      if (!decodedToken) {
-        return res.status(401).send({ message: "Invalid token" });
-      }
-  
-      // find the user with the id from the token
-      const user = await User.findOne({ _id: decodedToken.userId });
-      if (!user) {
-        return res.status(401).send({ message: "No user found" });
-      }
-
-      // Extract newPassword and confirmPassword from the request body
-      const { newPassword, confirmPassword } = req.body;
-
-      // Check if newPassword and confirmPassword match
-      if (newPassword !== confirmPassword) {
-        return res.status(400).send({ message: "New password and confirm password do not match" });
-      }
-
-      // Hash the new password
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(newPassword, salt);
-  
-      // Update user's password, clear reset token and expiration time
-      user.password = hashedPassword;
-      user.isLocked = false; // Unlock the account
-      await user.save();
-  
-      // Send success response
-      res.status(200).send({ message: "Password updated" });
-    } catch (err) {
-      // Send error response if any error occurs
-      res.status(500).send({ message: err.message });
+    if (!decodedToken) {
+      return res.status(401).send({ message: "Invalid token" });
     }
+
+    const user = await User.findOne({ _id: decodedToken.userId });
+    if (!user) {
+      return res.status(401).send({ message: "No user found" });
+    }
+
+    const { newPassword, confirmPassword } = req.body;
+
+    if (newPassword !== confirmPassword) {
+      return res.status(400).send({ message: "New password and confirm password do not match" });
+    }
+
+    // Debug log: Log the current contents of the password history
+    console.log("Password History before update:", user.passwordHistory);
+
+    // Check if the new password matches any of the recent passwords
+    const isRecentPassword = user.passwordHistory.some(oldPasswordHash => {
+      console.log("Comparing with:", oldPasswordHash);
+      return bcrypt.compareSync(newPassword, oldPasswordHash);
+    });
+
+    if (isRecentPassword) {
+      console.log("New password matches a recent password.");
+      return res.status(400).send({ message: "Cannot reuse recent passwords" });
+    }
+
+    // Debug log: Log the hashed version of the new password before updating
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+    console.log("Hashed New Password:", hashedNewPassword);
+
+    // Update user's password and password history, clear reset token and expiration time
+    user.passwordHistory.unshift(hashedNewPassword); // Add hashed new password to history
+    user.passwordHistory = user.passwordHistory.slice(0, 5); // Limit history to 5 passwords
+    user.password = hashedNewPassword;
+    user.isLocked = false;
+    await user.save();
+
+    // Debug log: Log the updated contents of the password history
+    console.log("Password History after update:", user.passwordHistory);
+
+    res.status(200).send({ message: "Password updated" });
+  } catch (err) {
+    res.status(500).send({ message: err.message });
+  }
 });
 
 
@@ -257,4 +264,4 @@ const resetPassword = asyncHandler(async (req, res) => {
 
   
   
-export { login, register, logout, checkUsernameExists, getAllUsers, forgetPassword, resetPassword  };
+export { login, register, logout, checkUsernameExists, getAllUsers, forgetPassword, resetPassword };
