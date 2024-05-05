@@ -6,50 +6,62 @@ import asyncHandler from '../middleWare/asyncHandler.js';
 
 
 const login = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+  try {
+      const user = await User.findOne({ email });
 
-    const { email, password } = req.body;
-    try {
+      if (!user) {
+          return res.json({ status: false, message: "User is not registered" });
+      }
 
-        const user = await User.findOne({ email });
-        if (!user) {
-            return res.json({ status: false, message: "User is not registered" });
-        }
-        
-        const validPassword = await bcrypt.compare(password, user.password);
-        if (!validPassword) {
-            return res.json({ status: false, message: "Password is incorrect" });
-        }
+      // Check if the account is locked
+      if (user.isLocked) {
+          return res.json({ status: false, message: "Account is locked. Please reset your password." });
+      }
 
-        // Update lastLogin field
-        user.lastLogin = new Date();
-        await user.save();  
+      const validPassword = await bcrypt.compare(password, user.password);
+      if (!validPassword) {
+          // Increment failed login attempts
+          user.failedLoginAttempts += 1;
 
-        // Include user ID in the JWT payload
-        const token = jwt.sign({ userId: user._id, role: user.role, username: user.username, email: user.email, }, process.env.KEY, { expiresIn: '1h' });
-        res.cookie('token', token, { httpOnly: true, maxAge: 3600000});
+          // Lock the account if the number of failed attempts exceeds the threshold
+          if (user.failedLoginAttempts >= 3) {
+              user.isLocked = true;
+              await user.save();
+              return res.json({ status: false, message: "Account is locked. Please reset your password." });
+          }
 
-        const responseObj = {
-            status: true,
-            message: "Login successful",
-            userId: user._id,
-            lastLogin: user.lastLogin,
-            username: user.username,
-            email: user.email,
-            role: user.role,
-            token
-        };
+          await user.save();
 
-        console.log("Response Object:", responseObj); // Log the response object
-        return res.json(responseObj);
+          return res.json({ status: false, message: "Password is incorrect" });
+      }
 
-        
+      // Reset failed login attempts on successful login
+      user.failedLoginAttempts = 0;
+      user.lastLogin = new Date();
+      await user.save();
 
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ message: "Internal server error" });
-    }
+      // Include user ID in the JWT payload
+      const token = jwt.sign({ userId: user._id, role: user.role, username: user.username, email: user.email }, process.env.KEY, { expiresIn: '1h' });
+      res.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
 
+      const responseObj = {
+          status: true,
+          message: "Login successful",
+          userId: user._id,
+          lastLogin: user.lastLogin,
+          username: user.username,
+          email: user.email,
+          role: user.role,
+          token
+      };
 
+      console.log("Response Object:", responseObj); // Log the response object
+      return res.json(responseObj);
+  } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Internal server error" });
+  }
 });
 
 const register = asyncHandler(async (req, res) => {
