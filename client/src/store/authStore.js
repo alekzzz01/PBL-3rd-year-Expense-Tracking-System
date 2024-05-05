@@ -219,7 +219,7 @@
 
     forgotPassword: async (email) => {
       try {
-        const response = await axios.post('http://localhost:5000/auth/forgetpassword', { email });
+        const response = await axios.post('http://localhost:5000/auth/forgetPassword', { email });
   
         if (response.status === 200) {
           toast.success('Password reset email sent successfully. Check your inbox.');

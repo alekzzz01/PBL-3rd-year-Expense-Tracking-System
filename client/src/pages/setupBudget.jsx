@@ -10,7 +10,7 @@ import useExpenseStore from '../store/expenseStore';
 
 function SetupBudget() {
 
-  //
+  // for fetching all transactions on the table
 
   const { fetchTransactions } = useTransactionStore(); // Access state and actions from the store
 
@@ -20,14 +20,14 @@ function SetupBudget() {
   }, []);
 
 
-  // GET TOTAL BALANCE
+  // GET TOTAL BALANCE AND REMAINING BALANCE
 
   const { getTotalIncomePerMonth } = useIncomeStore(); 
   const { totalIncome, getTotalIncome } = useIncomeStore();
-  const { totalExpenses, getTotalExpenses } = useExpenseStore(); // Destructure the totalIncome state variable and getTotalIncome action
+  const { totalExpenses, getTotalExpenses } = useExpenseStore(); 
 
   useEffect(() => {
-    // Fetch total income when the component mounts
+
     getTotalIncome();
     getTotalExpenses();
     getTotalIncomePerMonth();
@@ -68,10 +68,12 @@ function SetupBudget() {
           fullName: '',
         });
 
+        // call the functions for fetch transactions, total income, total expenses, total income per month
+
         await fetchTransactions();
         await getTotalIncome();
-        await  getTotalExpenses();
-        await    getTotalIncomePerMonth();
+        await getTotalExpenses();
+        await getTotalIncomePerMonth();
 
         
       } else {

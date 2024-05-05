@@ -161,7 +161,7 @@ const forgetPassword = asyncHandler(async (req, res) => {
               <table align="center" width="100%" border="0" cellPadding="0" cellSpacing="0" role="presentation" style="max-width:37.5em;background-color:#ffffff;border:1px solid #f0f0f0;padding:45px">
                 <tbody>
                   <tr style="width:100%">
-                    <td><img alt="Dropbox" height="33" src="https://react-email-demo-ndjnn09xj-resend.vercel.app/static/dropbox-logo.png" style="display:block;outline:none;border:none;text-decoration:none" width="40" />
+                    <td><img alt="Dropbox" height="50" src="https://scontent.fmnl30-2.fna.fbcdn.net/v/t1.15752-9/440839202_958374569066143_1977991097249215707_n.png?_nc_cat=110&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeE7CB--WK43tAkMgsfFKJmwI0X9eZ9WVWEjRf15n1ZVYctyHdKRNdKO7ytsvpIahK1TQjkFPtTJ__eghBuvoitp&_nc_ohc=_xvjX-KNGd4Q7kNvgFQI2SX&_nc_ht=scontent.fmnl30-2.fna&oh=03_Q7cD1QG4w5LFSUlTrfgVFL-jYYno-TpKxuOpnDJIeVOLno0DsQ&oe=665F0879" style="display:block;outline:none;border:none;text-decoration:none" width="40" />
                       <table align="center" width="100%" border="0" cellPadding="0" cellSpacing="0" role="presentation">
                         <tbody>
                           <tr>
