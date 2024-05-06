@@ -15,7 +15,7 @@ const refreshToken = async (req, res) => {
         const userId = decoded.userId;
 
         // Fetch user from database
-        const user = await User.findById(userId);
+        const user = await User.findById(userId);   
         if (!user) {
             throw new Error('User not found');
         }

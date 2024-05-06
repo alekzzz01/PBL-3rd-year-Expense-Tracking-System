@@ -259,9 +259,10 @@ const resetPassword = asyncHandler(async (req, res) => {
   }
 });
 
+// updateUserProfile function
 const updateUserProfile = asyncHandler(async (req, res) => {
   const { firstName, lastName, bio } = req.body;
-  const userId = req.user._id; // Assuming you have middleware to authenticate and extract user ID from the token
+  const userId = req.user._id;  
 
   try {
       const user = await User.findById(userId);
@@ -270,11 +271,13 @@ const updateUserProfile = asyncHandler(async (req, res) => {
           return res.status(404).json({ message: "User not found" });
       }
 
-      // Update user profile fields
-      user.firstName = firstName;
-      user.lastName = lastName;
+      // Capitalize first letter of each word in first name and last name
+      const formattedFirstName = firstName.replace(/\b\w/g, char => char.toUpperCase());
+      const formattedLastName = lastName.replace(/\b\w/g, char => char.toUpperCase());
+      
+      user.firstName = formattedFirstName;
+      user.lastName = formattedLastName;
       user.bio = bio;
-
       await user.save();
 
       return res.json({ status: true, message: "User profile updated successfully", user });
@@ -285,5 +288,33 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 });
 
 
+
+const getUserDetails = asyncHandler(async (req, res) => {
+  console.log("req.user:", req.user); // Log req.user to see its structure
+
+  if (!req.user || !req.user._id) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
   
-export { login, register, logout, checkUsernameExists, getAllUsers, forgetPassword, resetPassword, updateUserProfile };
+  const userId = req.user._id;  
+
+  try {
+    // Fetch user by ID with required fields
+    const user = await User.findById(userId, 'email username firstName lastName bio');
+    
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+
+
+});
+
+
+  
+export { login, register, logout, checkUsernameExists, getAllUsers, forgetPassword, resetPassword, updateUserProfile, getUserDetails };

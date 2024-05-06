@@ -167,7 +167,7 @@
       const token = localStorage.getItem('token');
       if(token) {
         const payLoad = jwtDecode(token);
-        // console.log('Role retrieved', payLoad?.username, payLoad?.email);
+      
         return { username: payLoad?.username, email: payLoad?.email };
       }
     },
@@ -193,8 +193,6 @@
       window.location.href = '/login';
       return false; // Return false if no token is found
     },
-
-
 
 
     // Admin Private route, user can't access Admin routes
@@ -261,7 +259,64 @@
         }
       }
     },
+
+
     
+    updateUserProfile: async (firstName, lastName, bio) => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          throw new Error('No token found');
+        }
+  
+        const response = await axios.put(
+          'http://localhost:5000/auth/updateprofile',
+          { firstName, lastName, bio },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+  
+        if (response.status === 200) {
+          const updatedUser = response.data.user;
+          set({ user: updatedUser });
+          toast.success('Profile updated successfully');
+          return { success: true, user: updatedUser };
+        } else {
+          console.error('Unexpected response status:', response.status);
+          return { success: false, errorMessage: 'Failed to update profile' };
+        }
+      } catch (error) {
+        console.error('Error updating profile:', error);
+        return { success: false, errorMessage: 'Failed to update profile' };
+      }
+    },
+
+
+    getUserDetails: async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          throw new Error('No token found');
+        }
+  
+        const response = await axios.get('http://localhost:5000/auth/getUserDetails', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+  
+        if (response.status === 200) {
+          const userDetails = response.data;
+          set({ user: userDetails });
+          return { success: true, user: userDetails };
+        } else {
+          console.error('Unexpected response status:', response.status);
+          return { success: false, errorMessage: 'Failed to fetch user details' };
+        }
+      } catch (error) {
+        console.error('Error fetching user details:', error);
+        return { success: false, errorMessage: 'Failed to fetch user details' };
+      }
+    },
+
+
 
     
 
