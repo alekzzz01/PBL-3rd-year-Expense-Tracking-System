@@ -39,6 +39,7 @@ const useTransactionStore = create((set) => ({
       // Combine expenses and incomes into a single array of items
       const transactions = response.data.data.expenses.flatMap(expense => {
         return expense.expenseItems.map(expenseItem => ({
+          _id: expenseItem._id,
           tableType: expenseItem.tabletype,
           category: expenseItem.category,
           paymentMethod: expenseItem.paymentMethod,
@@ -47,6 +48,7 @@ const useTransactionStore = create((set) => ({
         }));
       }).concat(response.data.data.incomes.flatMap(income => {
         return income.incomeItems.map(incomeItem => ({
+          _id: incomeItem._id,
           tableType: incomeItem.tabletype,
           category: incomeItem.category,
           paymentMethod: incomeItem.paymentMethod,

@@ -1,16 +1,53 @@
-import React, { useEffect } from 'react';
-import DataTable, { createTheme } from 'react-data-table-component';
-import useTransactionStore from '../../store/transactionStore'; // Import your Zustand store
+import React, { useEffect, useState} from 'react';
+import DataTable from 'react-data-table-component';
+import { Pen, Trash } from 'lucide-react';
+import useTransactionStore from '../../store/transactionStore';
+import useIncomeStore from '../../store/incomeStore';
+import useExpenseStore from '../../store/expenseStore';
 
 function TransactionTable() {
   const { transactions, fetchTransactions, isLoading, isError, errorMessage } = useTransactionStore(); // Access state and actions from the store
+  const { deleteIncome } = useIncomeStore();
+  const { deleteExpense } = useExpenseStore();
+  const [selectedRows, setSelectedRows] = useState([]);
+
+
 
   useEffect(() => {
     fetchTransactions(); // Fetch transactions when component mounts
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Empty dependency array to ensure it only runs once
 
+  const handleDeleteSelected = async () => {
+    try {
+      for (const row of selectedRows) {
+        if (row.tableType === 'Income') {
+          await deleteIncome(row._id);
+        } else if (row.tableType === 'Expense') {
+          await deleteExpense(row._id);
+        }
+      }
+      fetchTransactions();
+      setSelectedRows([]);
+      console.log('Rows deleted successfully');
+    } catch (error) {
+      console.error('Error deleting rows:', error);
+    }
+  };
+  
+
+  const handleRowSelected = rows => {
+    setSelectedRows(rows.selectedRows);
+  };
+
+
+
   const columns = [
+    {
+      name: 'ID',
+      selector: row => row._id,
+      sortable: true,
+    },
     {
       name: 'Type',
       selector: row => row.tableType,
@@ -36,61 +73,76 @@ function TransactionTable() {
       selector: row => row.date,
       sortable: true
     },
+
+    {
+      cell: (row) => (
+        <div className='flex flex-wrap items-center gap-3'>
+
+          <button>
+              <Pen     
+              size={16}
+              color="#007bff"   />
+          </button> 
+
+           <button onClick={() => {
+            if (row.tableType === 'Income') {
+              deleteIncome(row._id);
+            } else if (row.tableType === 'Expense') {
+              deleteExpense(row._id);
+            }
+          }}>
+          <Trash
+              size={16}
+              color="#dc3545"  />
+          </button> 
+
+        </div>
+      ),
+      ignoreRowClick: true,
+      allowOverflow: true,
+      button: true,
+    },
    
   ];
 
-  createTheme('solarized', {
-    text: {
-      primary: '#7F6EFF',
-      secondary: '#7F6EFF',
-    },
-    background: {
-      default: 'transparent',
-    },
-    context: {
-      background: '#cb4b16',
-      text: '#FFFFFF',
-    },
-    divider: {
-      default: '#bababa',
-    },
-    action: {
-      button: 'rgba(0,0,0,.54)',
-      hover: 'rgba(0,0,0,.08)',
-      disabled: 'rgba(0,0,0,.12)',
-    },
-  }, 'dark');
 
-  // const handleDeleteItem = async () => {
-  //   try {
-  //     if (tableType === 'expense') {
-  //       await deleteExpenseItem(itemId);
-  //     } else if (tableType === 'income') {
-  //       await deleteIncomeItem(itemId);
-  //     }
-  //     // Handle success (e.g., update state, show notification)
-  //   } catch (error) {
-  //     // Handle error (e.g., show error message)
-  //   }
-  // };
-
+  
   
   return (
     <>
+
+     <div className='flex justify-end'>
+        {selectedRows.length > 0 && (
+              <button className='border border-base-300 btn' onClick={handleDeleteSelected}> <Trash
+              size={16}
+              color="#dc3545"  /></button>
+          )}
+    </div>
+
+
+
+
       {isLoading ? (
         <div>Loading...</div>
       ) : isError ? (
         <div>Error: {errorMessage}</div>
       ) : (
-        <DataTable
-          columns={columns}
-          data={transactions}
-          selectableRows
-          fixedHeader
-          pagination
-          theme="solarized"
-        />
+        <>
+         
+          <DataTable
+            columns={columns}
+            data={transactions}
+            selectableRows
+            onSelectedRowsChange={handleRowSelected}
+            fixedHeader
+            pagination
+            theme="solarized"
+          />
+        </>
       )}
+
+
+    
     </>
   );
 }

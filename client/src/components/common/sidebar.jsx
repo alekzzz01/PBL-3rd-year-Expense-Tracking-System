@@ -172,8 +172,8 @@ const Sidebar = ({
                             : "transparent",
                         color:
                           active === lcText
-                            ? "rgb(116, 105, 182)"
-                            : "rgb(116, 105, 182)",
+                            ? "rgba(63, 81, 181, 1)"
+                            : "rgba(156, 163, 175, 1)",
                       }}
                     >
                       <ListItemIcon
@@ -181,8 +181,8 @@ const Sidebar = ({
                           ml: "2rem",
                           color:
                             active === lcText
-                              ? "rgb(116, 105, 182)"
-                              : "rgb(116, 105, 182)",
+                              ? "rgba(63, 81, 181, 1)"
+                              : "rgba(156, 163, 175, 1)",
                         }}
                       >
                         {icon}

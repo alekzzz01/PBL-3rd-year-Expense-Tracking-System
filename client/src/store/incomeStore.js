@@ -69,6 +69,8 @@ const useIncomeStore = create((set) => ({
         }
       },
 
+      
+
       getTotalIncome: async () => {
         try {
           const token = localStorage.getItem('token');
@@ -94,7 +96,35 @@ const useIncomeStore = create((set) => ({
           console.error('Error fetching total income:', error);
           return { success: false, error: 'Failed to fetch total income' };
         }
-      }
+      },
+
+      deleteIncome: async (incomeId) => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.delete(`http://localhost:5000/income/deleteincome/${incomeId}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                }
+            });
+
+            if (response.data && response.data.success) {
+                // Filter out the deleted income from the state
+                set((state) => ({
+                    ...state,
+                    income: state.income.filter((item) => item._id !== incomeId),
+                }));
+                toast.success('Income deleted successfully');
+                return { success: true };
+            } else {
+                toast.error('Failed to delete income');
+                return { success: false, error: 'Failed to delete income' };
+            }
+        } catch (error) {
+            console.error('Error deleting income:', error);
+            toast.error('Internal Server Error');
+            return { success: false, error: 'Internal Server Error' };
+        }
+    },
 
 
 }));

@@ -10,6 +10,8 @@ const login = asyncHandler(async (req, res) => {
   try {
       const user = await User.findOne({ email });
 
+
+      // Check  if the user already exists
       if (!user) {
           return res.json({ status: false, message: "User is not registered" });
       }
@@ -259,7 +261,7 @@ const resetPassword = asyncHandler(async (req, res) => {
   }
 });
 
-// updateUserProfile function
+
 const updateUserProfile = asyncHandler(async (req, res) => {
   const { firstName, lastName, bio } = req.body;
   const userId = req.user._id;  
@@ -286,8 +288,6 @@ const updateUserProfile = asyncHandler(async (req, res) => {
       return res.status(500).json({ message: "Internal server error" });
   }
 });
-
-
 
 const getUserDetails = asyncHandler(async (req, res) => {
   console.log("req.user:", req.user); // Log req.user to see its structure

@@ -125,8 +125,34 @@ const useExpenseStore = create((set) => ({
       console.error('Error fetching total expenses:', error);
       return { success: false, error: 'Failed to fetch total expenses' };
     }
-  }
+  },
 
+  deleteExpense: async (expenseItemId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.delete(`http://localhost:5000/expense/deleteexpenses/${expenseItemId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        }
+      });
+
+      if (response.data && response.data.success) {
+        set((state) => ({
+          ...state,
+          expenses: state.expenses.filter((item) => item._id !== expenseItemId), // Corrected from expenses to expense
+        }));
+        toast.success('Expense deleted successfully');
+        return { success: true };
+      } else {
+        toast.error('Failed to delete expense');
+        return { success: false, error: 'Failed to delete expense' };
+      }
+    } catch (error) {
+      console.error('Error deleting expense:', error);
+      toast.error('Internal Server Error');
+      return { success: false, error: 'Internal Server Error' };
+    }
+  },  
 
 
 

@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import UserBarChart  from '../components/charts/userBarChart';
+import UserBarChart  from '../components/charts/dashboardAreaChart';
 import TransactionTable from '../components/tables/transactionTable';
 
 import useIncomeStore from '../store/incomeStore';
@@ -30,12 +30,12 @@ function Dashboard() {
 
               <div className='flex flex-col gap-5 col-span-1 md:col-span-1 lg:col-span-2'>
 
-                    <div className='p-3 border border-base-300 rounded-xl' style={{ height: 500 }}>
-                        
+                    <div className='py-5 px-6 border border-base-300 rounded-md' style={{ height: 500 }}>
+                    <p className='text-lg font-medium'>Overview</p>
                           <UserBarChart />
                     </div>
 
-                    <div className='py-5 px-6 border border-base-300 rounded-xl'>
+                    <div className='py-5 px-6 border border-base-300 rounded-md'>
                       <p className='mb-6 text-lg font-medium'>Transactions List</p>
                       <TransactionTable/>
                     </div>
@@ -44,7 +44,7 @@ function Dashboard() {
                 
 
               <div className='flex flex-col gap-5'>
-                <div className='py-5 px-6 flex flex-col gap-5 border border-base-300 rounded-xl w-full'>  
+                <div className='py-5 px-6 flex flex-col gap-5 border border-base-300 rounded-md w-full'>  
 
                       <p className='text-lg font-medium'>Assets</p>
 
@@ -72,7 +72,7 @@ function Dashboard() {
          
                 </div>  
 
-                <div className='py-5 px-6 flex flex-col gap-5 border border-base-300 rounded-xl w-full'> 
+                <div className='py-5 px-6 flex flex-col gap-5 border border-base-300 rounded-md w-full'> 
 
                   <p className='text-lg font-medium'>Events</p>
 
