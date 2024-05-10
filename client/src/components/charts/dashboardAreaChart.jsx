@@ -1,9 +1,21 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import useExpenseStore from '../../store/expenseStore'; 
 import useIncomeStore from '../../store/incomeStore';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import { XAxis, YAxis, CartesianGrid, Tooltip, Legend ,ResponsiveContainer, AreaChart, Area } from 'recharts';
 
 function UserBarChart() {
+
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // State variable to store the selected year
+
+  const handleChange = (date) => {
+    setSelectedYear(date.getFullYear()); // Update the selected year when the user changes it in the date picker
+  };
+
+
+  // total expense, total income per month
+
   const { totalExpensePerMonth, getTotalExpensePerMonth } = useExpenseStore(); 
   const { totalIncomePerMonth, getTotalIncomePerMonth } = useIncomeStore(); 
 
@@ -28,10 +40,26 @@ function UserBarChart() {
     { name: 'Dec', income: 0, expense: 0 }
   ];
 
+    // // Merge the fetched total expenses per month into the initial data
+    // const updatedData = initialData.map((monthData, index) => {
+    //   const totalExpenseData = totalExpensePerMonth.find(expense => expense._id.month === index + 1);
+    //   const totalIncomeData = totalIncomePerMonth.find(income => income._id.month === index + 1);
+  
+    //   return {
+    //     ...monthData,
+    //     expense: totalExpenseData ? totalExpenseData.totalExpense : 0,
+    //     income: totalIncomeData ? totalIncomeData.totalIncome : 0
+    //   };
+    // });
+
   // Merge the fetched total expenses per month into the initial data
   const updatedData = initialData.map((monthData, index) => {
-    const totalExpenseData = totalExpensePerMonth.find(expense => expense._id.month === index + 1);
-    const totalIncomeData = totalIncomePerMonth.find(income => income._id.month === index + 1);
+    const totalExpenseData = totalExpensePerMonth.find(expense => 
+      expense._id.month === index + 1 && expense._id.year === selectedYear
+    );
+    const totalIncomeData = totalIncomePerMonth.find(income => 
+      income._id.month === index + 1 && income._id.year === selectedYear
+    );
 
     return {
       ...monthData,
@@ -42,6 +70,24 @@ function UserBarChart() {
 
   return (
     <div className='relative w-full h-full'>
+
+      <div className='flex items-center justify-between'>
+          <p className='text-lg font-medium'>Overview</p>
+
+          <div className='flex items-center gap-2 text-sm'>
+            <p>Filter by year:</p>
+            <DatePicker
+              selected={new Date(selectedYear, 0)} // Set the date to January 1st of the selected year
+              onChange={handleChange}
+              dateFormat="yyyy"
+              showYearPicker
+              className=" w-20 px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-500"
+              placeholderText='Filter Date:'
+            />
+         </div>
+
+      </div>
+
       <ResponsiveContainer>
         {/* <BarChart
           width={500}
@@ -65,7 +111,7 @@ function UserBarChart() {
 
       
         <AreaChart data={updatedData}
-          margin={{ top: 50, right: 30, left: 30, bottom: 40}}>
+          margin={{ top: 50, right: 30, left: 5, bottom: 40}}>
           <defs>
             <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8}/>
@@ -87,6 +133,7 @@ function UserBarChart() {
 
 
       </ResponsiveContainer>
+
     </div>
   );
 }

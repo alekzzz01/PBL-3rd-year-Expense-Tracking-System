@@ -262,6 +262,8 @@ const resetPassword = asyncHandler(async (req, res) => {
 });
 
 
+
+
 const updateUserProfile = asyncHandler(async (req, res) => {
   const { firstName, lastName, bio } = req.body;
   const userId = req.user._id;  

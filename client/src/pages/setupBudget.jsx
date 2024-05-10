@@ -120,12 +120,11 @@ function SetupBudget() {
 
               <div className='flex flex-col gap-5 col-span-1 lg:col-span-2'>
           
-                  <div className='border rounded-xl  py-5 px-6 w-full'>
+                  <div className='border rounded-xl  py-5 px-6 w-full' style={{ height: 400 }}>
                     <LineChart/>
                   </div>
 
-                  <div className=' border border-base-300 rounded-xl py-5 px-6'>
-                      <p className='mb-6 text-lg font-medium'>Income List</p>
+                  <div className=' border border-base-300 rounded-xl py-5 px-6' >
                       <IncomeTable/>
                   </div>
 

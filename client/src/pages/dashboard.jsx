@@ -31,13 +31,11 @@ function Dashboard() {
               <div className='flex flex-col gap-5 col-span-1 md:col-span-1 lg:col-span-2'>
 
                     <div className='py-5 px-6 border border-base-300 rounded-md' style={{ height: 500 }}>
-                    <p className='text-lg font-medium'>Overview</p>
                           <UserBarChart />
                     </div>
 
                     <div className='py-5 px-6 border border-base-300 rounded-md'>
-                      <p className='mb-6 text-lg font-medium'>Transactions List</p>
-                      <TransactionTable/>
+                          <TransactionTable/>
                     </div>
 
               </div>

@@ -137,8 +137,12 @@ function IncomeTable() {
   return (
     <>
 
-      <div className='flex justify-end'>
-      {selectedRows.length > 0 && (
+      <div className='flex items-center justify-between'>
+
+
+        <p className='mb-6 text-lg font-medium'>Income List</p>
+      
+        {selectedRows.length > 0 && (
             <button className='border border-base-300 btn' onClick={handleDeleteSelected}> <Trash
             size={16}
             color="#dc3545"  /></button>

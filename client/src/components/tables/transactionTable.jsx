@@ -18,6 +18,39 @@ function TransactionTable() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Empty dependency array to ensure it only runs once
 
+
+  // for Individual items for deletion
+
+  const handleDeleteIncome = (incomeId) => {
+    // Call the deleteIncome function with the incomeId
+    deleteIncome(incomeId)
+      .then((response) => {
+        fetchTransactions(); 
+        console.log(response);
+      })
+      .catch((error) => {
+        console.error('Error deleting income:', error);
+        
+      });
+  };
+
+  const handleDeleteExpense = (expenseItemId) => {
+    // Call the deleteIncome function with the incomeId
+    deleteExpense(expenseItemId)
+      .then((response) => {
+        fetchTransactions(); 
+        console.log(response);
+      })
+      .catch((error) => {
+        console.error('Error deleting income:', error);
+        
+      });
+  };
+
+
+  // for Selected Items for deletion
+
+  
   const handleDeleteSelected = async () => {
     try {
       for (const row of selectedRows) {
@@ -84,11 +117,11 @@ function TransactionTable() {
               color="#007bff"   />
           </button> 
 
-           <button onClick={() => {
+          <button onClick={() => {
             if (row.tableType === 'Income') {
-              deleteIncome(row._id);
+              handleDeleteIncome(row._id);
             } else if (row.tableType === 'Expense') {
-              deleteExpense(row._id);
+              handleDeleteExpense(row._id);
             }
           }}>
           <Trash
@@ -111,7 +144,10 @@ function TransactionTable() {
   return (
     <>
 
-     <div className='flex justify-end'>
+     <div className='flex items-center justify-between'>
+
+        <p className='mb-6 text-lg font-medium'>Transactions List</p>
+
         {selectedRows.length > 0 && (
               <button className='border border-base-300 btn' onClick={handleDeleteSelected}> <Trash
               size={16}
