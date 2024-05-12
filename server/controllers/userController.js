@@ -417,6 +417,7 @@ const getNewUsers = asyncHandler(async (req, res) => {
   }
 });
 
+
 const removeUser = async (req, res) => {
   try {
       const userId = req.params.userId; // Extract userId from request parameters
@@ -439,7 +440,7 @@ const removeUser = async (req, res) => {
 const viewUser = asyncHandler(async (req, res) => {
   try {
     const userId = req.params.userId; // Extract userId from request parameters
-    const user = await User.findById(userId, '_id username role createdAt status lastLogin');
+    const user = await User.findById(userId, '_id username email lastName firstName role bio createdAt status lastLogin');
     if (!user) {
       return res.status(404).json({ success: false, message: 'User not found' });
     }

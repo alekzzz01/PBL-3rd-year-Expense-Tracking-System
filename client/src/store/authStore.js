@@ -424,6 +424,46 @@
         return { success: false, errorMessage: 'Failed to fetch users' };
       }
     },
+
+    removeUser: async (userId) => {
+      try {
+        const response = await axios.delete(`http://localhost:5000/auth/removeUser/${userId}`);
+        if (response.status === 200) {
+          // Filter out the removed user from the local state
+          set((state) => ({
+            allUsers: state.allUsers.filter((user) => user.userId !== userId),
+          }));
+          toast.success('User removed successfully');
+          return { success: true };
+        } else {
+          console.error('Unexpected response status:', response.status);
+          return { success: false, errorMessage: 'Failed to remove user' };
+        }
+      } catch (error) {
+        console.error('Error removing user:', error);
+        return { success: false, errorMessage: 'Failed to remove user' };
+      }
+    },
+
+    viewUser: async (userId) => {
+      try {
+        const response = await axios.get(`http://localhost:5000/auth/viewUser/${userId}`);
+        if (response.data.success) {
+          const user = response.data.user;
+          return { success: true, user };
+        } else {
+          console.error('User not found:', response.data.message);
+          return { success: false, errorMessage: response.data.message };
+        }
+      } catch (error) {
+        console.error('Error fetching user:', error);
+        return { success: false, errorMessage: 'Internal server error' };
+      }
+    },
+
+    
+
+
   }));
 
 
