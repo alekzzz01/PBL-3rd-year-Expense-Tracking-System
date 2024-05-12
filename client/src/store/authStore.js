@@ -1,9 +1,9 @@
   import { create } from 'zustand';
   import { jwtDecode } from "jwt-decode";
   import axios from 'axios';
-
   import { toast } from 'react-toastify';
   import 'react-toastify/dist/ReactToastify.css';
+  import { baseUrl } from '../store/url.js';
 
 
   const useAuthStore = create((set) => ({
@@ -42,7 +42,7 @@
     
     login: async (email, password) => {
       try {
-        const response = await axios.post('http://localhost:5000/auth/login', {
+        const response = await axios.post(`${baseUrl}/auth/login`, {
           email,
           password,
         });
@@ -96,7 +96,7 @@
 
     register: async (username, email, password) => {
       try {
-        const response = await axios.post('http://localhost:5000/auth/register', {
+        const response = await axios.post(`${baseUrl}/auth/register`, {
           username,
           email,
           password,
@@ -141,7 +141,7 @@
               throw new Error('No token found');
           }
   
-          const response = await axios.post('http://localhost:5000/auth/logout', null, {
+          const response = await axios.post(`${baseUrl}/auth/logout`, null, {
               headers: { Authorization: `Bearer ${token}` },
           });
   
@@ -165,7 +165,7 @@
 
     checkUsernameExists: async (username) => {
       try {
-        const response = await axios.get(`http://localhost:5000/auth/check-username/${username}`);
+        const response = await axios.get(`${baseUrl}/auth/check-username/${username}`);
         set({ usernameExists: response.data.exists });
       } catch (error) {
         console.error('Error checking username:', error);
@@ -238,7 +238,7 @@
 
     forgotPassword: async (email) => {
       try {
-        const response = await axios.post('http://localhost:5000/auth/forgetPassword', { email });
+        const response = await axios.post(`${baseUrl}/auth/forgetPassword`, { email });
   
         if (response.status === 200) {
           toast.success('Password reset email sent successfully. Check your inbox.');
@@ -259,7 +259,7 @@
 
     resetPassword: async (token, newPassword, confirmPassword) => {
       try {
-        const response = await axios.post(`http://localhost:5000/auth/resetpassword/${token}`, {
+        const response = await axios.post(`${baseUrl}/auth/resetpassword/${token}`, {
           newPassword,
           confirmPassword,
         });
@@ -291,7 +291,7 @@
         }
   
         const response = await axios.put(
-          'http://localhost:5000/auth/updateprofile',
+          `${baseUrl}/auth/updateprofile`,
           { firstName, lastName, bio },
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -320,7 +320,7 @@
           throw new Error('No token found');
         }
   
-        const response = await axios.get('http://localhost:5000/auth/getUserDetails', {
+        const response = await axios.get(`${baseUrl}/auth/getUserDetails`, {
           headers: { Authorization: `Bearer ${token}` },
         });
   
@@ -345,7 +345,7 @@
       try {
 
         
-        const response = await axios.get('http://localhost:5000/auth/getUsersperMonth')
+        const response = await axios.get(`${baseUrl}/auth/getUsersperMonth`)
           
         if (response.data && response.data.success) {
           set({ totalUserPerMonth: response.data.data });
@@ -361,7 +361,7 @@
     getTotalRegisteredUsers: async () => {
       try {
 
-        const response = await axios.get('http://localhost:5000/auth/getTotalUsers')
+        const response = await axios.get(`${baseUrl}/auth/getTotalUsers`)
           
   
         if (response.data && response.data.success) {
@@ -377,7 +377,7 @@
     getTotalActiveUsers: async () => {
       try {
 
-        const response = await axios.get('http://localhost:5000/auth/getTotalActiveUsers')
+        const response = await axios.get(`${baseUrl}/auth/getTotalActiveUsers`)
           
   
         if (response.data && response.data.success) {
@@ -393,7 +393,7 @@
     getTotalNewUsers: async () => {
       try {
 
-        const response = await axios.get('http://localhost:5000/auth/getTotalNewUsers')
+        const response = await axios.get(`${baseUrl}/auth/getTotalNewUsers`)
           
   
         if (response.data && response.data.success) {
@@ -409,7 +409,7 @@
 
     getAllUsers: async () => {
       try {
-        const response = await axios.get('http://localhost:5000/auth/getUsers');
+        const response = await axios.get(`${baseUrl}/auth/getUsers`);
         if (response.status === 200) {
           const users = response.data;
           set({ allUsers: users });
@@ -427,7 +427,7 @@
 
     removeUser: async (userId) => {
       try {
-        const response = await axios.delete(`http://localhost:5000/auth/removeUser/${userId}`);
+        const response = await axios.delete(`${baseUrl}/auth/removeUser/${userId}`);
         if (response.status === 200) {
           // Filter out the removed user from the local state
           set((state) => ({
@@ -447,7 +447,7 @@
 
     viewUser: async (userId) => {
       try {
-        const response = await axios.get(`http://localhost:5000/auth/viewUser/${userId}`);
+        const response = await axios.get(`${baseUrl}/auth/viewUser/${userId}`);
         if (response.data.success) {
           const user = response.data.user;
           return { success: true, user };
