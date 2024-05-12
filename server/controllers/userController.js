@@ -41,6 +41,7 @@ const login = asyncHandler(async (req, res) => {
       // Reset failed login attempts on successful login
       user.failedLoginAttempts = 0;
       user.lastLogin = new Date();
+      user.status = "active";
       await user.save();
 
       // Include user ID in the JWT payload
@@ -94,9 +95,34 @@ const register = asyncHandler(async (req, res) => {
 
 
 const logout = asyncHandler(async (req, res) => {
-    // Clear the token cookie
-    res.clearCookie('token');
-    res.json({ status: true, message: "Logout successful" });
+  try {
+      if (!req.user || !req.user._id) {
+          return res.status(401).json({ success: false, message: 'Unauthorized' });
+      }
+
+      // Get the user ID from the authenticated user
+      const userId = req.user._id;
+
+      // Fetch user from the database
+      const user = await User.findById(userId);
+
+      // Check if the user exists
+      if (!user) {
+          return res.status(404).json({ success: false, message: 'User not found' });
+      }
+
+      // Update user status to "inactive"
+      user.status = "inactive";
+      await user.save();
+  } catch (error) {
+      console.error("Error setting user status to inactive:", error);
+      // Handle error if needed
+      return res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+
+  // Clear the token cookie
+  res.clearCookie('token');
+  res.json({ status: true, message: "Logout successful" });
 });
 
 
@@ -109,17 +135,6 @@ const checkUsernameExists = asyncHandler(async (req, res) => {
       console.error('Error checking username:', error);
       res.status(500).json({ error: 'Internal server error' });
     }
-});
-
-
-const getAllUsers = asyncHandler(async (req, res) => {
-  try {
-      const users = await User.find({}, 'firstName lastName email username bio');
-      res.json(users);
-  } catch (error) {
-      console.error('Error fetching users:', error);
-      res.status(500).json({ error: 'Internal server error' });
-  }
 });
 
 
@@ -262,8 +277,6 @@ const resetPassword = asyncHandler(async (req, res) => {
 });
 
 
-
-
 const updateUserProfile = asyncHandler(async (req, res) => {
   const { firstName, lastName, bio } = req.body;
   const userId = req.user._id;  
@@ -318,5 +331,92 @@ const getUserDetails = asyncHandler(async (req, res) => {
 });
 
 
+const getAllUsers = asyncHandler(async (req, res) => {
+  try {
+      const users = await User.find({}, 'firstName lastName email username bio');
+      res.json(users);
+  } catch (error) {
+      console.error('Error fetching users:', error);
+      res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
+
+const getTotalRegisteredUsersPerMonth = asyncHandler(async (req, res) => {
+  try {
+    const userCountPerMonth = await User.aggregate([
+      {
+        $project: {
+          month: { $month: "$createdAt" }, // Extract month from createdAt field
+          year: { $year: "$createdAt" }, // Extract year from createdAt field
+        }
+      },
+      {
+        $group: {
+          _id: { month: '$month', year: '$year' },
+          totalUsers: { $sum: 1 }
+        }
+      },
+      {
+        $sort: { "_id.year": 1, "_id.month": 1 } // Sort the result by year and month
+      }
+    ]);
+
+    res.status(200).json({ success: true, data: userCountPerMonth });
+  } catch (error) {
+    console.error('Error getting total registered users per month:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
+const getTotalRegisteredUsers  = asyncHandler(async (req, res) => {
+  try {
+    // Query the database to count the number of registered users
+    const totalRegisteredUsers = await User.countDocuments();
+    res.json({ success: true, totalRegisteredUsers });
+  } catch (error) {
+    console.error('Error fetching total registered users:', error);
+    res.status(500).json({ success: false, message: 'Failed to fetch total registered users' });
+  }
+});
+
+
+const getTotalActiveUsers = asyncHandler(async (req, res) => {
+  try {
+    // Query the database to count the number of active users
+    const totalActiveUsers = await User.countDocuments({ status: "active" });
+    res.json({ success: true, totalActiveUsers });
+  } catch (error) {
+    console.error('Error fetching total active users:', error);
+    res.status(500).json({ success: false, message: 'Failed to fetch total active users' });
+  }
+});
+
+const getNewUsers = asyncHandler(async (req, res) => {
+  try {
+    // Calculate a date (e.g., 30 days ago from now) to define the threshold for "new" users
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    // Query the database to count the number of new users
+    const totalNewUsers = await User.countDocuments({
+      createdAt: { $gte: thirtyDaysAgo } // Filter users created within the last 30 days
+    });
+
+    res.json({ success: true, totalNewUsers });
+  } catch (error) {
+    console.error('Error fetching total new users:', error);
+    res.status(500).json({ success: false, message: 'Failed to fetch total new users' });
+  }
+});
+
+
+
+
+
+
+
   
-export { login, register, logout, checkUsernameExists, getAllUsers, forgetPassword, resetPassword, updateUserProfile, getUserDetails };
+export { login, register, logout, checkUsernameExists, getAllUsers, forgetPassword, resetPassword, updateUserProfile, getUserDetails, getTotalRegisteredUsersPerMonth, getTotalRegisteredUsers, getTotalActiveUsers, getNewUsers };

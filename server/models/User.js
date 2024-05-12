@@ -8,7 +8,14 @@ const UserSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true, minlength: 8 },
     role: { type: String, required: true },
+
+    
+    status: { type: String, enum: ["active", "inactive"], default: "active" },
     lastLogin: { type: Date, default: Date.now },
+    createdAt: { type: Date, default: Date.now },
+  
+
+
     failedLoginAttempts: { type: Number, default: 0 }, // Track failed login attempts
     isLocked: { type: Boolean, default: false }, // Track if the account is locked
     passwordHistory: [{ type: String }] // Array to store recent passwords

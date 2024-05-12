@@ -12,6 +12,8 @@
     isAuthenticated: false,
     user: null,
     usernameExists: false,
+    totalUserPerMonth: [], 
+    totalRegisteredUsers: 0,
 
   
     // for automatic login it checks if the user is already logged in
@@ -132,13 +134,31 @@
     
 
     logout: async (navigate) => {
-     
-              set({ isAuthenticated: false, user: null });
-              localStorage.removeItem('token');
-              toast.success('Logged out successfully');
-              navigate('/login'); // Redirect to login page
-    
+      try {
+          const token = localStorage.getItem('token');
+          if (!token) {
+              throw new Error('No token found');
+          }
+  
+          const response = await axios.post('http://localhost:5000/auth/logout', null, {
+              headers: { Authorization: `Bearer ${token}` },
+          });
+  
+          // Log the response status code
+          console.log('Logout response status code:', response.status);
+  
+          set({ isAuthenticated: false, user: null });
+          localStorage.removeItem('token');
+          toast.success('Logged out successfully');
+          navigate('/login'); // Redirect to login page
+      } catch (error) {
+          console.error('Logout failed:', error);
+          // Handle error if needed
+          toast.error('Logout failed');
+      }
   },
+  
+  
   
   
 
@@ -291,6 +311,7 @@
     },
 
 
+
     getUserDetails: async () => {
       try {
         const token = localStorage.getItem('token');
@@ -317,9 +338,72 @@
     },
 
 
+    // admin side
 
-    
+    getTotalRegisteredUsersPerMonth: async () => {
+      try {
 
+        
+        const response = await axios.get('http://localhost:5000/auth/getUsersperMonth')
+          
+        if (response.data && response.data.success) {
+          set({ totalUserPerMonth: response.data.data });
+          // console.log('Total users per month data:', response.data.data);
+        } else {
+          console.error('Failed to fetch total registered users per month');
+        }
+      } catch (error) {
+        console.error('Error fetching total registered users per month:', error);
+      }
+    },
+
+    getTotalRegisteredUsers: async () => {
+      try {
+
+        const response = await axios.get('http://localhost:5000/auth/getTotalUsers')
+          
+  
+        if (response.data && response.data.success) {
+          set({ totalRegisteredUsers: response.data.totalRegisteredUsers });
+        } else {
+          console.error('Failed to fetch total registered users');
+        }
+      } catch (error) {
+        console.error('Error fetching total registered users:', error);
+      }
+    },
+
+    getTotalActiveUsers: async () => {
+      try {
+
+        const response = await axios.get('http://localhost:5000/auth/getTotalActiveUsers')
+          
+  
+        if (response.data && response.data.success) {
+          set({ totalActiveUsers: response.data.totalActiveUsers });
+        } else {
+          console.error('Failed to fetch total active users');
+        }
+      } catch (error) {
+        console.error('Error fetching total active users:', error);
+      }
+    },
+
+    getTotalNewUsers: async () => {
+      try {
+
+        const response = await axios.get('http://localhost:5000/auth/getTotalNewUsers')
+          
+  
+        if (response.data && response.data.success) {
+          set({ totalNewUsers: response.data.totalNewUsers });
+        } else {
+          console.error('Failed to fetch total new users');
+        }
+      } catch (error) {
+        console.error('Error fetching total new users:', error);
+      }
+    },
 
 
 

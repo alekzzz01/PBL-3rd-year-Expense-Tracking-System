@@ -1,7 +1,7 @@
 import React from "react";
+import Image from 'mui-image'
 import {
   Box,
-
   Drawer,
   IconButton,
   List,
@@ -12,88 +12,48 @@ import {
   Typography,
 
 } from "@mui/material";
-import {
+
+import { 
   
-  ChevronLeft,
-  ChevronRightOutlined,
-  HomeOutlined,
-  ShoppingCartOutlined,
-  Groups2Outlined,
-  ReceiptLongOutlined,
-  PublicOutlined,
-  PointOfSaleOutlined,
-  TodayOutlined,
-  CalendarMonthOutlined,
-  AdminPanelSettingsOutlined,
-  TrendingUpOutlined,
-  PieChartOutlined,
-} from "@mui/icons-material";
+  LayoutDashboard,
+ 
+  ChevronRight,
+  ChevronLeft 
+
+
+
+ } from 'lucide-react';
+
+
+// // import {
+  
+//   ChevronLeft,
+//   ChevronRightOutlined,
+//    HomeOutlined,
+//   CurrencyExchangeOutlined,
+//   PointOfSaleOutlined,
+//   Notifications,
+//   AddOutlined,
+
+//   Settings
+//  } from "@mui/icons-material";
+
+
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import FlexBetween from "./FlexBetween";
-// import profileImage from "assets/profile.jpeg";
 
 const navItems = [
   {
     text: "Home",
-    icon: <HomeOutlined />,
+    icon: <LayoutDashboard />,
   
   },
-  {
-    text: "Client Facing",
-    icon: null,
-  },
-  {
-    text: "Products",
-    icon: <ShoppingCartOutlined />,
-  },
-  {
-    text: "Customers",
-    icon: <Groups2Outlined />,
-  },
-  {
-    text: "Transactions",
-    icon: <ReceiptLongOutlined />,
-  },
-  {
-    text: "Geography",
-    icon: <PublicOutlined />,
-  },
-  {
-    text: "Sales",
-    icon: null,
-  },
-  {
-    text: "Overview",
-    icon: <PointOfSaleOutlined />,
-  },
-  {
-    text: "Daily",
-    icon: <TodayOutlined />,
-  },
-  {
-    text: "Monthly",
-    icon: <CalendarMonthOutlined />,
-  },
-  {
-    text: "Breakdown",
-    icon: <PieChartOutlined />,
-  },
-  {
-    text: "Management",
-    icon: null,
-  },
-  {
-    text: "Users",
-    icon: <AdminPanelSettingsOutlined />,
-  },
-  {
-    text: "Performance",
-    icon: <TrendingUpOutlined />,
-  },
+
+
 ];
 
-const Sidebar = ({
+const AdminSidebar = ({
 
   drawerWidth,
   isSidebarOpen,
@@ -120,11 +80,12 @@ const Sidebar = ({
             width: drawerWidth,
             "& .MuiDrawer-paper": {
             // color: theme.palette.secondary[200],
-                backgroundColor: "transparent",
+              backgroundColor: "white",
               boxSixing: "border-box",
               borderWidth: isNonMobile ? 0 : "2px",
               width: drawerWidth,
               borderRight: "1px solid #e0e0e0", 
+              zIndex: 10,
              
             },
           }}
@@ -133,9 +94,7 @@ const Sidebar = ({
             <Box m="1.5rem 2rem 2rem 3rem">
               <FlexBetween >
                 <Box display="flex" alignItems="center" gap="0.5rem">
-                  <Typography variant="h4" fontWeight="bold">
-                  
-                  </Typography>
+                  <Image src="https://scontent.fmnl30-1.fna.fbcdn.net/v/t1.15752-9/440864325_346224308474974_6359235480973778937_n.png?_nc_cat=107&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeHIt5B4k375UleDKn1GgV7jHQZJq3po0xwdBkmremjTHM-vPXe_pMAVPpMZ8yFe9wwAGErdZAz_Otk4fdN7M3PU&_nc_ohc=1v7qZe3lq_0Q7kNvgEbduVD&_nc_ht=scontent.fmnl30-1.fna&oh=03_Q7cD1QGhNR71L_khz38GwpxfqxW8PBBXuzeah0Nb0pgGOkEesg&oe=66658FD7" />
                 </Box>
                 {!isNonMobile && (
                   <IconButton onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
@@ -148,7 +107,7 @@ const Sidebar = ({
               {navItems.map(({ text, icon }) => {
                 if (!icon) {
                   return (
-                    <Typography key={text} sx={{ m: "2.25rem 0 1rem 3rem" }}>
+                    <Typography key={text}>
                       {text}
                     </Typography>
                   );
@@ -163,14 +122,16 @@ const Sidebar = ({
                         setActive(lcText);
                       }}
                       sx={{
+                        padding: "1rem" ,
+                       
                         backgroundColor:
                           active === lcText
                             ? "rgb(246, 245, 242)"
                             : "transparent",
                         color:
                           active === lcText
-                            ? "rgb(116, 105, 182)"
-                            : "rgb(116, 105, 182)",
+                            ? "rgba(63, 81, 181, 1)"
+                            : "rgba(156, 163, 175, 1)",
                       }}
                     >
                       <ListItemIcon
@@ -178,15 +139,15 @@ const Sidebar = ({
                           ml: "2rem",
                           color:
                             active === lcText
-                              ? "rgb(116, 105, 182)"
-                              : "rgb(116, 105, 182)",
+                              ? "rgba(63, 81, 181, 1)"
+                              : "rgba(156, 163, 175, 1)",
                         }}
                       >
                         {icon}
                       </ListItemIcon>
                       <ListItemText primary={text} />
                       {active === lcText && (
-                        <ChevronRightOutlined sx={{ ml: "auto" }} />
+                        <ChevronRight sx={{ ml: "auto" }} />
                       )}
                     </ListItemButton>
                   </ListItem>
@@ -203,4 +164,4 @@ const Sidebar = ({
   );
 };
 
-export default Sidebar;
+export default AdminSidebar;
