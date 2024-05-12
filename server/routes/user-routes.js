@@ -1,5 +1,5 @@
 import express from 'express';
-import { login, register, logout, checkUsernameExists, getAllUsers, forgetPassword, resetPassword, updateUserProfile, getUserDetails, getTotalRegisteredUsersPerMonth, getTotalRegisteredUsers, getTotalActiveUsers, getNewUsers } from "../controllers/userController.js"; 
+import { login, register, logout, checkUsernameExists, getAllUsers, forgetPassword, resetPassword, updateUserProfile, getUserDetails, getTotalRegisteredUsersPerMonth, getTotalRegisteredUsers, getTotalActiveUsers, getNewUsers, removeUser, viewUser } from "../controllers/userController.js"; 
 import checkAuth from "../middleWare/checkAuth.js";
 
 const router = express.Router();
@@ -20,6 +20,8 @@ router.get('/getUsersperMonth',  getTotalRegisteredUsersPerMonth)
 router.get('/getTotalUsers', getTotalRegisteredUsers )
 router.get('/getTotalActiveUsers', getTotalActiveUsers)
 router.get('/getTotalNewUsers', getNewUsers)
+router.delete('/removeUser/:userId', removeUser);
+router.get('/viewUser/:userId', viewUser);
 
 router.get('/', (req, res, next ) => {
  res.send("Hello World")

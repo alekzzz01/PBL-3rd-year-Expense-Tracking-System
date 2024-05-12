@@ -417,11 +417,41 @@ const getNewUsers = asyncHandler(async (req, res) => {
   }
 });
 
+const removeUser = async (req, res) => {
+  try {
+      const userId = req.params.userId; // Extract userId from request parameters
+      console.log("Removing user with ID:", userId); // Log the userId to verify it
+      // Use userId to remove the user from the database
+      // For example:
+      const result = await User.findByIdAndDelete(userId); // Assuming you're using Mongoose
+      console.log("Removal result:", result); // Log the result of the removal operation
+      if (!result) {
+          return res.status(404).json({ success: false, message: 'User not found' });
+      }
+      console.log("User removed successfully");
+      res.status(200).json({ success: true, message: 'User removed successfully' });
+  } catch (error) {
+      console.error('Error removing user:', error);
+      res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+};
 
-
+const viewUser = asyncHandler(async (req, res) => {
+  try {
+    const userId = req.params.userId; // Extract userId from request parameters
+    const user = await User.findById(userId, '_id username role createdAt status lastLogin');
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+    res.status(200).json({ success: true, user });
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+});
 
 
 
 
   
-export { login, register, logout, checkUsernameExists, getAllUsers, forgetPassword, resetPassword, updateUserProfile, getUserDetails, getTotalRegisteredUsersPerMonth, getTotalRegisteredUsers, getTotalActiveUsers, getNewUsers };
+export { login, register, logout, checkUsernameExists, getAllUsers, forgetPassword, resetPassword, updateUserProfile, getUserDetails, getTotalRegisteredUsersPerMonth, getTotalRegisteredUsers, getTotalActiveUsers, getNewUsers, removeUser, viewUser };
