@@ -112,7 +112,7 @@ const logout = asyncHandler(async (req, res) => {
       }
 
       // Update user status to "inactive"
-      user.status = "inactive";
+      user.status = "Inactive";
       await user.save();
   } catch (error) {
       console.error("Error setting user status to inactive:", error);

@@ -5,8 +5,6 @@ import useAuthStore from '../../store/authStore'; // Update the path accordingly
 function UserTable() {
 
   const { allUsers, getAllUsers, isLoading, isError, errorMessage } = useAuthStore(); // Access state and actions from the store
-
-
   
   useEffect(() => {
     getAllUsers(); // Fetch transactions when component mounts
@@ -46,9 +44,7 @@ function UserTable() {
     },
   ];
   
-   
-   
-   
+  
 
   return (
     <>
