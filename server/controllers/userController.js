@@ -1,7 +1,7 @@
 import {User} from '../models/User.js'
 import nodemailer from 'nodemailer';
 import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import asyncHandler from '../middleWare/asyncHandler.js';
 
 
