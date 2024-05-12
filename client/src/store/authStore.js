@@ -11,6 +11,7 @@
     
     isAuthenticated: false,
     user: null,
+    allUsers: [],
     usernameExists: false,
     totalUserPerMonth: [], 
     totalRegisteredUsers: 0,
@@ -406,9 +407,30 @@
     },
 
 
-
-
+    getAllUsers: async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/auth/getUsers');
+        if (response.status === 200) {
+          const users = response.data;
+          set({ allUsers: users });
+     
+          return { success: true, users: users };
+        } else {
+          console.error('Unexpected response status:', response.status);
+          return { success: false, errorMessage: 'Failed to fetch users' };
+        }
+      } catch (error) {
+        console.error('Error fetching users:', error);
+        return { success: false, errorMessage: 'Failed to fetch users' };
+      }
+    },
   }));
+
+
+   
+    
+    
+
 
   // useAuthStore.getState().initializeUserFromLocalStorage();
 

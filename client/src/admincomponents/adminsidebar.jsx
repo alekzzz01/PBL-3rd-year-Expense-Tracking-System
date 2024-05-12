@@ -16,7 +16,7 @@ import {
 import { 
   
   LayoutDashboard,
- 
+  UsersRound,
   ChevronRight,
   ChevronLeft 
 
@@ -47,6 +47,12 @@ const navItems = [
   {
     text: "Home",
     icon: <LayoutDashboard />,
+  
+  },
+
+  {
+    text: "Users",
+    icon: <UsersRound />,
   
   },
 

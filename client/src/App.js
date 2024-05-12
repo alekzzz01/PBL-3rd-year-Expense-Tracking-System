@@ -14,6 +14,7 @@ import Settings from './pages/settings';
 
 import AdminLayout from './layout/AdminLayout';
 import AdminDashboard from './adminpages/admindashboard';
+import AdminUserManagement from './adminpages/userManagement';
 
 import SignUp from './auth/register';
 import SignIn from './auth/login';
@@ -66,6 +67,7 @@ function App() {
         <Route path="/" element={<AdminLayout />}>
     
           <Route path="/home" element={<AdminDashboard/>} />
+          <Route path="/users" element={<AdminUserManagement/>} />
 
         </Route>
 

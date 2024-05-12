@@ -41,7 +41,7 @@ const login = asyncHandler(async (req, res) => {
       // Reset failed login attempts on successful login
       user.failedLoginAttempts = 0;
       user.lastLogin = new Date();
-      user.status = "active";
+      user.status = "Active";
       await user.save();
 
       // Include user ID in the JWT payload
@@ -331,9 +331,14 @@ const getUserDetails = asyncHandler(async (req, res) => {
 });
 
 
+
+
+// admin side
+
+
 const getAllUsers = asyncHandler(async (req, res) => {
   try {
-      const users = await User.find({}, 'firstName lastName email username bio');
+      const users = await User.find({}, 'firstName lastName email username bio status');
       res.json(users);
   } catch (error) {
       console.error('Error fetching users:', error);
@@ -386,7 +391,7 @@ const getTotalRegisteredUsers  = asyncHandler(async (req, res) => {
 const getTotalActiveUsers = asyncHandler(async (req, res) => {
   try {
     // Query the database to count the number of active users
-    const totalActiveUsers = await User.countDocuments({ status: "active" });
+    const totalActiveUsers = await User.countDocuments({ status: "Active" });
     res.json({ success: true, totalActiveUsers });
   } catch (error) {
     console.error('Error fetching total active users:', error);

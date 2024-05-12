@@ -10,7 +10,7 @@ const UserSchema = new mongoose.Schema({
     role: { type: String, required: true },
 
     
-    status: { type: String, enum: ["active", "inactive"], default: "active" },
+    status: { type: String, enum: ["Active", "Inactive"], default: "Active" },
     lastLogin: { type: Date, default: Date.now },
     createdAt: { type: Date, default: Date.now },
   
