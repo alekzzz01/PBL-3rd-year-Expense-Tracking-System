@@ -40,7 +40,7 @@ function App() {
     <BrowserRouter>
       <Routes>
 
-        <Analytics/>
+
 
         <Route index element={<SignIn />} />
         <Route path="/login" element={<SignIn />} />
@@ -80,7 +80,9 @@ function App() {
        
 
       </Routes>
+    
     </BrowserRouter>
+    <Analytics/>
   </div>
   );
 }

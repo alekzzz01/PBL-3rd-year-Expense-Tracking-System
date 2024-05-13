@@ -36,6 +36,7 @@ function AdminLayout() {
       </Box>
 
       <SessionTimeout />
+      
     </Box>
   );
 }
