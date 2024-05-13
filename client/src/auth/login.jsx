@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import useAuthStore from '../store/authStore';
-
+import { TailSpin } from 'react-loader-spinner';
 
 function Login() {
 
@@ -24,9 +24,11 @@ function Login() {
   // Authstore Login
 
   const login = useAuthStore(state => state.login);
+  const [isLoading, setIsLoading] = useState(false);
  
   const handleLogin = async (event) => {
     event.preventDefault();
+    setIsLoading(true);
     const email = event.target.email.value;
     const password = event.target.password.value;
   
@@ -43,6 +45,7 @@ function Login() {
       console.error('Error during login:', error);
       // Set a generic error message
       setErrorMessage('Failed to login. Please check your credentials.');
+      setIsLoading(false);
     }
   };
   
@@ -127,7 +130,15 @@ function Login() {
               {errorMessage}
             </div>
           }
+
+              {isLoading && (
+                <div className="py-4 px-2 flex justify-center items-center">
+                  <TailSpin type="TailSpin" color="#000" height={30} width={30} />
+                </div>
+                )}
         </div>
+
+
       </section>
     </>
   )
