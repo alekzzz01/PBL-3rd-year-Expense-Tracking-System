@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { AnalyticsVercel } from "@vercel/analytics/react"
+import { Analytics } from "@vercel/analytics/react"
 
 import Layout from './layout/Layout';
 import Dashboard from './pages/dashboard';
 import Transactions from './pages/transactions';
 import Income from './pages/setupBudget';
 import Expenses from './pages/expenses';
-import Analytics from './pages/analytics';
+import Analytic from './pages/analytics';
 import Profile from './pages/Profile';
 import Notifications from './pages/notifications';
 import Settings from './pages/settings';
@@ -40,7 +40,7 @@ function App() {
     <BrowserRouter>
       <Routes>
 
-        <AnalyticsVercel/>
+        <Analytics/>
 
         <Route index element={<SignIn />} />
         <Route path="/login" element={<SignIn />} />
@@ -57,7 +57,7 @@ function App() {
             <Route path="/transactions" element={<Transactions />} />
             <Route path="/income" element={<Income/>} />
             <Route path="/expenses" element={<Expenses/>} />
-            <Route path="/analytics" element={<Analytics/>} />
+            <Route path="/analytics" element={<Analytic/>} />
             <Route path="/notifications" element={<Notifications/>} />
             <Route path="/settings" element={<Settings/>} />
             <Route path="/profile" element={<Profile/>} />
