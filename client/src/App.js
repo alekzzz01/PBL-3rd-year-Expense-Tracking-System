@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { AnalyticsVercel } from "@vercel/analytics/react"
 
 import Layout from './layout/Layout';
 import Dashboard from './pages/dashboard';
@@ -15,7 +16,7 @@ import Settings from './pages/settings';
 import AdminLayout from './layout/AdminLayout';
 import AdminDashboard from './adminpages/admindashboard';
 import AdminUserManagement from './adminpages/userManagement';
-import AdminVisitorManagement from './adminpages/vercelManagement'
+
 
 import SignUp from './auth/register';
 import SignIn from './auth/login';
@@ -38,6 +39,8 @@ function App() {
     <div className='app'>
     <BrowserRouter>
       <Routes>
+
+        <AnalyticsVercel/>
 
         <Route index element={<SignIn />} />
         <Route path="/login" element={<SignIn />} />
@@ -69,7 +72,7 @@ function App() {
     
           <Route path="/home" element={<AdminDashboard/>} />
           <Route path="/users" element={<AdminUserManagement/>} />
-          <Route path="/visitors" element={<AdminVisitorManagement/>} />
+     
        
 
         </Route>
