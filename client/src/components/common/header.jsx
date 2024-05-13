@@ -15,7 +15,7 @@ function Header({isSidebarOpen, setIsSidebarOpen}) {
     };
     
   return (
-    <div className='flex items-center justify-between gap-2 border-b border-base-100 px-8 py-2 '>
+    <div className='flex items-center justify-between gap-2 border-b border-base-200 px-8 py-2 '>
 
 
             <div>
