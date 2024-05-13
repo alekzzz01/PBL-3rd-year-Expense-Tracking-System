@@ -3,6 +3,8 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import { baseUrl } from '../store/url.js';
+
 const useExpenseStore = create((set) => ({
   expenses: [],
   totalExpensePerMonth: [], 
@@ -13,7 +15,7 @@ const useExpenseStore = create((set) => ({
       // Retrieve the token from local storage
       const token = localStorage.getItem('token');
 
-      const response = await axios.post('http://localhost:5000/expense/addexpenses', expenseData, {
+      const response = await axios.post(`${baseUrl}/expense/addexpenses`, expenseData, {
         headers: {
           'Authorization': `Bearer ${token}`, // Include the token in the Authorization header
           'Content-Type': 'application/json' // Specify content type if needed
@@ -41,7 +43,7 @@ const useExpenseStore = create((set) => ({
   getExpenseItemsForUser: async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/expense/expenseitems', {
+      const response = await axios.get(`${baseUrl}/expense/expenseitems`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         }
@@ -75,7 +77,7 @@ const useExpenseStore = create((set) => ({
   getTotalExpensePerMonth: async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/expense/monthly-total', {
+      const response = await axios.get(`${baseUrl}/expense/monthly-total`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         }
@@ -103,7 +105,7 @@ const useExpenseStore = create((set) => ({
   getTotalExpenses: async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/expense/totalExpenses', {
+      const response = await axios.get(`${baseUrl}/expense/totalExpenses`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         }
@@ -130,7 +132,7 @@ const useExpenseStore = create((set) => ({
   deleteExpense: async (expenseItemId) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.delete(`http://localhost:5000/expense/deleteexpenses/${expenseItemId}`, {
+      const response = await axios.delete(`${baseUrl}/expense/deleteexpenses/${expenseItemId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         }

@@ -3,6 +3,8 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import { baseUrl } from '../store/url.js';
+
 const useIncomeStore = create((set) => ({
     income: [],
     totalIncomePerMonth: [], 
@@ -14,7 +16,7 @@ const useIncomeStore = create((set) => ({
         // Retrieve the token from local storage
         const token = localStorage.getItem('token');
   
-        const response = await axios.post('http://localhost:5000/income/addincome', incomeData, {
+        const response = await axios.post(`${baseUrl}/income/addincome`, incomeData, {
           headers: {
             'Authorization': `Bearer ${token}`, // Include the token in the Authorization header
             'Content-Type': 'application/json' // Specify content type if needed
@@ -45,7 +47,7 @@ const useIncomeStore = create((set) => ({
     getTotalIncomePerMonth: async () => {
         try {
           const token = localStorage.getItem('token');
-          const response = await axios.get('http://localhost:5000/income/monthly-total-income', {
+          const response = await axios.get(`${baseUrl}/income/monthly-total-income`, {
             headers: {
               'Authorization': `Bearer ${token}`,
             }
@@ -74,7 +76,7 @@ const useIncomeStore = create((set) => ({
       getTotalIncome: async () => {
         try {
           const token = localStorage.getItem('token');
-          const response = await axios.get('http://localhost:5000/income/totalincome', {
+          const response = await axios.get(`${baseUrl}/income/totalincome`, {
             headers: {
               'Authorization': `Bearer ${token}`,
             }
@@ -101,7 +103,7 @@ const useIncomeStore = create((set) => ({
       deleteIncome: async (incomeId) => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.delete(`http://localhost:5000/income/deleteincome/${incomeId}`, {
+            const response = await axios.delete(`${baseUrl}/income/deleteincome/${incomeId}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                 }

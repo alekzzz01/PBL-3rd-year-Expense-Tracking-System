@@ -3,6 +3,8 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import { baseUrl } from '../store/url.js';
+
 const formatDate = (dateString) => {
   const dateObject = new Date(dateString);
   const months = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May', 'Jun.', 'Jul.', 'Aug.', 'Sep.', 'Oct.', 'Nov.', 'Dec.'];
@@ -29,7 +31,7 @@ const useTransactionStore = create((set) => ({
   
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/transaction/combinedtable', {
+      const response = await axios.get(`${baseUrl}/transaction/combinedtable`, {
         headers: {
           'Authorization': `Bearer ${token}`, // Include the token in the Authorization header
           'Content-Type': 'application/json' // Specify content type if needed
