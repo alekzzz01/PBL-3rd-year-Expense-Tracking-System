@@ -3,7 +3,7 @@ import SelectTheme from '../common/themeSelector';
 import useAuthStore from '../../store/authStore';
 import { useNavigate } from 'react-router-dom'; 
 
-import { BellDot } from "lucide-react"
+import { BellDot, Menu } from "lucide-react"
 
 function Header({isSidebarOpen, setIsSidebarOpen}) {
 
@@ -15,23 +15,12 @@ function Header({isSidebarOpen, setIsSidebarOpen}) {
     };
     
   return (
-    <div className='flex items-center justify-between gap-2  border-b px-8 py-2 '>
+    <div className='flex items-center justify-between gap-2 border-b border-base-100 px-8 py-2 '>
 
 
             <div>
 
-            <label className="btn btn-ghost btn-circle swap swap-rotate">
-  
-                {/* this hidden checkbox controls the state */}
-                <input onClick={() => setIsSidebarOpen(!isSidebarOpen)} type="checkbox" />
-                
-                {/* hamburger icon */}
-                <svg className="swap-off fill-current" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 512 512"><path d="M64,384H448V341.33H64Zm0-106.67H448V234.67H64ZM64,128v42.67H448V128Z"/></svg>
-                
-                {/* close icon */}
-                <svg className="swap-on fill-current" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 512 512"><polygon points="400 145.49 366.51 112 256 222.51 145.49 112 112 145.49 222.51 256 112 366.51 145.49 400 256 289.49 366.51 400 400 366.51 289.49 256 400 145.49"/></svg>
-                
-                </label>
+                <label htmlFor="my-drawer-2" className="btn btn-ghost btn-circle  drawer-button lg:hidden"><Menu/></label>
 
 
             </div>

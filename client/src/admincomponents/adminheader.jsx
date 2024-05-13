@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { BellDot,  Menu } from "lucide-react"
 
-function Adminheader({isSidebarOpen, setIsSidebarOpen}) {
+function Adminheader() {
 
     const navigate = useNavigate(); // Initialize useNavigate hook
     const { logout } = useAuthStore(); // Get logout function from useAuthStore
@@ -19,10 +19,12 @@ function Adminheader({isSidebarOpen, setIsSidebarOpen}) {
 
 
             <div>
-                <button onClick={() => setIsSidebarOpen(!isSidebarOpen)}  className='btn btn-ghost btn-circle sm:block md:block lg:hidden'>
-                    <Menu />
-                </button>    
+
+                <label htmlFor="my-drawer-2" className="btn btn-ghost btn-circle  drawer-button lg:hidden"><Menu/></label>
+                   
             </div>
+
+          
 
             <div className='flex items-center gap-2'>
                         <div><SelectTheme/></div>

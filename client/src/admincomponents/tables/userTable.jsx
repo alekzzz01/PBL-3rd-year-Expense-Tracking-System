@@ -193,7 +193,7 @@
             data={allUsers}
             selectableRows
             onSelectedRowsChange={handleRowSelected}
-            fixedHeader
+           
             pagination
             theme="solarized"
           />

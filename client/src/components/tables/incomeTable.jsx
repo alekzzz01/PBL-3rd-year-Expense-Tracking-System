@@ -159,7 +159,7 @@ function IncomeTable() {
           data={incomeTransactions}
           selectableRows
           onSelectedRowsChange={handleRowSelected}
-          fixedHeader
+      
           pagination
           theme="solarized"
         />

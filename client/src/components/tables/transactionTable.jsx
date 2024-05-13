@@ -170,7 +170,7 @@ function TransactionTable() {
             data={transactions}
             selectableRows
             onSelectedRowsChange={handleRowSelected}
-            fixedHeader
+       
             pagination
             theme="solarized"
           />
