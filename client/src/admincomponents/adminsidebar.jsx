@@ -57,12 +57,6 @@ const navItems = [
   
   },
 
-  {
-    text: "Visitors",
-    icon: <BarChart3 />,
-  
-  },
-
 
 
 ];
