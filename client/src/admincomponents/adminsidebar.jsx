@@ -18,7 +18,8 @@ import {
   LayoutDashboard,
   UsersRound,
   ChevronRight,
-  ChevronLeft 
+  ChevronLeft,
+  BarChart3
 
 
 
@@ -55,6 +56,13 @@ const navItems = [
     icon: <UsersRound />,
   
   },
+
+  {
+    text: "Visitors",
+    icon: <BarChart3 />,
+  
+  },
+
 
 
 ];
