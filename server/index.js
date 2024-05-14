@@ -19,8 +19,8 @@ dotenv.config();
   app.use(express.json());
   app.use(cookieParser());
   app.use(cors({
-     origin: 'http://localhost:3000', // Allow requests from this origin
-    // origin: 'https://expense-client.vercel.app',
+     //origin: 'http://localhost:3000', // Allow requests from this origin
+    origin: 'https://expense-client.vercel.app',
     credentials: true, 
   }));
 
