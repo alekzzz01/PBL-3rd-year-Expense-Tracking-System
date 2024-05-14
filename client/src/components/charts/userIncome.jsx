@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import useIncomeStore from '../../store/incomeStore';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { LineChart, CartesianGrid, XAxis, YAxis, Line, Tooltip, Legend, ResponsiveContainer  } from 'recharts';
+import { XAxis, YAxis, CartesianGrid, Tooltip, Legend ,ResponsiveContainer, AreaChart, Area  } from 'recharts';
 
 
 
@@ -57,8 +57,8 @@ function UserLineChart() {
   return (
     <div className='relative w-full h-full'>
 
-      <div className='flex items-center justify-between'>
-          <p className='text-lg font-medium'>Overview</p>
+      <div className='flex items-center'>
+        
 
           <div className='flex items-center gap-2 text-sm'>
             <p>Filter by year:</p>
@@ -76,16 +76,26 @@ function UserLineChart() {
 
       <ResponsiveContainer>
     
-        <LineChart width={1000}  data={updatedData}
-        margin={{ top: 50, right: 30, left: 5, bottom: 40}}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        <Line type="monotone" dataKey="income" stroke="#8884d8" />
-      
-        </LineChart>
+      <AreaChart data={updatedData}
+          margin={{ top: 50, right: 30, left: 5, bottom: 40}}>
+          <defs>
+            <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8}/>
+              <stop offset="95%" stopColor="#8884d8" stopOpacity={0}/>
+            </linearGradient>
+            <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8}/>
+              <stop offset="95%" stopColor="#82ca9d" stopOpacity={0}/>
+            </linearGradient>
+          </defs>
+          <XAxis dataKey="name" />
+          <YAxis />
+          <CartesianGrid strokeDasharray="3 3" />
+          <Tooltip />
+          <Legend />
+          <Area type="monotone" dataKey="income" stroke="#8884d8" fillOpacity={1} fill="url(#colorUv)" />
+    
+        </AreaChart>
 
         </ResponsiveContainer>
     </div>

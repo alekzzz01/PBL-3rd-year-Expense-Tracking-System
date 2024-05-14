@@ -25,7 +25,7 @@ function Dashboard() {
   return (
     <>
 
-    <div className='p-9  w-full'>
+    <div className='p-6  w-full'>
         <div className='grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-5 '>
 
               <div className='flex flex-col gap-5 col-span-1 md:col-span-1 lg:col-span-2'>

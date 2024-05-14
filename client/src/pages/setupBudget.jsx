@@ -85,7 +85,7 @@ function SetupBudget() {
 
 
   return (
-    <div className=' p-9 w-full flex flex-col gap-6'>
+    <div className=' p-6 w-full flex flex-col gap-6'>
 
     <div className='flex items-center justify-between'>
                   <p className='text-2xl font-bold'>Income</p>

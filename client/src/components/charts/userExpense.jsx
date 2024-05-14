@@ -1,11 +1,19 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import useExpenseStore from '../../store/expenseStore'; 
-
-import { LineChart, CartesianGrid, XAxis, YAxis, Line, Tooltip, Legend, ResponsiveContainer  } from 'recharts';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer,  AreaChart, Area  } from 'recharts';
 
 
 
 function UserLineChart() {
+
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // State variable to store the selected year
+
+  const handleChange = (date) => {
+    setSelectedYear(date.getFullYear()); // Update the selected year when the user changes it in the date picker
+  };
+
 
   const { totalExpensePerMonth, getTotalExpensePerMonth } = useExpenseStore(); 
 
@@ -34,7 +42,7 @@ function UserLineChart() {
     // Merge the fetched total expenses per month into the initial data
     const updatedData = initialData.map((monthData, index) => {
 
-      const totalExpenseData = totalExpensePerMonth.find(expense => expense._id.month === index + 1);
+      const totalExpenseData = totalExpensePerMonth.find(expense => expense._id.month === index + 1 && expense._id.year === selectedYear);
         return {
           ...monthData,
           expense: totalExpenseData ? totalExpenseData.totalExpense : 0
@@ -44,19 +52,47 @@ function UserLineChart() {
 
 
   return (
-    <div className='relative w-full h-full overflow-x-auto'>
-     <ResponsiveContainer>
+    <div className='relative w-full h-full'>
 
-            <LineChart width={1500} height={450} data={updatedData}
-            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Line type="monotone" dataKey="expense" stroke="#8884d8" />
+    <div className='flex items-center'>
+        
+
+        <div className='flex items-center gap-2 text-sm'>
+          <p>Filter by year:</p>
+          <DatePicker
+            selected={new Date(selectedYear, 0)} // Set the date to January 1st of the selected year
+            onChange={handleChange}
+            dateFormat="yyyy"
+            showYearPicker
+            className=" w-20 px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-500"
+            placeholderText='Filter Date:'
+          />
+       </div>
+
+    </div>
+
+
+     <ResponsiveContainer>
+          <AreaChart data={updatedData}
+          margin={{ top: 50, right: 30, left: 5, bottom: 40}}>
+          <defs>
+            <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8}/>
+              <stop offset="95%" stopColor="#8884d8" stopOpacity={0}/>
+            </linearGradient>
+            <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8}/>
+              <stop offset="95%" stopColor="#82ca9d" stopOpacity={0}/>
+            </linearGradient>
+          </defs>
+          <XAxis dataKey="name" />
+          <YAxis />
+          <CartesianGrid strokeDasharray="3 3" />
+          <Tooltip />
+          <Legend />
           
-            </LineChart>
+          <Area type="monotone" dataKey="expense" stroke="#82ca9d" fillOpacity={1} fill="url(#colorPv)" />
+        </AreaChart>
       </ResponsiveContainer>
             
     </div>

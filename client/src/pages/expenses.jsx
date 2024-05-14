@@ -104,14 +104,14 @@ function Expenses() {
 
 
   return (
-    <div className='p-9 w-full flex flex-col gap-6'>
+    <div className='p-6 w-full flex flex-col gap-6'>
 
               <div className='flex items-center justify-between'>
                   <p className='text-xl font-bold'>Expenses</p>
                   <button className='btn' onClick={()=>document.getElementById('my_modal_3').showModal()}>Add Expense</button>
               </div>
 
-              <div className='p-3 border border-base-300 rounded-xl' style={{ height: 500 }}>
+              <div className='py-5 px-6 border border-base-200 rounded-xl' style={{ height: 400 }}>
                     <LineChart />
               </div>
 

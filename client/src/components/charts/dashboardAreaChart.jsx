@@ -89,25 +89,7 @@ function UserBarChart() {
       </div>
 
       <ResponsiveContainer>
-        {/* <BarChart
-          width={500}
-          height={300}
-          data={updatedData}
-          margin={{
-            top: 20,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" tick={{ fill: '#57586F' }} />
-          <YAxis yAxisId="left" orientation="left" stroke="#57586F" />
-          <Tooltip />
-          <Legend />
-          <Bar yAxisId="left" dataKey="income" fill="#3F51B5" />
-          <Bar yAxisId="left" dataKey="expense" fill="#B1B1B1" />
-        </BarChart> */}
+        
 
       
         <AreaChart data={updatedData}
