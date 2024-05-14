@@ -1,11 +1,11 @@
 import React, {useState, useEffect} from 'react'
 import LineChart from '../components/charts/userIncome';
-import CardComponent from '../components/common/cardComponent'
+
 import IncomeTable from '../components/tables/incomeTable';
 import useTransactionStore from '../store/transactionStore';
 
 import useIncomeStore from '../store/incomeStore';
-import useExpenseStore from '../store/expenseStore';
+
 
 
 function SetupBudget() {
@@ -20,22 +20,15 @@ function SetupBudget() {
   }, []);
 
 
-  // GET TOTAL BALANCE AND REMAINING BALANCE
 
   const { getTotalIncomePerMonth } = useIncomeStore(); 
-  const { totalIncome, getTotalIncome } = useIncomeStore();
-  const { totalExpenses, getTotalExpenses } = useExpenseStore(); 
-
+ 
   useEffect(() => {
-
-    getTotalIncome();
-    getTotalExpenses();
     getTotalIncomePerMonth();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
 
-  const remainingBalance = (totalIncome - totalExpenses).toFixed(2);
 
   // ADD INCOME
 
@@ -71,8 +64,7 @@ function SetupBudget() {
         // call the functions for fetch transactions, total income, total expenses, total income per month
 
         await fetchTransactions();
-        await getTotalIncome();
-        await getTotalExpenses();
+     
         await getTotalIncomePerMonth();
 
         
@@ -101,43 +93,20 @@ function SetupBudget() {
       </div>
 
 
-      <div className='grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-5'>
+      <div className='flex flex-col gap-5'>
 
-
-              <div className='flex flex-col gap-5'>
-
-                  <div className='py-5 px-6 border border-base-300 rounded-xl'>
-                        <CardComponent/>
-                  </div>
-
-                  <div className='py-5 px-6 border border-base-300 rounded-xl'>
-                        <p className='mb-6 text-lg'>Main Balance</p>
-                        <p className='text-5xl font-medium tracking-wide'>$ {remainingBalance}</p>
-
-                  </div>
-
-              </div>
-
-              <div className='flex flex-col gap-5 col-span-1 lg:col-span-2'>
-          
                   <div className='border rounded-xl  py-5 px-6 w-full' style={{ height: 400 }}>
                     <LineChart/>
                   </div>
 
                   <div className=' border border-base-300 rounded-xl py-5 px-6' >
                       <IncomeTable/>
-                  </div>
-
-
-              </div>
-
+                  </div>  
 
       </div>
 
       
-    
-
-
+  
       <dialog id="my_modal_3" className="modal">
                 <div className="modal-box">
 
