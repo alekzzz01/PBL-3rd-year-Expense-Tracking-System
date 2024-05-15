@@ -156,6 +156,27 @@ const useExpenseStore = create((set) => ({
     }
   },  
 
+  getExpenseItemById: async (expenseItemId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${baseUrl}/expense/expenseItemUser/${expenseItemId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        }
+      });
+
+      if (response.data && response.data.success) {
+        const expenseItem = response.data.data || null;
+        return { success: true, data: expenseItem };
+      } else {
+        return { success: false, error: 'Failed to fetch expense item' };
+      }
+    } catch (error) {
+      console.error('Error fetching expense item:', error);
+      return { success: false, error: 'Failed to fetch expense item' };
+    }
+  },
+
 
 
 

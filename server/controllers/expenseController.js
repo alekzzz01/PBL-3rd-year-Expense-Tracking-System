@@ -110,6 +110,44 @@ const updateExpenseItem = asyncHandler(async (req, res) => {
     
 });
 
+const getExpenseItemById = asyncHandler(async (req, res) => {
+    // Check if req.user exists and has the _id property
+    if (!req.user || !req.user._id) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+    }
+
+    // Get the user ID from the authenticated user
+    const userId = req.user._id;
+
+    // Get the expense item ID from the request parameters
+    const { expenseItemId } = req.params;
+
+    try {
+        // Find the user's expense document
+        const expense = await ExpenseModel.findOne({ user: userId });
+
+        // If the expense document exists
+        if (expense) {
+            // Find the expense item within the expense document's expenseItems array
+            const expenseItem = expense.expenseItems.find(item => item._id.toString() === expenseItemId);
+
+            // If the expense item is found, return it
+            if (expenseItem) {
+                return res.status(200).json({ success: true, data: expenseItem });
+            } else {
+                // If the expense item is not found, return an error
+                return res.status(404).json({ success: false, message: 'Expense item not found' });
+            }
+        } else {
+            // If the expense document is not found, return an error
+            return res.status(404).json({ success: false, message: 'Expense document not found' });
+        }
+    } catch (error) {
+        // If an error occurs, return an internal server error
+        res.status(500).json({ success: false, error: 'Internal Server Error' });
+    }
+});
+
 // Controller method to fetch expenses by expense type
 const getExpenseItemsForUser = asyncHandler(async (req, res) => {
     // Check if req.user exists and has the _id property
@@ -226,5 +264,8 @@ const getTotalExpenses = asyncHandler(async (req, res) => {
 
 
 
-export { addExpense, deleteExpenseItem, updateExpenseItem, getExpenseItemsForUser, getTotalExpensePerMonth, getTotalExpenses};
+
+
+
+export { addExpense, deleteExpenseItem, updateExpenseItem, getExpenseItemsForUser, getTotalExpensePerMonth, getTotalExpenses, getExpenseItemById};
 

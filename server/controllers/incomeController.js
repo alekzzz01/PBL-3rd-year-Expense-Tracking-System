@@ -13,7 +13,7 @@ const addIncome = asyncHandler(async (req, res) => {
     const userId = req.user._id;
 
     // Extract necessary fields from the request body
-    const {  category, amount, fullName, date  } = req.body;
+    const { paymentMethod, category, amount, fullName, date  } = req.body;
 
     try {
      
@@ -28,7 +28,7 @@ const addIncome = asyncHandler(async (req, res) => {
 
         const newIncomeItem = {
          
-            
+            paymentMethod: paymentMethod,
             category: category,
             amount: amount,
             fullName: fullName,

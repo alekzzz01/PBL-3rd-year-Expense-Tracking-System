@@ -34,6 +34,7 @@ function SetupBudget() {
 
   const addIncome = useIncomeStore((state) => state.addIncome); // Access the addExpense function from the store
   const [formData, setFormData] = useState({
+  paymentMethod: '',
   category: '',
   amount: '',
   fullName: '',
@@ -56,6 +57,7 @@ function SetupBudget() {
         // Handle success, e.g., show a success message
         console.log('Income added successfully:', result.data);
         setFormData({
+          paymentMethod: '',
           category: '',
           amount: '',
           fullName: '',
@@ -64,7 +66,6 @@ function SetupBudget() {
         // call the functions for fetch transactions, total income, total expenses, total income per month
 
         await fetchTransactions();
-     
         await getTotalIncomePerMonth();
 
         
@@ -121,8 +122,16 @@ function SetupBudget() {
               
                     <form action="" className='flex flex-col gap-3' onSubmit={handleSubmit} >
 
-                     
+                      <select className='select select-bordered w-full' name="paymentMethod" value={formData.paymentMethod} onChange={handleChange}>
+                        <option selected>Payment Method</option>
+                        <option value="Cash">Cash</option>
+                        <option value="Credit Card">Credit Card</option>
+                        <option value="Debit Card">Debit Card</option>
+                        <option value="E-wallet">E-Wallet</option>
+                      </select>
 
+
+                    
                       <input className='input input-bordered w-full' name='category' value={formData.category} onChange={handleChange} type="text" placeholder='Category' /> 
 
                       <input className='input input-bordered w-full' name='amount' value={formData.amount} onChange={handleChange} type="text" placeholder='Amount' /> 

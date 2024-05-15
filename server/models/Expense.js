@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
 
 const ExpenseItemSchema = new mongoose.Schema({
+  tabletype: { type: String, default: "Expense" },
   expenseType: { type: String },
   paymentMethod: { type: String },
   category: { type: String },
   amount: { type: Number },
   fullName: { type: String },
-  tabletype: { type: String, default: "Expense" },
   date: { type: Date, default: Date.now },
   month: { type: Number, default: () => new Date().getMonth() + 1 },
   year: { type: Number, default: () => new Date().getFullYear() }

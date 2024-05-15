@@ -7,11 +7,31 @@ import useExpenseStore from '../store/expenseStore';
 function Expenses() {
 
 
-  // FOR GETTINGS AND SETTING EXPENSES
-  const {getTotalExpensePerMonth } = useExpenseStore(); 
+  // VIEW EXPENSES
+  const { getExpenseItemById } = useExpenseStore();
+  const [selectedExpense, setSelectedExpense] = useState(null); 
+  const [selectedExpenseId, setSelectedExpenseId] = useState(null);
+  
+  
+  const handleViewExpense = async (expenseId) => {
+  setSelectedExpenseId(expenseId);
+  
+  const { success, data, error } = await getExpenseItemById(expenseId);
+  if (success) {
+    setSelectedExpense(data);
+    document.getElementById('ViewExpense').showModal(); 
+  } else {
+    console.error('Failed to fetch expense item:', error);
+  }
+};
 
-  const { getExpenseItemsForUser, addExpense } = useExpenseStore();
+
+
+
+  // FOR GETTINGS ALL EXPENSE
+  const { getTotalExpensePerMonth, getExpenseItemsForUser, addExpense } = useExpenseStore();
   const [expenses, setExpenses] = useState([]);
+  const [filterType, setFilterType] = useState('Necessities');
 
   const fetchExpenseItems = async () => {
     try {
@@ -28,15 +48,28 @@ function Expenses() {
 
   useEffect(() => {
     fetchExpenseItems();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getExpenseItemsForUser]);
-
-  useEffect(() => {
-
     getTotalExpensePerMonth();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [getTotalExpensePerMonth, getExpenseItemsForUser]);
 
+  const handleChange = (e) => {
+    const { value } = e.target;
+    setFilterType(value);
+  };
+
+  
+  const filteredExpenses = filterType ? expenses.filter((expense) => expense.expenseType === filterType) : expenses;
+
+
+  //  form of add expenses
+
+  const handleChangeForm = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
 
 
   const [formData, setFormData] = useState({
@@ -47,18 +80,6 @@ function Expenses() {
     fullName: '',
   });
 
-
-
-  // HANDLE SUBMIT OF EXPENSES TO SERVER
-
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -84,11 +105,10 @@ function Expenses() {
   };
 
 
-  // CHECK THE FORMDATA IS ALL FILLED OUT
-
   const isFormComplete = Object.values(formData).every((value) => value.trim() !== '');
 
-  // FORMAT DATE AND SET THE CURRENT DATE
+
+  //
 
   const options = {
     month: 'short',
@@ -108,85 +128,53 @@ function Expenses() {
 
               <div className='flex items-center justify-between'>
                   <p className='text-xl font-bold'>Expenses</p>
-                  <button className='btn' onClick={()=>document.getElementById('my_modal_3').showModal()}>Add Expense</button>
+                  <button className='btn' onClick={()=>document.getElementById('addExpense').showModal()}>Add Expense</button>
               </div>
 
               <div className='py-5 px-6 border border-base-200 rounded-xl' style={{ height: 400 }}>
                     <LineChart />
               </div>
 
+          
 
-              <div className='grid grid-cols-1 lg:grid-cols-3 gap-9'>
+              <div className='flex flex-col gap-6'>
 
+                    <div className='flex items-center justify-between'>
+                      <p className='font-bold'>Type: <span className='font-medium'>{filterType}</span></p> 
+  
+                      <select className='select select-bordered' value={filterType} onChange={handleChange}>
+                        <option value="">All</option>
+                        <option value="Necessities">Necessities</option>
+                        <option value="Savings">Savings</option>
+                        <option value="Wants">Wants</option>
+                      </select>
+                    </div>
 
-                      {/* NECESSITIES SECTION */}
+                    <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
 
-                        <div className='flex flex-col gap-6'>
-                          <p className='font-bold'>Necessities</p>
-                          {expenses.filter(expense => expense.expenseType === 'Necessities').map((expense, index) => (
-                            <div key={index} className='p-3 border border-base-300 rounded-xl'>
-                              {/* Render expense details */}
-                              <div className='flex flex-row items-center justify-between font-medium'>
-                                <p>Category: {expense.category}</p>
-                                <p>{expense.date}</p>
-                              </div>
-                              <div className='flex flex-row items-center justify-between font-light'>
-                                <p>Payment: {expense.paymentMethod}</p>
-                                <p>Expense: {expense.amount}</p>
-                              </div>
-                            </div>
-                          ))}
+                    {filteredExpenses.map((expense, index) => (
+                        
+                      <button key={index} className='p-3 border border-base-300 rounded-xl col-span-2' onClick={() => handleViewExpense(expense._id)} >
+                        {/* Render expense details */}
+                        <div className='flex flex-row items-center justify-between font-medium'>
+                          <p>Category: {expense.category}</p>
+                          <p>{expense.date}</p>
+                        </div>
+                        <div className='flex flex-row items-center justify-between font-light'>
+                          <p>Payment: {expense.paymentMethod}</p>
+                          <p>Expense: {expense.amount}</p>
                         </div>
 
-                        {/* SAVINGS SECTION */}
+                      
+                      </button>
+                    ))}
 
-                        <div className='flex flex-col gap-6'>
-                          <p className='font-bold'>Savings</p>
-                          {expenses.filter(expense => expense.expenseType === 'Savings').map((expense, index) => (
-                            <div key={index} className='p-3 border border-base-300 rounded-xl'>
-                              {/* Render expense details */}
-                              <div className='flex flex-row items-center justify-between font-medium'>
-                                <p>Category: {expense.category}</p>
-                                <p>{expense.date}</p>
-                              </div>
-                              <div className='flex flex-row items-center justify-between font-light'>
-                                <p>Payment: {expense.paymentMethod}</p>
-                                <p>Expense: {expense.amount}</p>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-
-                        {/* WANTS SECTION */}
-
-                        <div className='flex flex-col gap-6'>
-                          <p className='font-bold'>Wants</p>
-                          {expenses.filter(expense => expense.expenseType === 'Wants').map((expense, index) => (
-                            <div key={index} className='p-3 border border-base-300 rounded-xl'>
-                              {/* Render expense details */}
-                              <div className='flex flex-row items-center justify-between font-medium'>
-                                <p>Category: {expense.category}</p>
-                                <p>{expense.date}</p>
-                              </div>
-                              <div className='flex flex-row items-center justify-between font-light'>
-                                <p>Payment: {expense.paymentMethod}</p>
-                                <p>Expense: {expense.amount}</p>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-
-
-    
-
-
-
-
-
+                    </div>
+                    
               </div>
+          
 
-
-              <dialog id="my_modal_3" className="modal">
+              <dialog id="addExpense" className="modal">
                 <div className="modal-box">
 
                   <form method="dialog">
@@ -201,14 +189,14 @@ function Expenses() {
                     <form action="" className='flex flex-col gap-3' onSubmit={handleSubmit}>
 
 
-                      <select className='select select-bordered w-full' name="expenseType" value={formData.expenseType} onChange={handleChange}>
+                      <select className='select select-bordered w-full' name="expenseType" value={formData.expenseType} onChange={handleChangeForm}>
                         <option selected  >Type</option>
                         <option value="Necessities">Necessities</option>
                         <option value="Savings">Savings</option>
                         <option value="Wants">Wants</option>
                       </select>
 
-                      <select className='select select-bordered w-full' name="paymentMethod" value={formData.paymentMethod} onChange={handleChange}>
+                      <select className='select select-bordered w-full' name="paymentMethod" value={formData.paymentMethod} onChange={handleChangeForm}>
                         <option selected>Payment Method</option>
                         <option value="Cash">Cash</option>
                         <option value="Credit Card">Credit Card</option>
@@ -216,11 +204,11 @@ function Expenses() {
                         <option value="E-wallet">E-Wallet</option>
                       </select>
 
-                      <input className='input input-bordered w-full' name='category' value={formData.category} onChange={handleChange} type="text" placeholder='Category (e.g. Food, Transportation, Bills)' /> 
+                      <input className='input input-bordered w-full' name='category' value={formData.category} onChange={handleChangeForm} type="text" placeholder='Category (e.g. Food, Transportation, Bills)' /> 
 
-                      <input className='input input-bordered w-full' name='amount' value={formData.amount} onChange={handleChange} type="text" placeholder='Amount' /> 
+                      <input className='input input-bordered w-full' name='amount' value={formData.amount} onChange={handleChangeForm} type="text" placeholder='Amount' /> 
 
-                      <input className='input input-bordered w-full' name='fullName' value={formData.fullName} onChange={handleChange} type="text" placeholder='Full Name' /> 
+                      <input className='input input-bordered w-full' name='fullName' value={formData.fullName} onChange={handleChangeForm} type="text" placeholder='Full Name' /> 
 
 
 
@@ -238,6 +226,23 @@ function Expenses() {
                     </form>
 
 
+                </div>
+              </dialog>
+
+              <dialog id="ViewExpense" className="modal">
+                <div className="modal-box">
+                  <form method="dialog">
+                    <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                  </form>
+                  <h3 className="font-bold text-lg mb-6">View Expense</h3>
+
+                  <div className='flex flex-col gap-3'>
+                    <p className='font-medium'>Type: <span className='font-normal'>{selectedExpense && selectedExpense.expenseType} </span> </p>
+                    <p className='font-medium'>Category: <span className='font-normal'>{selectedExpense && selectedExpense.category}</span></p>
+                    <p className='font-medium'>Payment Method: <span className='font-normal'>{selectedExpense && selectedExpense.paymentMethod}</span></p>
+                    <p className='font-medium'>Amount: <span className='font-normal'>{selectedExpense && selectedExpense.amount}</span></p>
+                    {/* Add other fields here */}
+                  </div>
                 </div>
               </dialog>
 
