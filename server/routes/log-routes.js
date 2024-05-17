@@ -1,9 +1,10 @@
 import express from 'express';
-import {  getAllLogs  }  from "../controllers/logsController.js"; 
+import {  getAllLogs, removeEvent  }  from "../controllers/logsController.js"; 
 
 const router = express.Router();
 
 router.get('/logs', getAllLogs);
+router.delete('/removeEvent/:eventId', removeEvent);
 
 
 

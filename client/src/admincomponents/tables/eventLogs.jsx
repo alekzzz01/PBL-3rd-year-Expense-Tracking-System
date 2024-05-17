@@ -7,33 +7,57 @@ import useEventStore from '../../store/eventStore';
 function EventLogs() {
 
     const { allLogs, getAllEventLogs, isLoading, isError, errorMessage } = useEventStore(); 
+    const { removeEvent,  viewUser } = useEventStore();
     const [selectedRows, setSelectedRows] = useState([]);
-
+    const [eventToDelete, setEventToDelete] = useState(null);
 
     useEffect(() => {
       getAllEventLogs(); // Fetch transactions when component mounts
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []); // Empty dependency array to ensure it only runs once
 
+    const handleDeleteEvent = (eventId, event) => {
+      event.stopPropagation(); // Prevent the event from bubbling up
+      setEventToDelete(eventId); // Set the user to delete
+      document.getElementById('delete_user').showModal(); // Show the delete confirmation modal
+    };
 
-    // const handleDeleteSelected = async () => {
-    //     try {
-    //       for (const row of selectedRows) {
-    //         await removeUser(row._id);
-    //       }
-    //       getAllUsers();
-    //       setSelectedRows([]);
-    //       console.log('Rows deleted successfully');
-    //     } catch (error) {
-    //       console.error('Error deleting rows:', error);
-    //     }
-    //   };
-      
+    
+    const handleConfirmDelete = () => {
+      if (eventToDelete) {
+        removeEvent(eventToDelete)
+          .then(() => {
+            getAllEventLogs(); 
+            setSelectedRows([]);
+            setEventToDelete(null); // Reset userToDelete state
+            console.log('Event deleted successfully');
+          })
+          .catch((error) => {
+            console.error('Error deleting user:', error);
+          });
+      }
+    };
 
 
-    // const handleRowSelected = rows => {
-    //     setSelectedRows(rows.selectedRows);
-    //   };
+    const handleDeleteSelected = async () => {
+      try {
+        for (const row of selectedRows) {
+          await removeEvent(row._id);
+        }
+        getAllEventLogs();
+        setSelectedRows([]);
+        console.log('Rows deleted successfully');
+      } catch (error) {
+        console.error('Error deleting rows:', error);
+      }
+    };
+    
+
+    const handleRowSelected = rows => {
+      setSelectedRows(rows.selectedRows);
+    };
+
+
   
 
     const columns = [
@@ -76,13 +100,24 @@ function EventLogs() {
         name: 'Actions',
         cell: (row) => (
           <div>
-            <button className='btn btn-ghost btn-circle'>
-              <Eye size={16} color="#007bff" />
-            </button>
-            <button className='btn btn-ghost btn-circle' onClick={() => document.getElementById('delete_user').showModal()}>
-              <Trash size={16} color="#dc3545" />
-            </button>
-          </div>
+
+          {/* <button className='btn btn-ghost btn-circle' onClick={() => handleViewUser(row._id)}>
+            <Eye size={16} color="#007bff" />
+          </button> */}
+
+          
+          <button className='btn btn-ghost btn-circle' onClick={() => document.getElementById('delete_user').showModal()}>
+            <Trash
+              size={16}
+              color="#dc3545"
+              onClick={(event) => handleDeleteEvent(row._id, event)} // Pass userId and event
+            />
+          </button>
+
+
+      
+
+        </div>
         ),
         ignoreRowClick: true,
         allowOverflow: true,
@@ -96,11 +131,11 @@ function EventLogs() {
 
             <p className='mb-6 text-lg font-medium'>Event Logs</p>
 
-            {/* {selectedRows.length > 0 && (
+             {selectedRows.length > 0 && (
                 <button className='border border-base-300 btn' onClick={handleDeleteSelected}> <Trash
                 size={16}
                 color="#dc3545"  /></button>
-                )} */}
+                )} 
             </div>
 
 
@@ -117,13 +152,30 @@ function EventLogs() {
                 columns={columns}
                 data={allLogs}
                 selectableRows
-                // onSelectedRowsChange={handleRowSelected}
+                onSelectedRowsChange={handleRowSelected}
             
                 pagination
                 theme="solarized"
             />
             </>
             )}
+
+
+      <dialog id="delete_user" className="modal">
+        <div className="modal-box">
+          <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" onClick={() => setEventToDelete(null)}>✕</button>
+          <p className="py-4">Are you sure you want to delete this user?</p>
+          <div className="modal-action">
+            <form method="dialog">
+              <div className='w-full flex justify-end items-center gap-4'>
+                <button className="btn" onClick={() => setEventToDelete(null)}>Close</button>
+                <button className='btn bg-red-200 text-red-700' onClick={handleConfirmDelete}>Delete</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </dialog>
+
 
 
 

@@ -21,14 +21,14 @@ const login = asyncHandler(async (req, res) => {
       // Check  if the user already exists
       if (!user) {
         
-          await Logs.create({ email, eventType: 'failed_login', eventDetails: 'User is not registered', ipAddress });
+          await Logs.create({ email, eventType: 'Error Logs', eventDetails: 'User is not registered', ipAddress });
           return res.json({ status: false, message: "User is not registered" });
       }
 
       // Check if the account is locked
       if (user.isLocked) {
           
-          await Logs.create({ email, eventType: 'failed_login', eventDetails: 'Account is locked. Please reset your password.', ipAddress });
+          await Logs.create({ email, eventType: 'Error Logs', eventDetails: 'Account is locked. Please reset your password.', ipAddress });
           return res.json({ status: false, message: "Account is locked. Please reset your password." });
       }
 
@@ -42,7 +42,7 @@ const login = asyncHandler(async (req, res) => {
               user.isLocked = true;
               await user.save();
             
-              await Logs.create({ email, eventType: 'failed_login', eventDetails: 'Account is locked due to multiple failed attempts', ipAddress });
+              await Logs.create({ email, eventType: 'Error Logs', eventDetails: 'Account is locked due to multiple failed attempts', ipAddress });
               return res.json({ status: false, message: "Account is locked. Please reset your password." });
           }
 
@@ -72,12 +72,12 @@ const login = asyncHandler(async (req, res) => {
           token
       };
 
-      await Logs.create({ email, eventType: 'login', eventDetails: 'Login successful', ipAddress });
+      await Logs.create({ email, eventType: 'User Logs', eventDetails: 'Login successful', ipAddress });
       // console.log("Response Object:", responseObj); // Log the response object
       return res.json(responseObj);
   } catch (error) {
       logger.error(`Login error for user with email: ${email}`, { error });
-      await Logs.create({ email, eventType: 'failed_login', eventDetails: 'Internal server error', ipAddress });
+      await Logs.create({ email, eventType: 'Error Logs', eventDetails: 'Internal server error', ipAddress });
       console.error(error);
       return res.status(500).json({ message: "Internal server error" });
   }
@@ -108,7 +108,7 @@ const register = asyncHandler(async (req, res) => {
     await newUser.save()
 
     
-    await Logs.create({ email, eventType: 'register', eventDetails: 'Registration successful', ipAddress });
+    await Logs.create({ email, eventType: 'User Logs', eventDetails: 'Registration successful', ipAddress });
     return res.json({status: true, message: "record registered"})
 
 
@@ -122,7 +122,7 @@ const logout = asyncHandler(async (req, res) => {
     // Check if the user is authenticated
     if (!req.user || !req.user._id) {
    
-      await Logs.create({ eventType: 'Unauthorized', eventDetails: 'Unauthorized logout attempt', ipAddress });
+      await Logs.create({ eventType: 'Event Logs', eventDetails: 'Unauthorized logout attempt', ipAddress });
       return res.status(401).json({ success: false, message: 'Unauthorized' });
     }
 
@@ -146,13 +146,13 @@ const logout = asyncHandler(async (req, res) => {
     
     // Log the successful logout
     
-    await Logs.create({ userId, email: '', eventType: 'Logout', eventDetails: 'Logout successful', ipAddress });
+    await Logs.create({ userId, email: '', eventType: 'User Logs', eventDetails: 'Logout successful', ipAddress });
 
     return res.json({ success: true, message: 'Logout successful' });
   } catch (error) {
     console.error("Error setting user status to inactive:", error);
     // Handle error if needed
-    await Logs.create({ userId: '', email: '', eventType: 'Error', eventDetails: 'Error during logout', ipAddress });
+    await Logs.create({ userId: '', email: '', eventType: 'Error logs', eventDetails: 'Error during logout', ipAddress });
     return res.status(500).json({ success: false, message: 'Internal server error' });
   }
 });
@@ -332,7 +332,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
       await user.save();
 
       // logger.info(`Update profile successful for user: ${userId}`);
-      await Logs.create({ userId, eventType: 'Update Profile', eventDetails: 'Update profile successful', ipAddress });
+      await Logs.create({ userId, eventType: 'User Logs', eventDetails: 'Update profile successful', ipAddress });
 
       return res.json({ status: true, message: "User profile updated successfully", user });
   } catch (error) {
@@ -468,7 +468,7 @@ const removeUser = async (req, res) => {
       }
       console.log("User removed successfully");
 
-      await Logs.create({ userId, email: 'Admin', eventType: 'User removed', eventDetails: 'User removed successfully', ipAddress });
+      await Logs.create({ userId, email: 'Admin', eventType: 'User logs', eventDetails: 'User removed successfully', ipAddress });
       res.status(200).json({ success: true, message: 'User removed successfully' });
   } catch (error) {
       console.error('Error removing user:', error);
