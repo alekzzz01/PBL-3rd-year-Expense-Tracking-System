@@ -16,6 +16,7 @@ import Settings from './pages/settings';
 import AdminLayout from './layout/AdminLayout';
 import AdminDashboard from './adminpages/admindashboard';
 import AdminUserManagement from './adminpages/userManagement';
+import EventLogsManagement from './adminpages/eventLogsManagement';
 
 
 import SignUp from './auth/register';
@@ -72,6 +73,9 @@ function App() {
     
           <Route path="/home" element={<AdminDashboard/>} />
           <Route path="/users" element={<AdminUserManagement/>} />
+          <Route path="/eventlogs" element={<EventLogsManagement/>} />
+
+         
      
        
 

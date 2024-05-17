@@ -7,6 +7,7 @@ import { UserRouter } from './routes/user-routes.js';
 import { ExpenseRouter } from './routes/expense-routes.js';
 import { TransactionRouter } from './routes/transaction-routes.js';
 import { IncomeRouter } from './routes/income-routes.js';
+import { LogsRouter } from './routes/log-routes.js';
 
 // import ExpenseModel from './models/Expense.js' // for inserting expense
 // import expenseData from './data/UserExpense.js'; // for inserting expense
@@ -19,8 +20,8 @@ dotenv.config();
   app.use(express.json());
   app.use(cookieParser());
   app.use(cors({
-     //origin: 'http://localhost:3000', // Allow requests from this origin
-    origin: 'https://expense-client.vercel.app',
+    origin: 'http://localhost:3000', // Allow requests from this origin
+    // origin: 'https://expense-client.vercel.app',
     credentials: true, 
   }));
 
@@ -30,6 +31,7 @@ dotenv.config();
   app.use('/expense', ExpenseRouter);
   app.use('/income', IncomeRouter);
   app.use('/transaction', TransactionRouter);
+  app.use('/event', LogsRouter);
 
 
 

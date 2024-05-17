@@ -4,7 +4,6 @@ const logSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: false },
   email: {
     type: String,
-    required: true
   },
   eventType: {
     type: String,
@@ -24,6 +23,6 @@ const logSchema = new mongoose.Schema({
   }
 });
 
-const Logs = mongoose.model('Logs', logSchema);
+const LogsModel = mongoose.model('Logs', logSchema);
 
-export { Logs };
+export { LogsModel as Logs };

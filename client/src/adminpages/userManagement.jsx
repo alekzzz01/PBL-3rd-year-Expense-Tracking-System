@@ -7,7 +7,7 @@ function UserManagement() {
     <div className='p-9 w-full'>
 
 
-        <div className=' border border-base-300 rounded-xl py-5 px-6'>
+        <div className=' border border-base-200 rounded-xl py-5 px-6'>
                 <UserTable/>
         </div>
 

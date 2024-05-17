@@ -146,13 +146,13 @@ const logout = asyncHandler(async (req, res) => {
     
     // Log the successful logout
     
-    await Logs.create({ userId, eventType: 'Logout', eventDetails: 'Logout successful', ipAddress });
+    await Logs.create({ userId, email: '', eventType: 'Logout', eventDetails: 'Logout successful', ipAddress });
 
     return res.json({ success: true, message: 'Logout successful' });
   } catch (error) {
     console.error("Error setting user status to inactive:", error);
     // Handle error if needed
-    await Logs.create({ eventType: 'Error', eventDetails: 'Error during logout', ipAddress });
+    await Logs.create({ userId: '', email: '', eventType: 'Error', eventDetails: 'Error during logout', ipAddress });
     return res.status(500).json({ success: false, message: 'Internal server error' });
   }
 });
