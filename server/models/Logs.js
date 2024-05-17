@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 const logSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: false },
   email: {
     type: String,
     required: true

@@ -146,7 +146,7 @@ const logout = asyncHandler(async (req, res) => {
     
     // Log the successful logout
     
-    await Logs.create({ email: userId, eventType: 'Logout', eventDetails: 'Logout successful', ipAddress });
+    await Logs.create({ userId, eventType: 'Logout', eventDetails: 'Logout successful', ipAddress });
 
     return res.json({ success: true, message: 'Logout successful' });
   } catch (error) {
@@ -332,7 +332,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
       await user.save();
 
       // logger.info(`Update profile successful for user: ${userId}`);
-      await Logs.create({ email: userId, eventType: 'Update Profile', eventDetails: 'Update profile successful', ipAddress });
+      await Logs.create({ userId, eventType: 'Update Profile', eventDetails: 'Update profile successful', ipAddress });
 
       return res.json({ status: true, message: "User profile updated successfully", user });
   } catch (error) {
@@ -366,8 +366,6 @@ const getUserDetails = asyncHandler(async (req, res) => {
 
 
 });
-
-
 
 
 // admin side
@@ -470,11 +468,11 @@ const removeUser = async (req, res) => {
       }
       console.log("User removed successfully");
 
-      await Logs.create({ email: 'Admin', eventType: 'User removed', eventDetails: 'User removed successfully', ipAddress });
+      await Logs.create({ userId, email: 'Admin', eventType: 'User removed', eventDetails: 'User removed successfully', ipAddress });
       res.status(200).json({ success: true, message: 'User removed successfully' });
   } catch (error) {
       console.error('Error removing user:', error);
-      await Logs.create({ email: 'Admin', eventType: 'error', eventDetails: 'Server error', ipAddress });
+      await Logs.create({ userId, email: 'Admin', eventType: 'error', eventDetails: 'Server error', ipAddress });
       res.status(500).json({ success: false, message: 'Internal server error' });
   }
 };
