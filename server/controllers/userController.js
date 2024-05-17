@@ -1,5 +1,6 @@
 import {User} from '../models/User.js'
 import {Logs} from '../models/Logs.js'
+import { getClientIp } from '../utils/getIpinfo.js';
 import nodemailer from 'nodemailer';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
@@ -7,9 +8,10 @@ import asyncHandler from '../middleWare/asyncHandler.js';
 
 
 
+
 const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-  const ipAddress = req.ip || req.connection.remoteAddress;
+  const ipAddress = getClientIp(req);
 
 
   try {
@@ -83,7 +85,7 @@ const login = asyncHandler(async (req, res) => {
 
 const register = asyncHandler(async (req, res) => {
 
-    const ipAddress = req.ip || req.connection.remoteAddress;
+  const ipAddress = getClientIp(req);
 
     const {username, email, password} = req.body;
 
@@ -114,7 +116,7 @@ const register = asyncHandler(async (req, res) => {
 
 
 const logout = asyncHandler(async (req, res) => {
-  const ipAddress = req.ip || req.connection.remoteAddress;
+  const ipAddress = getClientIp(req);
 
   try {
     // Check if the user is authenticated
@@ -311,7 +313,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   const { firstName, lastName, bio } = req.body;
   const userId = req.user._id;  
 
-  const ipAddress = req.ip || req.connection.remoteAddress;
+  const ipAddress = getClientIp(req);
 
   try {
       const user = await User.findById(userId);
@@ -454,7 +456,7 @@ const getNewUsers = asyncHandler(async (req, res) => {
 
 
 const removeUser = async (req, res) => {
-  const ipAddress = req.ip || req.connection.remoteAddress;
+  const ipAddress = getClientIp(req);
 
   try {
       const userId = req.params.userId; // Extract userId from request parameters
