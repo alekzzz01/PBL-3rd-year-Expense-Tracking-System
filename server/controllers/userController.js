@@ -1,23 +1,32 @@
 import {User} from '../models/User.js'
+import {Logs} from '../models/Logs.js'
 import nodemailer from 'nodemailer';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import asyncHandler from '../middleWare/asyncHandler.js';
 
 
+
 const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
+  const ipAddress = req.ip || req.connection.remoteAddress;
+
+
   try {
       const user = await User.findOne({ email });
 
 
       // Check  if the user already exists
       if (!user) {
+        
+          await Logs.create({ email, eventType: 'failed_login', eventDetails: 'User is not registered', ipAddress });
           return res.json({ status: false, message: "User is not registered" });
       }
 
       // Check if the account is locked
       if (user.isLocked) {
+          
+          await Logs.create({ email, eventType: 'failed_login', eventDetails: 'Account is locked. Please reset your password.', ipAddress });
           return res.json({ status: false, message: "Account is locked. Please reset your password." });
       }
 
@@ -30,6 +39,8 @@ const login = asyncHandler(async (req, res) => {
           if (user.failedLoginAttempts >= 3) {
               user.isLocked = true;
               await user.save();
+            
+              await Logs.create({ email, eventType: 'failed_login', eventDetails: 'Account is locked due to multiple failed attempts', ipAddress });
               return res.json({ status: false, message: "Account is locked. Please reset your password." });
           }
 
@@ -59,15 +70,20 @@ const login = asyncHandler(async (req, res) => {
           token
       };
 
-      console.log("Response Object:", responseObj); // Log the response object
+      await Logs.create({ email, eventType: 'login', eventDetails: 'Login successful', ipAddress });
+      // console.log("Response Object:", responseObj); // Log the response object
       return res.json(responseObj);
   } catch (error) {
+      logger.error(`Login error for user with email: ${email}`, { error });
+      await Logs.create({ email, eventType: 'failed_login', eventDetails: 'Internal server error', ipAddress });
       console.error(error);
       return res.status(500).json({ message: "Internal server error" });
   }
 });
 
 const register = asyncHandler(async (req, res) => {
+
+    const ipAddress = req.ip || req.connection.remoteAddress;
 
     const {username, email, password} = req.body;
 
@@ -88,6 +104,9 @@ const register = asyncHandler(async (req, res) => {
     
 
     await newUser.save()
+
+    
+    await Logs.create({ email, eventType: 'register', eventDetails: 'Registration successful', ipAddress });
     return res.json({status: true, message: "record registered"})
 
 
@@ -95,34 +114,45 @@ const register = asyncHandler(async (req, res) => {
 
 
 const logout = asyncHandler(async (req, res) => {
+  const ipAddress = req.ip || req.connection.remoteAddress;
+
   try {
-      if (!req.user || !req.user._id) {
-          return res.status(401).json({ success: false, message: 'Unauthorized' });
-      }
+    // Check if the user is authenticated
+    if (!req.user || !req.user._id) {
+   
+      await Logs.create({ eventType: 'Unauthorized', eventDetails: 'Unauthorized logout attempt', ipAddress });
+      return res.status(401).json({ success: false, message: 'Unauthorized' });
+    }
 
-      // Get the user ID from the authenticated user
-      const userId = req.user._id;
+    // Get the user ID from the authenticated user
+    const userId = req.user._id;
 
-      // Fetch user from the database
-      const user = await User.findById(userId);
+    // Fetch user from the database
+    const user = await User.findById(userId);
 
-      // Check if the user exists
-      if (!user) {
-          return res.status(404).json({ success: false, message: 'User not found' });
-      }
+    // Check if the user exists
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
 
-      // Update user status to "inactive"
-      user.status = "Inactive";
-      await user.save();
+    // Update user status to "Inactive"
+    user.status = "Inactive";
+    await user.save();
+
+    // Clear the token cookie
+    res.clearCookie('token');
+    
+    // Log the successful logout
+    
+    await Logs.create({ email: userId, eventType: 'Logout', eventDetails: 'Logout successful', ipAddress });
+
+    return res.json({ success: true, message: 'Logout successful' });
   } catch (error) {
-      console.error("Error setting user status to inactive:", error);
-      // Handle error if needed
-      return res.status(500).json({ success: false, message: 'Internal server error' });
+    console.error("Error setting user status to inactive:", error);
+    // Handle error if needed
+    await Logs.create({ eventType: 'Error', eventDetails: 'Error during logout', ipAddress });
+    return res.status(500).json({ success: false, message: 'Internal server error' });
   }
-
-  // Clear the token cookie
-  res.clearCookie('token');
-  res.json({ status: true, message: "Logout successful" });
 });
 
 
@@ -281,6 +311,8 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   const { firstName, lastName, bio } = req.body;
   const userId = req.user._id;  
 
+  const ipAddress = req.ip || req.connection.remoteAddress;
+
   try {
       const user = await User.findById(userId);
 
@@ -296,6 +328,9 @@ const updateUserProfile = asyncHandler(async (req, res) => {
       user.lastName = formattedLastName;
       user.bio = bio;
       await user.save();
+
+      // logger.info(`Update profile successful for user: ${userId}`);
+      await Logs.create({ email: userId, eventType: 'Update Profile', eventDetails: 'Update profile successful', ipAddress });
 
       return res.json({ status: true, message: "User profile updated successfully", user });
   } catch (error) {
@@ -419,6 +454,8 @@ const getNewUsers = asyncHandler(async (req, res) => {
 
 
 const removeUser = async (req, res) => {
+  const ipAddress = req.ip || req.connection.remoteAddress;
+
   try {
       const userId = req.params.userId; // Extract userId from request parameters
       console.log("Removing user with ID:", userId); // Log the userId to verify it
@@ -430,9 +467,12 @@ const removeUser = async (req, res) => {
           return res.status(404).json({ success: false, message: 'User not found' });
       }
       console.log("User removed successfully");
+
+      await Logs.create({ email: 'Admin', eventType: 'User removed', eventDetails: 'User removed successfully', ipAddress });
       res.status(200).json({ success: true, message: 'User removed successfully' });
   } catch (error) {
       console.error('Error removing user:', error);
+      await Logs.create({ email: 'Admin', eventType: 'error', eventDetails: 'Server error', ipAddress });
       res.status(500).json({ success: false, message: 'Internal server error' });
   }
 };
