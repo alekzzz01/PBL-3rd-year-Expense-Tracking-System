@@ -22,12 +22,10 @@ function Layout() {
       <div className="drawer lg:drawer-open">
         <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content">
-        <Header />
+              <Header />
               <CheckToken /> 
               <Outlet />
-             
 
-             
         </div>
 
         <div className="drawer-side">
@@ -43,7 +41,8 @@ function Layout() {
                   <li><button onClick={() => handleNavigation('/dashboard')}>Home</button></li>
                   <li><button onClick={() => handleNavigation('/transactions')}>Transactions</button></li>
                   <li><button onClick={() => handleNavigation('/income')}>Income</button></li>
-                  <li><button onClick={() => handleNavigation('/expenses')}>Expenses</button></li>                  
+                  <li><button onClick={() => handleNavigation('/expenses')}>Expenses</button></li>
+                  <li><button onClick={() => handleNavigation('/savings')}>Savings</button></li>                    
                   </ul>
                   </details>
               </li>

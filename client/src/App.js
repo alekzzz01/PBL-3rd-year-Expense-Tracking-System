@@ -9,6 +9,7 @@ import Income from './pages/setupBudget';
 import Expenses from './pages/expenses';
 import Analytic from './pages/analytics';
 import Profile from './pages/Profile';
+import Savings from './pages/Savings';
 import Notifications from './pages/notifications';
 import Settings from './pages/settings';
 
@@ -62,7 +63,10 @@ function App() {
             <Route path="/notifications" element={<Notifications/>} />
             <Route path="/settings" element={<Settings/>} />
             <Route path="/profile" element={<Profile/>} />
+            <Route path="/savings" element={<Savings/>} />
         
+
+            
 
 
         </Route>

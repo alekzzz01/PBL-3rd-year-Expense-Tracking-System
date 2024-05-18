@@ -21,7 +21,9 @@ To be fixed
 
 [] For SAVINGS user can create a new savings, for the input (name, goalAmount, frequency (DAILY,WEEKLY,MONTHLY), finishBy).
 
-[] When VIEW the savings | they can ADD a amountItems (amount, date, note) to said savings. 
+[] Get all savings of the user
+
+[] per savings they can ADD a amountItems on a savings (amount, date, note) to said savings. 
 
 [] EDIT and DELETE savings function.
 
