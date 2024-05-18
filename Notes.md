@@ -23,11 +23,10 @@ To be fixed
 
 [] When VIEW the savings | they can ADD a amountItems (amount, date, note) to said savings. 
 
-[] EDIT and DELETE function.
+[] EDIT and DELETE savings function.
 
+[] Get Total Amount Items per  user.(Note: This should not be exceed to the budget)
 
-    - CALCULATION (CONTROLLER)
-        [] Get Total Amount Items per  user.(Note: This should not be exceed to the budget)
-        [] Get amountItemSchema per user. for the table 
-        [] Get Total Budget, FinishBy, Frequency for showing it in frontend per user
-        [] Calculate the budget per (FREQUENCY) until the (FINISHBYdate)
+[] Get All Savings of user (name, goalAmount, FinishBy, Frequency, amountItems) for showing it in frontend per 
+        
+[] Calculate the budget per (FREQUENCY) until the (FINISHBYdate)
