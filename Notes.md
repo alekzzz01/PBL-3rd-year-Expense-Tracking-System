@@ -31,4 +31,4 @@ To be fixed
       
 [x] Calculate the budget per (FREQUENCY) until the (FINISHBYdate)
 
-[] View per savings item / expense controller line 113
+[x] View per savings item 
