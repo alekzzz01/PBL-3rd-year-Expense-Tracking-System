@@ -6,42 +6,50 @@ const amountItemSchema = new mongoose.Schema({
         type: Number,
         required: true
       },
-      date: {
+    date: {
         type: Date,
         default: Date.now
       },
-      note: {
+    note: {
         type: String
       }
 });
 
 
+const savingItemSchema = new mongoose.Schema({
+
+  name: {
+    type: String,
+    required: true
+  },
+
+  goalAmount: {
+      type: Number,
+      required: true
+  },
+
+  finishBy: {
+      type: Date
+  },
+
+  frequency: {
+      type: String,
+      enum: ['daily', 'weekly', 'monthly'],
+      default: 'monthly'
+    },
+
+    
+  amountItems: [amountItemSchema],
+
+
+});
 
 
 
 const SavingsSchema = new mongoose.Schema({
 
-    name: {
-        type: String,
-        required: true
-    },
-
-    goalAmount: {
-        type: Number,
-        required: true
-    },
-
-    finishBy: {
-        type: Date
-    },
-
-    frequency: {
-        type: String,
-        enum: ['daily', 'weekly', 'monthly'],
-        default: 'monthly'
-      },
-
-    amountItems: [amountItemSchema],
+ 
+    savingItems: [savingItemSchema],
 
     user: {
         type: mongoose.Schema.Types.ObjectId,
