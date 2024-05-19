@@ -8,6 +8,7 @@ import { ExpenseRouter } from './routes/expense-routes.js';
 import { TransactionRouter } from './routes/transaction-routes.js';
 import { IncomeRouter } from './routes/income-routes.js';
 import { LogsRouter } from './routes/log-routes.js';
+import { SavingsRouter } from './routes/savings-routes.js';
 
 // import ExpenseModel from './models/Expense.js' // for inserting expense
 // import expenseData from './data/UserExpense.js'; // for inserting expense
@@ -32,7 +33,7 @@ dotenv.config();
   app.use('/income', IncomeRouter);
   app.use('/transaction', TransactionRouter);
   app.use('/event', LogsRouter);
-
+  app.use('/savings', SavingsRouter);
 
 
 
