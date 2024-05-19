@@ -19,16 +19,16 @@ To be fixed
 
 - FOR CONTROLLER
 
-[] For SAVINGS user can create a new savings, for the input (name, goalAmount, frequency (DAILY,WEEKLY,MONTHLY), finishBy).
+[x] For SAVINGS user can create a new savings, for the input (name, goalAmount, frequency (DAILY,WEEKLY,MONTHLY), finishBy).
 
-[] Get all savings of the user
+[x] Get all savings of the user
 
-[] per savings they can ADD a amountItems on a savings (amount, date, note) to said savings. 
+[x] per savings they can ADD a amountItems on a savings (amount, date, note) to said savings. 
 
-[] EDIT and DELETE savings function.
+[x] EDIT and DELETE savings function.
 
-[] Get Total Amount Items per  user.(Note: This should not be exceed to the budget)
+[] Get Total Amount Items per user and savings id .(Note: This should not be exceed to the budget)
+      
+[x] Calculate the budget per (FREQUENCY) until the (FINISHBYdate)
 
-[] Get All Savings of user (name, goalAmount, FinishBy, Frequency, amountItems) for showing it in frontend per 
-        
-[] Calculate the budget per (FREQUENCY) until the (FINISHBYdate)
+[] View per savings item / expense controller line 113
