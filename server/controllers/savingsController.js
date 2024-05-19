@@ -78,32 +78,42 @@ const createSavings = asyncHandler(async (req, res) => {
   
 // Get savings items for user
 const getSavingsForUser = asyncHandler(async (req, res) => {
-  if (!req.user || !req.user._id) {
-    return res.status(401).json({ success: false, message: 'Unauthorized' });
-  }
-
-  const userId = req.user._id;
-
-  try {
-    const savings = await SavingsModel.findOne({ user: userId });
-
-    if (!savings) {
-      return res.status(404).json({ success: false, message: 'Savings document not found' });
+    if (!req.user || !req.user._id) {
+      return res.status(401).json({ success: false, message: 'Unauthorized' });
     }
-
-    const savingsWithBudgets = savings.savingItems.map(item => {
-      const budgetPerFrequency = calculateBudgetPerFrequency(item.goalAmount, new Date(), item.finishBy, item.frequency);
-      return {
-        ...item.toObject(), // Convert mongoose document to plain object
-        budgetPerFrequency: budgetPerFrequency
-      };
-    });
-
-    res.status(200).json({ success: true, data: savingsWithBudgets });
-  } catch (error) {
-    res.status(500).json({ success: false, error: 'Internal Server Error' });
-  }
+  
+    const userId = req.user._id;
+  
+    try {
+      const savings = await SavingsModel.findOne({ user: userId });
+  
+      if (!savings) {
+        return res.status(404).json({ success: false, message: 'Savings document not found' });
+      }
+  
+      // Calculate total amount items for each savings item
+      const savingsWithTotalAmounts = savings.savingItems.map(item => {
+        // Calculate total amount for each savings item
+        const totalAmountItems = item.amountItems.reduce((total, amountItem) => total + amountItem.amount, 0);
+        
+        // Calculate budget per frequency
+        const budgetPerFrequency = calculateBudgetPerFrequency(item.goalAmount, new Date(), item.finishBy, item.frequency);
+        
+        return {
+          ...item.toObject(), // Convert mongoose document to plain object
+          totalAmountItems: totalAmountItems,
+          budgetPerFrequency: budgetPerFrequency
+        };
+      });
+  
+      res.status(200).json({ success: true, data: savingsWithTotalAmounts });
+    } catch (error) {
+      res.status(500).json({ success: false, error: 'Internal Server Error' });
+    }
 });
+  
+
+
 
 const addAmountItem = asyncHandler(async (req, res) => {
   const { amount, date, note } = req.body;
@@ -192,7 +202,6 @@ const editSavings = asyncHandler(async (req, res) => {
   }
 });
 
-// Delete a savings item
 // Delete a savings item
 const deleteSavings = asyncHandler(async (req, res) => {
   const { savingsItemId } = req.params;
