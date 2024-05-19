@@ -1,11 +1,12 @@
 import express from 'express';
-import { createSavings, getSavingsForUser, addAmountItem, editSavings, deleteSavings } from '../controllers/savingsController.js';
+import { createSavings, getSavingsForUser, addAmountItem, editSavings, deleteSavings, getSavingsItemId } from '../controllers/savingsController.js';
 import authMiddleware from '../middleWare/checkAuth.js';
 
 const router = express.Router();
 
 router.post('/createSavings', authMiddleware, createSavings);
 router.get('/getSavings', authMiddleware, getSavingsForUser);
+router.get('/viewSavings/:savingsItemId', authMiddleware, getSavingsItemId)
 router.post('/add-amount-item/:savingsItemId', authMiddleware, addAmountItem);
 router.put('/editSavings/:savingsItemId', authMiddleware, editSavings);
 router.delete('/deleteSavings/:savingsItemId', authMiddleware, deleteSavings);

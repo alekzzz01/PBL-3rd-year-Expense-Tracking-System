@@ -237,4 +237,45 @@ const deleteSavings = asyncHandler(async (req, res) => {
 });
 
 
-export { createSavings, getSavingsForUser, addAmountItem, editSavings, deleteSavings };
+
+ const getSavingsItemId = asyncHandler(async (req, res) => {
+     // Check if req.user exists and has the _id property
+     if (!req.user || !req.user._id) {
+         return res.status(401).json({ success: false, message: 'Unauthorized' });
+    }
+
+     // Get the user ID from the authenticated user
+     const userId = req.user._id;
+
+     // Get the expense item ID from the request parameters
+     const { savingsItemId } = req.params;
+
+     try {
+         // Find the user's expense document
+         const savings = await SavingsModel.findOne({ user: userId });
+
+         // If the expense document exists
+         if (savings) {
+       
+             const savingItems = savings.savingItems.find(item => item._id.toString() === savingsItemId);
+
+             if (savingItems) {
+                 return res.status(200).json({ success: true, data: savingItems });
+             } else {
+             
+                 return res.status(404).json({ success: false, message: 'Savings item not found' });
+            }
+         } else {
+          
+             return res.status(404).json({ success: false, message: 'Savings document not found' });
+         }
+     } catch (error) {
+         // If an error occurs, return an internal server error
+         res.status(500).json({ success: false, error: 'Internal Server Error' });
+     }
+ });
+
+
+
+
+export { createSavings, getSavingsForUser, addAmountItem, editSavings, deleteSavings, getSavingsItemId };
