@@ -1,11 +1,11 @@
-import React from "react";
+import React, {useEffect} from 'react';
 import { Outlet } from 'react-router-dom';
-// import Sidebar from '../admincomponents/adminsidebar';
+
 import Navbar from '../admincomponents/adminheader';
-import PrivateRoute from '../components/helpers/PrivateRoute'; // Import your PrivateRoute component
+// Import your PrivateRoute component
 import SessionTimeout from '../components/helpers/SessionTimeout';
 import { useNavigate } from 'react-router-dom';
-
+import useAuthStore from '../store/authStore';
 
 function AdminLayout() {
 
@@ -15,6 +15,17 @@ function AdminLayout() {
   const handleNavigation = (path) => {
     navigate(path);
   };
+
+
+  useEffect(() => {
+    useAuthStore.getState().checkAdminAccess();
+  }, []);
+
+  useEffect(() => {
+    // Check if the user is logged in when the component mounts
+    useAuthStore.getState().isLoggedIn();
+  }, []);
+
 
 
 
@@ -27,7 +38,7 @@ function AdminLayout() {
         <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content">
               <Navbar/>
-              <PrivateRoute /> 
+        
               <Outlet />
 
              

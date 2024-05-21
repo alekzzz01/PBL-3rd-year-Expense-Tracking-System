@@ -1,7 +1,7 @@
 import SavingsModel from '../models/Savings.js';
 import asyncHandler from '../middleWare/asyncHandler.js';
 
-const calculateBudgetPerFrequency = (goalAmount, startDate, finishBy, frequency) => {
+const calculateBudgetPerFrequency = (goalAmount, startDate, finishBy, frequency, totalAmountItems) => {
   const now = new Date();
   const end = new Date(finishBy);
   
@@ -9,7 +9,9 @@ const calculateBudgetPerFrequency = (goalAmount, startDate, finishBy, frequency)
     return 0; // If the current date is past the finishBy date, no budget per frequency needed
   }
 
-  const remainingAmount = goalAmount;
+
+
+  const remainingAmount = goalAmount - totalAmountItems;
   const remainingTime = (end - now) / (1000 * 60 * 60 * 24); // Convert remaining time to days
 
   let periods;
@@ -238,42 +240,53 @@ const deleteSavings = asyncHandler(async (req, res) => {
 
 
 
- const getSavingsItemId = asyncHandler(async (req, res) => {
-     // Check if req.user exists and has the _id property
-     if (!req.user || !req.user._id) {
-         return res.status(401).json({ success: false, message: 'Unauthorized' });
-    }
+const getSavingsItemId = asyncHandler(async (req, res) => {
+  // Check if req.user exists and has the _id property
+  if (!req.user || !req.user._id) {
+      return res.status(401).json({ success: false, message: 'Unauthorized' });
+  }
 
-     // Get the user ID from the authenticated user
-     const userId = req.user._id;
+  // Get the user ID from the authenticated user
+  const userId = req.user._id;
 
-     // Get the expense item ID from the request parameters
-     const { savingsItemId } = req.params;
+  // Get the expense item ID from the request parameters
+  const { savingsItemId } = req.params;
 
-     try {
-         // Find the user's expense document
-         const savings = await SavingsModel.findOne({ user: userId });
+  try {
+      // Find the user's expense document
+      const savings = await SavingsModel.findOne({ user: userId });
 
-         // If the expense document exists
-         if (savings) {
-       
-             const savingItems = savings.savingItems.find(item => item._id.toString() === savingsItemId);
+      // If the expense document exists
+      if (savings) {
+          const savingItem = savings.savingItems.find(item => item._id.toString() === savingsItemId);
 
-             if (savingItems) {
-                 return res.status(200).json({ success: true, data: savingItems });
-             } else {
-             
-                 return res.status(404).json({ success: false, message: 'Savings item not found' });
-            }
-         } else {
-          
-             return res.status(404).json({ success: false, message: 'Savings document not found' });
-         }
-     } catch (error) {
-         // If an error occurs, return an internal server error
-         res.status(500).json({ success: false, error: 'Internal Server Error' });
-     }
- });
+          if (savingItem) {
+              // Calculate total amount items for the savings item
+              const totalAmountItems = savingItem.amountItems.reduce((total, amountItem) => total + amountItem.amount, 0);
+              
+              // Calculate budget per frequency
+              const budgetPerFrequency = calculateBudgetPerFrequency(savingItem.goalAmount, new Date(), savingItem.finishBy, savingItem.frequency, totalAmountItems );
+              
+              // Add calculated fields to the saving item
+              const savingItemWithCalculations = {
+                  ...savingItem.toObject(),
+                  totalAmountItems: totalAmountItems,
+                  budgetPerFrequency: budgetPerFrequency
+              };
+
+              return res.status(200).json({ success: true, data: savingItemWithCalculations });
+          } else {
+              return res.status(404).json({ success: false, message: 'Savings item not found' });
+          }
+      } else {
+          return res.status(404).json({ success: false, message: 'Savings document not found' });
+      }
+  } catch (error) {
+      // If an error occurs, return an internal server error
+      res.status(500).json({ success: false, error: 'Internal Server Error' });
+  }
+});
+
 
 
 

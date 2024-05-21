@@ -58,8 +58,8 @@ const login = asyncHandler(async (req, res) => {
       await user.save();
 
       // Include user ID in the JWT payload
-      const token = jwt.sign({ userId: user._id, role: user.role, username: user.username, email: user.email }, process.env.KEY, { expiresIn: '1h' });
-      res.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
+      const token = jwt.sign({ userId: user._id, role: user.role}, process.env.KEY, { expiresIn: '10s' });
+      res.cookie('token', token, { httpOnly: true, maxAge: 10000 });
 
       const responseObj = {
           status: true,
@@ -495,4 +495,4 @@ const viewUser = asyncHandler(async (req, res) => {
 
 
   
-export { login, register, logout, checkUsernameExists, getAllUsers, forgetPassword, resetPassword, updateUserProfile, getUserDetails, getTotalRegisteredUsersPerMonth, getTotalRegisteredUsers, getTotalActiveUsers, getNewUsers, removeUser, viewUser };
+export { login, register, logout, checkUsernameExists, getAllUsers, forgetPassword, resetPassword, updateUserProfile, getUserDetails, getTotalRegisteredUsersPerMonth, getTotalRegisteredUsers, getTotalActiveUsers, getNewUsers, removeUser, viewUser};

@@ -15,6 +15,7 @@
     usernameExists: false,
     totalUserPerMonth: [], 
     totalRegisteredUsers: 0,
+    
 
   
     // for automatic login it checks if the user is already logged in
@@ -195,25 +196,29 @@
     
 
 
-    isLoggedIn: async () => {
-      const token = localStorage.getItem('token'); // Retrieves the token from localStorage
-      if(token){
-        const payLoad = jwtDecode(token); // Decodes the JWT token to extract payload
-        const isExpired = Date.now() >= payLoad.exp * 1000; // Checks if the token expiration time (in milliseconds) is in the past
+    isLoggedIn: () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        const payLoad = jwtDecode(token);
+        const isExpired = Date.now() >= payLoad.exp * 1000;
         if (isExpired) {
-          // Token is expired, redirect to login
-          localStorage.removeItem('token'); // Remove the expired token
-          toast.error('Your session has expired. Please log in again.'); // Display toast notification
-          window.location.href = '/login'; // Redirect to the login page
-          return false; // Return false since the token is expired
+          localStorage.removeItem('token');
+          set({ isAuthenticated: false });
+          alert('Session Expired.');
+          window.location.href = '/login';
+          return false;
         }
-        return true; // Return true if the token is not expired
+        set({ isAuthenticated: true });
+        console.log('User authenticated');
+        return true;
       }
-      // No token found, redirect to login
-      toast.error('Please log in to access this page.'); // Display toast notification
+      console.log('No token found, user not authenticated');
+      alert('Please log in to access this page.');
       window.location.href = '/login';
-      return false; // Return false if no token is found
+      set({ isAuthenticated: false });
+      return false;
     },
+    
 
 
     // Admin Private route, user can't access Admin routes

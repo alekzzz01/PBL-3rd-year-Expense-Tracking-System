@@ -1,9 +1,10 @@
-import React from "react";
+import React, {useEffect} from 'react';
 import { Outlet } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/common/header';
-import CheckToken from '../components/helpers/UserAuth';
-import SessionTimeout from '../components/helpers/SessionTimeout'; // Import the SessionTimeout component
+
+import SessionTimeout from '../components/helpers/SessionTimeout';
+import useAuthStore from '../store/authStore';
 
 function Layout() {
 
@@ -15,6 +16,13 @@ function Layout() {
   };
 
 
+  useEffect(() => {
+    // Check if the user is logged in when the component mounts
+    useAuthStore.getState().isLoggedIn();
+  }, []);
+
+
+
   return (
 
     <>
@@ -23,7 +31,7 @@ function Layout() {
         <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content">
               <Header />
-              <CheckToken /> 
+            
               <Outlet />
 
         </div>

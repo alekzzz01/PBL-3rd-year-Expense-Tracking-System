@@ -29,6 +29,7 @@ function Expenses() {
 
 
   // FOR GETTINGS ALL EXPENSE
+  
   const { getTotalExpensePerMonth, getExpenseItemsForUser, addExpense } = useExpenseStore();
   const [expenses, setExpenses] = useState([]);
   const [filterType, setFilterType] = useState('Necessities');
