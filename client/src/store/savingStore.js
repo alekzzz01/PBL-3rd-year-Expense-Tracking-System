@@ -10,7 +10,36 @@ const useSavingsStore = create((set) => ({
 
     savings: [], // state to store savings data
 
-  // Function to fetch savings items for the user
+    addSaving: async (savingsData) => {
+        try {
+          // Retrieve the token from local storage
+          const token = localStorage.getItem('token');
+    
+          const response = await axios.post(`${baseUrl}/savings/createSavings`, savingsData, {
+            headers: {
+              'Authorization': `Bearer ${token}`, // Include the token in the Authorization header
+              'Content-Type': 'application/json' // Specify content type if needed
+            }
+          });
+    
+          if (response.status === 201) {
+            set((state) => ({
+              ...state,
+              savings: [...state.savings, response.data], // Add the new expense to the expenses array
+            }));
+            toast.success('savings added successfully');
+            return { success: true, data: response.data };
+          } else {
+            toast.error('Failed to add savings');
+            return { success: false, error: 'Failed to add savings' };
+          }
+        } catch (error) {
+          console.error('Error adding savings:', error);
+          toast.error('Internal Server Error');
+          return { success: false, error: 'Internal Server Error' };
+        }
+      },
+
     getSavingItemsForUser: async () => {
         try {
         const token = localStorage.getItem('token');
