@@ -5,9 +5,36 @@ import nodemailer from 'nodemailer';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import asyncHandler from '../middleWare/asyncHandler.js';
+import crypto from 'crypto';
 
+const generateOTP = () => {
+  return crypto.randomBytes(3).toString('hex'); // Generates a 6-character hex OTP
+};
 
+const sendOTPEmail = (email, otp) => {
+  const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+          user: process.env.EMAIL,
+          pass: process.env.PASSWORD_APP_EMAIL,
+      },
+  });
 
+  const mailOptions = {
+      from: process.env.EMAIL,
+      to: email,
+      subject: 'Your OTP Code',
+      text: `Your OTP code is ${otp}. It will expire in 10 minutes.`,
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+          console.error('Error sending OTP email:', error);
+      } else {
+          console.log('OTP email sent:', info.response);
+      }
+  });
+};
 
 const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
@@ -72,6 +99,18 @@ const login = asyncHandler(async (req, res) => {
           token
       };
 
+      // Generate OTP
+      const otp = generateOTP();
+      user.otp = otp;
+      user.otpExpires = Date.now() + 10 * 60 * 1000; // OTP expires in 10 minutes
+      await user.save();
+
+      // Send OTP to user's email
+      sendOTPEmail(user.email, otp);
+
+      await Logs.create({ email, eventType: 'User Logs', eventDetails: 'OTP sent', ipAddress });
+
+      return res.json({ status: true, message: "OTP sent to your email. Please verify to proceed." });
       await Logs.create({ email, eventType: 'User Logs', eventDetails: 'Login successful', ipAddress });
       // console.log("Response Object:", responseObj); // Log the response object
       return res.json(responseObj);
@@ -79,6 +118,50 @@ const login = asyncHandler(async (req, res) => {
       logger.error(`Login error for user with email: ${email}`, { error });
       await Logs.create({ email, eventType: 'Error Logs', eventDetails: 'Internal server error', ipAddress });
       console.error(error);
+      return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+const verifyOTP = asyncHandler(async (req, res) => {
+  const { email, otp } = req.body;
+  const ipAddress = getClientIp(req);
+
+  try {
+      const user = await User.findOne({ email });
+
+      if (!user) {
+          return res.status(404).json({ message: "User not found" });
+      }
+
+      if (user.otp !== otp || Date.now() > user.otpExpires) {
+          return res.status(400).json({ message: "Invalid or expired OTP" });
+      }
+
+      user.otp = null;
+      user.otpExpires = null;
+      user.lastLogin = new Date();
+      user.status = "Active";
+      await user.save();
+
+      const token = jwt.sign({ userId: user._id, role: user.role }, process.env.KEY, { expiresIn: '1h' });
+      res.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
+
+      const responseObj = {
+          status: true,
+          message: "Login successful",
+          userId: user._id,
+          lastLogin: user.lastLogin,
+          username: user.username,
+          email: user.email,
+          role: user.role,
+          token
+      };
+
+      await Logs.create({ email, eventType: 'User Logs', eventDetails: 'OTP verified and login successful', ipAddress });
+      return res.json(responseObj);
+  } catch (error) {
+      console.error("OTP verification error:", error);
+      await Logs.create({ email, eventType: 'Error Logs', eventDetails: 'Internal server error during OTP verification', ipAddress });
       return res.status(500).json({ message: "Internal server error" });
   }
 });
@@ -495,4 +578,4 @@ const viewUser = asyncHandler(async (req, res) => {
 
 
   
-export { login, register, logout, checkUsernameExists, getAllUsers, forgetPassword, resetPassword, updateUserProfile, getUserDetails, getTotalRegisteredUsersPerMonth, getTotalRegisteredUsers, getTotalActiveUsers, getNewUsers, removeUser, viewUser};
+export { login, verifyOTP, register, logout, checkUsernameExists, getAllUsers, forgetPassword, resetPassword, updateUserProfile, getUserDetails, getTotalRegisteredUsersPerMonth, getTotalRegisteredUsers, getTotalActiveUsers, getNewUsers, removeUser, viewUser};

@@ -18,7 +18,9 @@ const UserSchema = new mongoose.Schema({
 
     failedLoginAttempts: { type: Number, default: 0 }, // Track failed login attempts
     isLocked: { type: Boolean, default: false }, // Track if the account is locked
-    passwordHistory: [{ type: String }] // Array to store recent passwords
+    passwordHistory: [{ type: String }], // Array to store recent passwords
+    otp: { type: String },
+    otpExpires: { type: Date }
 });
 
 const UserModel = mongoose.model("User", UserSchema);
