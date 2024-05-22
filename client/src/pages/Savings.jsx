@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function Savings() {
 
-    const { getSavingItemsForUser, savings, getSavingItemById, addAmountItem } = useSavingsStore();
+    const { getSavingItemsForUser, savings, getSavingItemById, addAmountItem, createSavingItem } = useSavingsStore();
     const [selectedSavings, setSelectedSavings] = useState(null);
     const [selectedSavingsId, setSelectedSavingsId] = useState(null);
     const [filterOption, setFilterOption] = useState('All');
@@ -19,6 +19,15 @@ function Savings() {
         note: ''
     });
     const [isFormComplete, setIsFormComplete] = useState(false);
+
+      
+    
+    const [savingFormData, setSavingFormData] = useState({
+        name: '',
+        goalAmount: '',
+        finishBy: '',
+        frequency: '',
+    });
 
     useEffect(() => {
         getSavingItemsForUser();
@@ -60,7 +69,7 @@ function Savings() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const maxAmountToAdd = selectedSavings.goalAmount - selectedSavings.totalAmountItems;
+            const maxAmountToAdd = selectedSavingsId.goalAmount - selectedSavingsId.totalAmountItems;
             const amountToAdd = parseFloat(formData.amount);
     
             if (amountToAdd > maxAmountToAdd) {
@@ -79,6 +88,7 @@ function Savings() {
                     date: '',
                     note: ''
                 });
+                getSavingItemsForUser();
             } else {
                 console.error('Failed to add item:', result.error);
             }
@@ -93,23 +103,41 @@ function Savings() {
     }, [formData]);
 
 
-    //
 
+    //  form of add 
 
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setSavingFormData({ ...savingFormData, [name]: value });
+    };
+
+    const handleSubmitAddSavings = async (e) => {
+        e.preventDefault();
+        try {
+            console.log('Saving form data:', savingFormData); // Log saving form data before sending the request
+            const response = await createSavingItem(savingFormData);
+            console.log('Response from backend:', response); // Log the response from the backend
+            if (response.success) {
+                toast.success('Savings created successfully');
+                // Clear the form fields after successful creation
+                setSavingFormData({
+                    name: '',
+                    goalAmount: '',
+                    finishBy: '',
+                    frequency: '',
+                });
+                // Optionally, you can fetch the updated list of savings
+                getSavingItemsForUser();
+            } else {
+                toast.error('Failed to create savings');
+            }
+        } catch (error) {
+            console.error('Error creating savings:', error);
+            toast.error('Failed to create savings');
+        }
+    };
     
-
-
-
-    const options = {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        hour12: true,
-      };
-
-    const currentDate = new Date().toLocaleString('en-US', options);
+  
 
     const formatFinishByDate = (dateString) => {
         const options = { month: 'long', day: 'numeric', year: 'numeric' };
@@ -262,28 +290,29 @@ function Savings() {
 
                 
               
-                    <form action="" className='flex flex-col gap-3' >
+                    <form onSubmit={handleSubmitAddSavings} className='flex flex-col gap-3' >
 
 
                     
-                      <input className='input input-bordered w-full' name='name'  type="text" placeholder='Name' /> 
+                      <input className='input input-bordered w-full' name='name'  type="text" placeholder='Name'  value={savingFormData.name}
+                            onChange={handleChange}  /> 
 
-                      <input className='input input-bordered w-full' name='goalAmount'  type="text" placeholder='Amount' /> 
+                      <input className='input input-bordered w-full' name='goalAmount'  type="text" placeholder='Amount' value={savingFormData.goalAmount}
+                            onChange={handleChange} />
+                      
+                      <input className='input input-bordered w-full' name='finishBy' type="date" placeholder='Date'   min={(new Date()).toISOString().split('T')[0]}value={savingFormData.finishBy}
+                            onChange={handleChange}
+ />
 
-
-                      <select className='select select-bordered w-full' name="expenseType" >
+                      <select className='select select-bordered w-full' name="frequency" value={savingFormData.frequency}
+                            onChange={handleChange} >
                         <option selected >Frequency</option>
-                        <option value="Daily">Daily</option>
-                        <option value="Weekly">Weekly</option>
-                        <option value="Monthly">Monthly</option>
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="monthly">Monthly</option>
                       </select>
 
 
-
-                      <div className='flex justify-between items-center px-4 mt-6'>
-                          <p className='font-medium'>Date and Time:</p>
-                          <p className='font-normal'>{currentDate}</p>
-                      </div>
 
 
                       <button className='btn'>Save</button>

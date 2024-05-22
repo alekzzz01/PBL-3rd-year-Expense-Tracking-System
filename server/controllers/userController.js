@@ -88,16 +88,16 @@ const login = asyncHandler(async (req, res) => {
       const token = jwt.sign({ userId: user._id, role: user.role}, process.env.KEY, { expiresIn: '1h' });
       res.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
 
-      const responseObj = {
-          status: true,
-          message: "Login successful",
-          userId: user._id,
-          lastLogin: user.lastLogin,
-          username: user.username,
-          email: user.email,
-          role: user.role,
-          token
-      };
+      // const responseObj = {
+      //     status: true,
+      //     message: "Login successful",
+      //     userId: user._id,
+      //     lastLogin: user.lastLogin,
+      //     username: user.username,
+      //     email: user.email,
+      //     role: user.role,
+      //     token
+      // };
 
       // Generate OTP
       const otp = generateOTP();
@@ -111,9 +111,9 @@ const login = asyncHandler(async (req, res) => {
       await Logs.create({ email, eventType: 'User Logs', eventDetails: 'OTP sent', ipAddress });
 
       return res.json({ status: true, message: "OTP sent to your email. Please verify to proceed." });
-      await Logs.create({ email, eventType: 'User Logs', eventDetails: 'Login successful', ipAddress });
-      // console.log("Response Object:", responseObj); // Log the response object
-      return res.json(responseObj);
+      // await Logs.create({ email, eventType: 'User Logs', eventDetails: 'Login successful', ipAddress });
+      // // console.log("Response Object:", responseObj); // Log the response object
+      // return res.json(responseObj);
   } catch (error) {
       logger.error(`Login error for user with email: ${email}`, { error });
       await Logs.create({ email, eventType: 'Error Logs', eventDetails: 'Internal server error', ipAddress });
@@ -156,6 +156,8 @@ const verifyOTP = asyncHandler(async (req, res) => {
           role: user.role,
           token
       };
+
+ 
 
       await Logs.create({ email, eventType: 'User Logs', eventDetails: 'OTP verified and login successful', ipAddress });
       return res.json(responseObj);

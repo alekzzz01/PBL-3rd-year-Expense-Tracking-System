@@ -10,35 +10,37 @@ const useSavingsStore = create((set) => ({
 
     savings: [], // state to store savings data
 
-    addSaving: async (savingsData) => {
+
+    
+    createSavingItem: async (savingFormData) => {
         try {
-          // Retrieve the token from local storage
-          const token = localStorage.getItem('token');
+            console.log('Saving form data:', savingFormData); // Log the saving form data before making the request
     
-          const response = await axios.post(`${baseUrl}/savings/createSavings`, savingsData, {
-            headers: {
-              'Authorization': `Bearer ${token}`, // Include the token in the Authorization header
-              'Content-Type': 'application/json' // Specify content type if needed
-            }
-          });
+            const token = localStorage.getItem('token');
+            const response = await axios.post(`${baseUrl}/savings/createSavings`, savingFormData, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                }
+            });
     
-          if (response.status === 201) {
+            // Update the state with the new savings item
             set((state) => ({
-              ...state,
-              savings: [...state.savings, response.data], // Add the new expense to the expenses array
+                savings: [...state.savings, response.data.data] // Assuming response.data.data contains the new savings item
             }));
-            toast.success('savings added successfully');
-            return { success: true, data: response.data };
-          } else {
-            toast.error('Failed to add savings');
-            return { success: false, error: 'Failed to add savings' };
-          }
+    
+            toast.success('Savings created successfully');
+            return response.data; // Return the response data
         } catch (error) {
-          console.error('Error adding savings:', error);
-          toast.error('Internal Server Error');
-          return { success: false, error: 'Internal Server Error' };
+            // Handle errors
+            console.error('Error creating savings:', error);
+            toast.error('Failed to create savings');
+            throw error; // Rethrow the error for the caller to handle
         }
-      },
+    },
+    
+
+
+    
 
     getSavingItemsForUser: async () => {
         try {

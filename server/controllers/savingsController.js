@@ -42,6 +42,11 @@ const createSavings = asyncHandler(async (req, res) => {
       return res.status(401).json({ success: false, message: 'Unauthorized' });
     }
 
+    if (!name || !goalAmount || !finishBy || !frequency) {
+      return res.status(400).json({ success: false, message: 'All fields are required' });
+  }
+
+
     // Get the user ID from the authenticated user
     const userId = req.user._id;
 
