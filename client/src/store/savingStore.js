@@ -55,7 +55,7 @@ const useSavingsStore = create((set) => ({
         } catch (error) {
         // Handle errors
         console.error('Error fetching savings:', error);
-        toast.error('Failed to fetch savings data');
+        
         }
     },
 
@@ -85,30 +85,35 @@ const useSavingsStore = create((set) => ({
                     'Authorization': `Bearer ${token}`,
                 }
             });
-    
-            // Update the specific savings item with the new amount item
+
+            // Update the state with the updated savings data
             set((state) => ({
-                savings: state.savings.map((saving) => {
-                    // Find the savings item with the matching ID
-                    if (saving._id === savingsItemId) {
-                        // Update the amountItems array with the new item
+                savings: state.savings.map(savingItem => {
+                    if (savingItem._id === savingsItemId) {
                         return {
-                            ...saving,
-                            amountItems: [...saving.amountItems, response.data.data.amountItem] // Assuming response.data.data.amountItem contains the new amount item
+                            ...savingItem,
+                            amountItems: [...savingItem.amountItems, response.data.data]
                         };
                     }
-                    return saving; // Return unchanged if ID doesn't match
+                    return savingItem;
                 })
             }));
-    
+
+            toast.success('Amount item added successfully');
             return response.data; // Return the response data
         } catch (error) {
             // Handle errors
-            console.error('Error adding amount item:', error);
+            if (error.response && error.response.status === 400 && error.response.data && error.response.data.message) {
+                // Display the error message to the user
+                toast.error(error.response.data.message);
+            } else {
+                // Handle other errors
+                console.error('Error adding amount item:', error);
+                toast.error('Failed to add amount item');
+            }
             throw error; // Rethrow the error for the caller to handle
         }
-    }
-    
+    },
 
 }));
 

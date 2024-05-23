@@ -54,12 +54,17 @@ function AdminLayout() {
                 <h2 className="menu-title">Dashboard</h2>
                 <ul>
                   <li><button onClick={() => handleNavigation('/home')}>Home</button></li>
-                  <li><button onClick={() => handleNavigation('/users')}>User Management</button></li>
-                  <li><button onClick={() => handleNavigation('/eventlogs')}>Event Logs</button></li>
-                
                 </ul>
               </li>
-
+              <li>
+                <h2 className="menu-title">Manage</h2>
+                <ul>
+                  <li><button onClick={() => handleNavigation('/users')}>Users</button></li>
+                  <li><button onClick={() => handleNavigation('/eventlogs')}>Logs</button></li>
+                  <li><button onClick={() => handleNavigation('/backuprestore')}>Backup/Restore</button></li>
+                </ul>
+              </li>
+     
               <li>
 
               <h2 className="menu-title">Settings</h2>

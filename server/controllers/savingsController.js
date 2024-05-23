@@ -132,45 +132,54 @@ const addAmountItem = asyncHandler(async (req, res) => {
 
   // Validate required fields
   if (!amount) {
-      return res.status(400).json({ success: false, message: 'Amount is required' });
+    return res.status(400).json({ success: false, message: 'Amount is required' });
   }
 
   // Get the user ID from the authenticated user
   const userId = req.user._id;
 
   try {
-      // Find the user's savings document
-      let savings = await SavingsModel.findOne({ user: userId });
+    // Find the user's savings document
+    let savings = await SavingsModel.findOne({ user: userId });
 
-      if (!savings) {
-          return res.status(404).json({ success: false, message: 'Savings document not found' });
-      }
+    if (!savings) {
+      return res.status(404).json({ success: false, message: 'Savings document not found' });
+    }
 
-      // Find the specific savings item within the savings document
-      const savingsItem = savings.savingItems.id(savingsItemId);
+    // Find the specific savings item within the savings document
+    const savingsItem = savings.savingItems.id(savingsItemId);
 
-      if (!savingsItem) {
-          return res.status(404).json({ success: false, message: 'Savings item not found' });
-      }
+    if (!savingsItem) {
+      return res.status(404).json({ success: false, message: 'Savings item not found' });
+    }
 
-      // Create a new amount item
-      const newAmountItem = {
-          amount: amount,
-          date: date || Date.now(),
-          note: note
-      };
+    // Calculate total amount of existing amount items
+    const totalAmountItems = savingsItem.amountItems.reduce((total, amountItem) => total + amountItem.amount, 0);
 
-      // Add the new amount item to the savings item's amountItems array
-      savingsItem.amountItems.push(newAmountItem);
+    // Ensure adding the new amount item doesn't exceed the goal amount
+    if (totalAmountItems + amount > savingsItem.goalAmount) {
+      return res.status(400).json({ success: false, message: 'Adding this amount would exceed the savings goal' });
+    }
 
-      // Save the updated savings document
-      const updatedSavings = await savings.save();
+    // Create a new amount item
+    const newAmountItem = {
+      amount: amount,
+      date: date || Date.now(),
+      note: note
+    };
 
-      res.status(201).json({ success: true, data: updatedSavings });
+    // Add the new amount item to the savings item's amountItems array
+    savingsItem.amountItems.push(newAmountItem);
+
+    // Save the updated savings document
+    const updatedSavings = await savings.save();
+
+    res.status(201).json({ success: true, data: updatedSavings });
   } catch (error) {
-      res.status(400).json({ success: false, message: error.message });
+    res.status(400).json({ success: false, message: error.message });
   }
 });
+
 
 // Edit a savings item
 const editSavings = asyncHandler(async (req, res) => {

@@ -93,38 +93,75 @@
     // },
     
 
-    login: async (email, password) => {
-      try {
-        const response = await axios.post(`${baseUrl}/auth/login`, {
-          email,
-          password,
-        });
-  
-        if (response.status === 200) {
-          const { status, message, otpToken } = response.data;
-          if (status) {
-            // Login successful, store user data
-            const { userId, username, email, role } = response.data;
-            set({ isAuthenticated: true, user: { userId, username, email, role } });
-            // Store OTP token in local storage
-            localStorage.setItem('otpToken', otpToken);
-            // Redirect logic or any further action if needed
-            // For example:
-            window.location.href = '/verifyotp';
-          } else {
-            // Login unsuccessful, display error message
-            console.error('Login error:', message);
-            toast.error(message);
-          }
-        } else {
-          console.error('Unexpected response status:', response.status);
-          toast.error('Unexpected error occurred');
-        }
-      } catch (error) {
-        console.error('Login error:', error);
+//    login: async (email, password) => {
+//   try {
+//     const response = await axios.post(`${baseUrl}/auth/login`, {
+//       email,
+//       password,
+//     });
+
+//     const { status, message, otpToken } = response.data;
+//     if (status) {
+//       // Login successful, store user data
+//       const { userId, username, email, role } = response.data;
+//       set({ isAuthenticated: true, user: { userId, username, email, role } });
+//       // Store OTP token in local storage
+//       localStorage.setItem('otpToken', otpToken);
+//       // Redirect to OTP verification page
+//       window.location.href = '/verifyotp';
+//     } else {
+//       // Login unsuccessful, display error message
+//       console.error('Login error:', message);
+//       toast.error(message);
+//     }
+//   } catch (error) {
+//     console.error('Login error:', error);
+//     toast.error('Login failed');
+//   }
+// },
+
+login: async (email, password) => {
+  try {
+    const response = await axios.post(`${baseUrl}/auth/login`, { email, password });
+    console.log('Login response:', response.data); // Log the response data
+    if (response.status === 200) {
+      const { status, message, otpToken } = response.data;
+      if (status) {
+        // Login successful
+        localStorage.setItem('otpToken', otpToken);
+        set({ isAuthenticated: true });
+        toast.success('Login successful');
+        window.location.href = '/verifyotp';
+      } else {
+        // Login failed
+        console.error('Login failed:', message);
+        toast.error(message);
+      }
+    } else {
+      console.error('Unexpected response status:', response.status);
+      toast.error('Unexpected error occurred');
+    }
+  } catch (error) {
+    console.error('Login error:', error);
+    if (error.response) {
+      // console.log('Login error response data:', error.response.data); // Log the response data
+      if (error.response.data.status === false && error.response.data.message === 'User is not registered') {
+        // Display error message to the user
+        toast.error('User is not registered. Please register to continue.');
+      } else {
+        // Handle other error scenarios
         toast.error('Login failed');
       }
-    },
+    } else {
+      // Handle other types of errors
+      toast.error('Login failed');
+    }
+  }
+},
+
+
+
+    
 
 
     verifyOTP: async (otp) => {

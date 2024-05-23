@@ -40,7 +40,7 @@ function Savings() {
 
 
     const handleViewSaving = async (savingsItemId) => {
-        setSelectedSavingsId(savingsItemId);
+        setSelectedSavings(savingsItemId);
         try {
             const data = await getSavingItemById(savingsItemId);
             setSelectedSavings(data);
@@ -69,16 +69,7 @@ function Savings() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const maxAmountToAdd = selectedSavingsId.goalAmount - selectedSavingsId.totalAmountItems;
-            const amountToAdd = parseFloat(formData.amount);
-    
-            if (amountToAdd > maxAmountToAdd) {
-                // If the amount to add exceeds the maximum amount allowed
-                console.error('Amount to add exceeds the goal amount:', amountToAdd);
-                toast.error('Amount to add exceeds the goal amount:', amountToAdd);
-           
-                return;
-            }
+          
     
             const result = await addAmountItem(selectedSavingsId, formData);
             if (result.success) {
