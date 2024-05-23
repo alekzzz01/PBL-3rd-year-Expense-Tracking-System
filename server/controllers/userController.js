@@ -23,8 +23,53 @@ const sendOTPEmail = (email, otp) => {
   const mailOptions = {
       from: process.env.EMAIL,
       to: email,
-      subject: 'Your OTP Code',
-      text: `Your OTP code is ${otp}. It will expire in 10 minutes.`,
+      subject: 'Moneyme OTP Verification Code',
+      html: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+      <!DOCTYPE html>
+      <html dir="ltr" lang="en">
+      
+        <head>
+          <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+          <meta name="x-apple-disable-message-reformatting" />
+        </head>
+        <div style="display:none;overflow:hidden;line-height:1px;opacity:0;max-height:0;max-width:0">Confirm your email address<div> ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿</div>
+        </div>
+      
+        <body style="background-color:#ffffff;margin:0 auto;font-family:-apple-system, BlinkMacSystemFont, &#x27;Segoe UI&#x27;, &#x27;Roboto&#x27;, &#x27;Oxygen&#x27;, &#x27;Ubuntu&#x27;, &#x27;Cantarell&#x27;, &#x27;Fira Sans&#x27;, &#x27;Droid Sans&#x27;, &#x27;Helvetica Neue&#x27;, sans-serif">
+          <table align="center" width="100%" border="0" cellPadding="0" cellSpacing="0" role="presentation" style="max-width:37.5em;margin:0 auto;padding:0px 20px">
+            <tbody>
+              <tr style="width:100%">
+                <td>
+                  
+                  <h1 style="color:#1d1c1d;font-size:36px;font-weight:700;margin:30px 0;padding:0;line-height:42px">Login Code</h1>
+                  <p style="font-size:20px;line-height:28px;margin:16px 0;margin-bottom:30px">Your verification code is:</p>
+                  <table align="center" width="100%" border="0" cellPadding="0" cellSpacing="0" role="presentation" style="background:rgb(245, 244, 245);border-radius:4px;margin-bottom:30px;padding:40px 10px">
+                    <tbody>
+                      <tr>
+                        <td>
+                          <p style="font-size:30px;line-height:24px;margin:16px 0;text-align:center;vertical-align:middle">${otp}</p>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <p style="font-size:14px;line-height:24px;margin:16px 0;color:#000">If you didn&#x27;t request this email, there&#x27;s nothing to worry about, you can safely ignore it.</p>
+                
+                  <table align="center" width="100%" border="0" cellPadding="0" cellSpacing="0" role="presentation">
+                    <tbody>
+                      <tr>
+                        <td><a href="https://slackhq.com" rel="noopener noreferrer" style="color:#b7b7b7;text-decoration:underline" target="_blank">Our blog</a>   |   <a href="https://slack.com/legal" rel="noopener noreferrer" style="color:#b7b7b7;text-decoration:underline" target="_blank">Policies</a>   |   <a href="https://slack.com/help" rel="noopener noreferrer" style="color:#b7b7b7;text-decoration:underline" target="_blank">Help center</a>   |   <a href="https://slack.com/community" rel="noopener noreferrer" data-auth="NotApplicable" data-linkindex="6" style="color:#b7b7b7;text-decoration:underline" target="_blank">Slack Community</a>
+                          <p style="font-size:12px;line-height:15px;margin:16px 0;color:#b7b7b7;text-align:left;margin-bottom:50px">©2022 Slack Technologies, LLC, a Salesforce company. <br />500 Howard Street, San Francisco, CA 94105, USA <br /><br />All rights reserved.</p>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </body>
+      
+      </html>`
   };
 
   transporter.sendMail(mailOptions, (error, info) => {
@@ -40,133 +85,116 @@ const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   const ipAddress = getClientIp(req);
 
-
   try {
-      const user = await User.findOne({ email });
+    const user = await User.findOne({ email });
 
+    // Check if the user exists
+    if (!user) {
+      await Logs.create({ email, eventType: 'Error Logs', eventDetails: 'User is not registered', ipAddress });
+      return res.status(404).json({ status: false, message: "User is not registered" });
+    }
 
-      // Check  if the user already exists
-      if (!user) {
-        
-          await Logs.create({ email, eventType: 'Error Logs', eventDetails: 'User is not registered', ipAddress });
-          return res.json({ status: false, message: "User is not registered" });
+    // Check if the account is locked
+    if (user.isLocked) {
+      await Logs.create({ email, eventType: 'Error Logs', eventDetails: 'Account is locked. Please reset your password.', ipAddress });
+      return res.status(403).json({ status: false, message: "Account is locked. Please reset your password." });
+    }
+
+    const validPassword = await bcrypt.compare(password, user.password);
+    if (!validPassword) {
+      user.failedLoginAttempts += 1;
+
+      if (user.failedLoginAttempts >= 3) {
+        user.isLocked = true;
+        await user.save();
+        await Logs.create({ email, eventType: 'Error Logs', eventDetails: 'Account is locked due to multiple failed attempts', ipAddress });
+        return res.status(401).json({ status: false, message: "Account is locked. Please reset your password." });
       }
 
-      // Check if the account is locked
-      if (user.isLocked) {
-          
-          await Logs.create({ email, eventType: 'Error Logs', eventDetails: 'Account is locked. Please reset your password.', ipAddress });
-          return res.json({ status: false, message: "Account is locked. Please reset your password." });
-      }
-
-      const validPassword = await bcrypt.compare(password, user.password);
-      if (!validPassword) {
-          // Increment failed login attempts
-          user.failedLoginAttempts += 1;
-
-          // Lock the account if the number of failed attempts exceeds the threshold
-          if (user.failedLoginAttempts >= 3) {
-              user.isLocked = true;
-              await user.save();
-            
-              await Logs.create({ email, eventType: 'Error Logs', eventDetails: 'Account is locked due to multiple failed attempts', ipAddress });
-              return res.json({ status: false, message: "Account is locked. Please reset your password." });
-          }
-
-          await user.save();
-
-          return res.json({ status: false, message: "Password is incorrect" });
-      }
-
-      // Reset failed login attempts on successful login
-      user.failedLoginAttempts = 0;
-      user.lastLogin = new Date();
-      user.status = "Active";
       await user.save();
+      return res.status(401).json({ status: false, message: "Password is incorrect" });
+    }
 
-      // Include user ID in the JWT payload
-      const token = jwt.sign({ userId: user._id, role: user.role}, process.env.KEY, { expiresIn: '1h' });
-      res.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
+    user.failedLoginAttempts = 0;
 
-      // const responseObj = {
-      //     status: true,
-      //     message: "Login successful",
-      //     userId: user._id,
-      //     lastLogin: user.lastLogin,
-      //     username: user.username,
-      //     email: user.email,
-      //     role: user.role,
-      //     token
-      // };
+    const otp = generateOTP();
+    user.otp = otp;
+    user.otpExpires = Date.now() + 10 * 60 * 1000;
+    await user.save();
 
-      // Generate OTP
-      const otp = generateOTP();
-      user.otp = otp;
-      user.otpExpires = Date.now() + 10 * 60 * 1000; // OTP expires in 10 minutes
-      await user.save();
+    sendOTPEmail(user.email, otp);
+    // await Logs.create({ email, eventType: 'User Logs', eventDetails: 'OTP sent', ipAddress });
 
-      // Send OTP to user's email
-      sendOTPEmail(user.email, otp);
+    // Generate a token containing the email for OTP verification
+    const otpToken = jwt.sign({ email: user.email }, process.env.KEY, { expiresIn: '10m' });
+    console.log("otpToken:", otpToken);
+    res.cookie('otpToken', otpToken, { httpOnly: true, maxAge: 10 * 60 * 1000 });
 
-      await Logs.create({ email, eventType: 'User Logs', eventDetails: 'OTP sent', ipAddress });
-
-      return res.json({ status: true, message: "OTP sent to your email. Please verify to proceed." });
-      // await Logs.create({ email, eventType: 'User Logs', eventDetails: 'Login successful', ipAddress });
-      // // console.log("Response Object:", responseObj); // Log the response object
-      // return res.json(responseObj);
+    return res.json({ status: true, message: "OTP sent to your email. Please verify to proceed.", otpToken });
   } catch (error) {
-      logger.error(`Login error for user with email: ${email}`, { error });
-      await Logs.create({ email, eventType: 'Error Logs', eventDetails: 'Internal server error', ipAddress });
-      console.error(error);
-      return res.status(500).json({ message: "Internal server error" });
+    console.error("Login error:", error);
+    await Logs.create({ email, eventType: 'Error Logs', eventDetails: 'Internal server error', ipAddress });
+    return res.status(500).json({ message: "Internal server error" });
   }
 });
 
 const verifyOTP = asyncHandler(async (req, res) => {
-  const { email, otp } = req.body;
+  const { otp } = req.body;
   const ipAddress = getClientIp(req);
+  const authHeader = req.headers['authorization'];
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(400).json({ message: "Authorization header is missing or invalid" });
+  }
+  const otpToken = authHeader.split(' ')[1]; // Extract token from the header
+  console.log('OTP Token:', otpToken);
+
+  if (!otpToken) {
+    return res.status(400).json({ message: "OTP token is missing" });
+  }
 
   try {
-      const user = await User.findOne({ email });
+    const decoded = jwt.verify(otpToken, process.env.KEY);
+    const email = decoded.email;
 
-      if (!user) {
-          return res.status(404).json({ message: "User not found" });
-      }
+    const user = await User.findOne({ email });
 
-      if (user.otp !== otp || Date.now() > user.otpExpires) {
-          return res.status(400).json({ message: "Invalid or expired OTP" });
-      }
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
-      user.otp = null;
-      user.otpExpires = null;
-      user.lastLogin = new Date();
-      user.status = "Active";
-      await user.save();
+    if (user.otp !== otp || Date.now() > user.otpExpires) {
+      return res.status(400).json({ message: "Invalid or expired OTP" });
+    }
 
-      const token = jwt.sign({ userId: user._id, role: user.role }, process.env.KEY, { expiresIn: '1h' });
-      res.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
+    user.otp = null;
+    user.otpExpires = null;
+    user.lastLogin = new Date();
+    user.status = "Active";
+    await user.save();
 
-      const responseObj = {
-          status: true,
-          message: "Login successful",
-          userId: user._id,
-          lastLogin: user.lastLogin,
-          username: user.username,
-          email: user.email,
-          role: user.role,
-          token
-      };
+    const token = jwt.sign({ userId: user._id, role: user.role, email: user.email }, process.env.KEY, { expiresIn: '1h' });
+    res.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
 
- 
+    const responseObj = {
+      status: true,
+      message: "Login successful",
+      userId: user._id,
+      lastLogin: user.lastLogin,
+      username: user.username,
+      email: user.email,
+      role: user.role,
+      token
+    };
 
-      await Logs.create({ email, eventType: 'User Logs', eventDetails: 'OTP verified and login successful', ipAddress });
-      return res.json(responseObj);
+    await Logs.create({ userId: user._id, email, eventType: 'User Logs', eventDetails: 'OTP verified and login successful', ipAddress });
+    return res.json(responseObj);
   } catch (error) {
-      console.error("OTP verification error:", error);
-      await Logs.create({ email, eventType: 'Error Logs', eventDetails: 'Internal server error during OTP verification', ipAddress });
-      return res.status(500).json({ message: "Internal server error" });
+    console.error("OTP verification error:", error);
+    await Logs.create({ eventType: 'Error Logs', eventDetails: 'Internal server error during OTP verification', ipAddress });
+    return res.status(500).json({ message: "Internal server error" });
   }
 });
+
 
 const register = asyncHandler(async (req, res) => {
 
@@ -213,6 +241,7 @@ const logout = asyncHandler(async (req, res) => {
 
     // Get the user ID from the authenticated user
     const userId = req.user._id;
+   
 
     // Fetch user from the database
     const user = await User.findById(userId);
@@ -226,18 +255,19 @@ const logout = asyncHandler(async (req, res) => {
     user.status = "Inactive";
     await user.save();
 
+
     // Clear the token cookie
     res.clearCookie('token');
     
     // Log the successful logout
     
-    await Logs.create({ userId, email: '', eventType: 'User Logs', eventDetails: 'Logout successful', ipAddress });
+    await Logs.create({ userId, eventType: 'User Logs', eventDetails: 'Logout successful', ipAddress });
 
     return res.json({ success: true, message: 'Logout successful' });
   } catch (error) {
     console.error("Error setting user status to inactive:", error);
     // Handle error if needed
-    await Logs.create({ userId: '', email: '', eventType: 'Error logs', eventDetails: 'Error during logout', ipAddress });
+    await Logs.create({ userId,  eventType: 'Error logs', eventDetails: 'Error during logout', ipAddress });
     return res.status(500).json({ success: false, message: 'Internal server error' });
   }
 });
@@ -416,7 +446,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
       user.bio = bio;
       await user.save();
 
-      // logger.info(`Update profile successful for user: ${userId}`);
+    
       await Logs.create({ userId, eventType: 'User Logs', eventDetails: 'Update profile successful', ipAddress });
 
       return res.json({ status: true, message: "User profile updated successfully", user });

@@ -41,6 +41,58 @@
     },
 
     
+    // login: async (email, password) => {
+    //   try {
+    //     const response = await axios.post(`${baseUrl}/auth/login`, {
+    //       email,
+    //       password,
+    //     });
+  
+    //     const { status, message, userId, lastLogin, username , role, token } = response.data;
+    //       if (status) {
+    //         // Login successful
+    //         set({
+    //           isAuthenticated: true,
+    //           user: {
+    //             userId,
+    //             lastLogin,
+    //             username,
+    //             email,
+    //             role,
+    //             token
+    //           }
+    //         });
+    
+    //         localStorage.setItem('token', token);
+        
+          
+            
+        
+    //         // Redirect based on role
+    //         if (role === "admin") {
+    //           window.location.href = '/home';
+    //         } else {
+    //           window.location.href = '/dashboard';
+    //         }
+    
+    //         toast.success('Login successful');
+
+            
+
+    //       } else {
+    //         // Login failed
+    //         console.error('Login failed:', message);
+    //         return message;
+    //       }
+    
+     
+    //   } catch (error) {
+    //     console.error('Network error:', error);
+    //     return `Network error: ${error}`;
+    //   }
+    // },
+    
+
     login: async (email, password) => {
       try {
         const response = await axios.post(`${baseUrl}/auth/login`, {
@@ -48,9 +100,48 @@
           password,
         });
   
-        const { status, message, userId, lastLogin, username , role, token } = response.data;
+        if (response.status === 200) {
+          const { status, message, otpToken } = response.data;
           if (status) {
-            // Login successful
+            // Login successful, store user data
+            const { userId, username, email, role } = response.data;
+            set({ isAuthenticated: true, user: { userId, username, email, role } });
+            // Store OTP token in local storage
+            localStorage.setItem('otpToken', otpToken);
+            // Redirect logic or any further action if needed
+            // For example:
+            window.location.href = '/verifyotp';
+          } else {
+            // Login unsuccessful, display error message
+            console.error('Login error:', message);
+            toast.error(message);
+          }
+        } else {
+          console.error('Unexpected response status:', response.status);
+          toast.error('Unexpected error occurred');
+        }
+      } catch (error) {
+        console.error('Login error:', error);
+        toast.error('Login failed');
+      }
+    },
+
+
+    verifyOTP: async (otp) => {
+      try {
+        const otpToken = localStorage.getItem('otpToken');
+        if (!otpToken) {
+          throw new Error('OTP token not found');
+        }
+  
+        const response = await axios.post(`${baseUrl}/auth/verifyotp`, { otp }, {
+          headers: { Authorization: `Bearer ${otpToken}` },
+        });
+  
+        if (response.status === 200) {
+          const { status, message, userId, lastLogin, username, email, role, token } = response.data;
+          if (status) {
+            // OTP verification successful
             set({
               isAuthenticated: true,
               user: {
@@ -62,35 +153,33 @@
                 token
               }
             });
-    
+  
             localStorage.setItem('token', token);
-        
-          
-            
-        
-            // Redirect based on role
-            if (role === "admin") {
+            localStorage.removeItem('otpToken');
+  
+            // Redirect logic based on role
+            if (role === 'admin') {
               window.location.href = '/home';
             } else {
               window.location.href = '/dashboard';
             }
-    
+  
             toast.success('Login successful');
-
-            
-
           } else {
-            // Login failed
-            console.error('Login failed:', message);
-            return message;
+            // OTP verification failed
+            console.error('OTP verification failed:', message);
+            toast.error(message);
           }
-    
-     
+        } else {
+          console.error('Unexpected response status:', response.status);
+          toast.error('Unexpected error occurred');
+        }
       } catch (error) {
-        console.error('Network error:', error);
-        return `Network error: ${error}`;
+        console.error('OTP verification error:', error);
+        toast.error('OTP verification failed');
       }
     },
+
     
 
 

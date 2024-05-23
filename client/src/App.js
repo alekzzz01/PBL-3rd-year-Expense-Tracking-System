@@ -22,6 +22,7 @@ import EventLogsManagement from './adminpages/eventLogsManagement';
 
 import SignUp from './auth/register';
 import SignIn from './auth/login';
+import Verifyotp from './auth/verifyotp';
 import Unauthorized from './pages/unauthorized';
 
 
@@ -48,6 +49,7 @@ function App() {
         <Route path="/login" element={<SignIn />} />
         <Route path="/register" element={<SignUp />} />
         <Route path="/forgotpassword" element={<Forgotpassword/>}></Route>
+        <Route path="/Verifyotp" element={<Verifyotp/>} />
         <Route path="/resetpassword/:token" element={<Resetpassword/>}></Route>
 
         <Route path="/forbidden" element={<Unauthorized />}/>
