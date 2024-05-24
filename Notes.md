@@ -7,7 +7,7 @@ To be fixed
 
 [] For the money in it will be the add income, for the money out it will be the add expense.
 
-[] additional functionality for every Expenses category they can add a budget. it can be per weekly, monthly or yearly.
+[x] additional functionality for every Expenses category they can add a budget. it can be per weekly, monthly or yearly.
 
 [] change the filtering of the charts to weekly, monthly or yearly
 
@@ -27,8 +27,36 @@ To be fixed
 
 [x] EDIT and DELETE savings function.
 
-[] Get Total Amount Items per user and savings id .(Note: This should not be exceed to the budget)
+[x] Get Total Amount Items per user and savings id .(Note: This should not be exceed to the budget)
       
 [x] Calculate the budget per (FREQUENCY) until the (FINISHBYdate)
 
 [x] View per savings item 
+
+
+// users
+
+[] in transactions add a delete selected and delete modal
+
+[] edit transaction details
+
+[] in savings edit and delete savings
+
+[] dashboard total savings and goals
+
+[] notifications
+
+[] settings
+
+[] download reports of the transactions
+
+
+// admin
+
+[] count all logs
+
+[] restore functionality
+
+[] chat support
+
+[] download reports of the logs

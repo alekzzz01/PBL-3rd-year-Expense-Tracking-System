@@ -94,7 +94,7 @@ function BackupTable() {
             sortable: true,
         },
         {
-            name: 'Size',
+            name: 'Size (Bytes)',
             selector: row => row.size,
             sortable: true,
         },
