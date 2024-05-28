@@ -10,20 +10,20 @@ function Expenses() {
   // VIEW EXPENSES
   const { getExpenseItemById } = useExpenseStore();
   const [selectedExpense, setSelectedExpense] = useState(null); 
-  const [selectedExpenseId, setSelectedExpenseId] = useState(null);
+  const [selectedExpenseId, setSelectedExpenseId] = useState(null); 
   
   
   const handleViewExpense = async (expenseId) => {
-  setSelectedExpenseId(expenseId);
-  
-  const { success, data, error } = await getExpenseItemById(expenseId);
-  if (success) {
-    setSelectedExpense(data);
-    document.getElementById('ViewExpense').showModal(); 
-  } else {
-    console.error('Failed to fetch expense item:', error);
-  }
-};
+      setSelectedExpenseId(expenseId);
+      
+      const { success, data, error } = await getExpenseItemById(expenseId);
+      if (success) {
+        setSelectedExpense(data);
+        document.getElementById('ViewExpense').showModal(); 
+      } else {
+        console.error('Failed to fetch expense item:', error);
+      }
+    };
 
 
 

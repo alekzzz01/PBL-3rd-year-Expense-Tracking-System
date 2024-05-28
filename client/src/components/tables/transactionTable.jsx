@@ -1,6 +1,6 @@
 import React, { useEffect, useState} from 'react';
 import DataTable from 'react-data-table-component';
-import { Pen, Trash } from 'lucide-react';
+import { Trash } from 'lucide-react';
 import useTransactionStore from '../../store/transactionStore';
 import useIncomeStore from '../../store/incomeStore';
 import useExpenseStore from '../../store/expenseStore';
@@ -10,7 +10,8 @@ function TransactionTable() {
   const { deleteIncome } = useIncomeStore();
   const { deleteExpense } = useExpenseStore();
   const [selectedRows, setSelectedRows] = useState([]);
-
+  
+  const [itemToDelete, setItemToDelete] = useState(null);
 
 
   useEffect(() => {
@@ -22,7 +23,7 @@ function TransactionTable() {
   // for Individual items for deletion
 
   const handleDeleteIncome = (incomeId) => {
-    // Call the deleteIncome function with the incomeId
+ 
     deleteIncome(incomeId)
       .then((response) => {
         fetchTransactions(); 
@@ -35,7 +36,7 @@ function TransactionTable() {
   };
 
   const handleDeleteExpense = (expenseItemId) => {
-    // Call the deleteIncome function with the incomeId
+
     deleteExpense(expenseItemId)
       .then((response) => {
         fetchTransactions(); 
@@ -46,6 +47,23 @@ function TransactionTable() {
         
       });
   };
+
+  const openModal = (item) => {
+    setItemToDelete(item);
+    document.getElementById('delete_user').showModal(); 
+  };
+
+
+  const handleConfirmDelete = () => {
+    if (itemToDelete.tableType === 'Income') {
+      handleDeleteIncome(itemToDelete._id);
+    } else if (itemToDelete.tableType === 'Expense') {
+      handleDeleteExpense(itemToDelete._id);
+    }
+    document.getElementById('delete_user').showModal(); 
+    setItemToDelete(null);
+  };
+
 
 
   // for Selected Items for deletion
@@ -111,23 +129,11 @@ function TransactionTable() {
       cell: (row) => (
         <div className='flex flex-wrap items-center gap-3'>
 
-          <button>
-              <Pen     
-              size={16}
-              color="#007bff"   />
-          </button> 
+        
 
-          <button onClick={() => {
-            if (row.tableType === 'Income') {
-              handleDeleteIncome(row._id);
-            } else if (row.tableType === 'Expense') {
-              handleDeleteExpense(row._id);
-            }
-          }}>
-          <Trash
-              size={16}
-              color="#dc3545"  />
-          </button> 
+          <button onClick={() => openModal(row)}>
+            <Trash size={16} color="#dc3545" />
+          </button>
 
         </div>
       ),
@@ -176,6 +182,24 @@ function TransactionTable() {
           />
         </>
       )}
+
+
+
+      <dialog id="delete_user" className="modal">
+        <div className="modal-box">
+         
+          <p className="py-4">Are you sure you want to delete this item?</p>
+          <div className="modal-action">
+            <form method="dialog">
+              <div className='w-full flex justify-end items-center gap-4'>
+                <button className="btn" onClick={() => setItemToDelete(null)} >Close</button>
+                <button className='btn bg-red-200 text-red-700'  onClick={handleConfirmDelete}>Delete</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </dialog>
+
 
 
     

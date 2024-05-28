@@ -129,6 +129,54 @@ const useIncomeStore = create((set) => ({
     },
 
 
+    viewIncome: async (incomeItemId) => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${baseUrl}/income/viewIncomeItem/${incomeItemId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          }
+        });
+  
+        if (response.data && response.data.success) {
+          const incomeItem = response.data.data || null;
+          return { success: true, data: incomeItem };
+        } else {
+          return { success: false, error: 'Failed to fetch income item' };
+        }
+      } catch (error) {
+        console.error('Error fetching income item:', error);
+        return { success: false, error: 'Failed to fetch income item' };
+      }
+    },
+
+    updateIncome: async (incomeId, updatedData) => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.put(`${baseUrl}/income/updateincome/${incomeId}`, updatedData, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+    
+        if (response.data && response.data.success) {
+          toast.success('Income updated successfully');
+          return { success: true, data: response.data.data };
+        } else {
+          return { success: false, error: response.data.message || 'Failed to update income' };
+        }
+      } catch (error) {
+        console.error('Error updating income:', error);
+        return { success: false, error: 'Internal Server Error' };
+      }
+    },
+    
+  
+  
+  
+
+
 }));
 
 export default useIncomeStore;

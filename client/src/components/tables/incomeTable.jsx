@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
-import { Pen, Trash } from 'lucide-react';
+import { Eye,  Trash } from 'lucide-react';
 // import DataTable, { createTheme } from 'react-data-table-component';
 import useTransactionStore from '../../store/transactionStore'; 
 import useIncomeStore from '../../store/incomeStore';
@@ -8,14 +8,80 @@ import useIncomeStore from '../../store/incomeStore';
 
 function IncomeTable() {
   const { transactions, fetchTransactions, isLoading, isError, errorMessage } = useTransactionStore();
-  const { deleteIncome } = useIncomeStore();
+  const { deleteIncome, viewIncome, updateIncome, getTotalIncomePerMonth } = useIncomeStore();
   const [selectedRows, setSelectedRows] = useState([]);
+  const [itemToDelete, setItemToDelete] = useState(null);
+
+
+  const [selectedIncome, setSelectedIncome] = useState(null); 
+  const [selectedExpenseId, setSelectedIncomeId] = useState(null); 
+  const [initialIncomeState, setInitialIncomeState] = useState(null);
+  
+  
+
+// FETCH ITESMS
 
   useEffect(() => {
     fetchTransactions(); // Fetch transactions when component mounts
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Empty dependency array to ensure it only runs 
+
+  useEffect(() => {
+    getTotalIncomePerMonth();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   
+
+
+  const handleViewIncome = async (incomeId) => {
+    setSelectedIncomeId(incomeId);
+    
+    const { success, data, error } = await viewIncome(incomeId);
+    if (success) {
+      setSelectedIncome(data);
+      setInitialIncomeState(data);
+      document.getElementById('ViewIncome').showModal(); 
+    } else {
+      console.error('Failed to fetch expense item:', error);
+    }
+  };
+
+  const handleSaveChanges = async (e) => {
+    e.preventDefault(); 
+      try {
+        const { success, data, error } = await updateIncome(selectedIncome._id, selectedIncome);
+        if (success) {
+          fetchTransactions();
+          getTotalIncomePerMonth();
+          document.getElementById('ViewIncome').close(); 
+        } else {
+          console.error('Failed to save changes:', error);
+          // Handle failure (e.g., show error message)
+        }
+      } catch (error) {
+        console.error('Error saving changes:', error);
+        
+      }
+    };
+
+  const handleInputChange = (e) => {
+      const { name, value } = e.target;
+      setSelectedIncome(prevState => ({
+        ...prevState,
+        [name]: value
+      }));
+    };
+
+  const isFormChanged = () => {
+      // Check if selectedIncome is not null and initialIncomeState is set
+      return selectedIncome && initialIncomeState && JSON.stringify(selectedIncome) !== JSON.stringify(initialIncomeState);
+    };
+  
+
+
+
+// FOR DELETE
 
   const handleDeleteIncome = (incomeId) => {
     // Call the deleteIncome function with the incomeId
@@ -46,10 +112,25 @@ function IncomeTable() {
     };
     
 
+    const openModal = (item) => {
+      setItemToDelete(item);
+      document.getElementById('delete_user').showModal(); 
+    };
   
-  const handleRowSelected = rows => {
-    setSelectedRows(rows.selectedRows);
-  };
+  
+    const handleConfirmDelete = () => {
+  
+      handleDeleteIncome(itemToDelete._id);
+      document.getElementById('delete_user').showModal(); 
+      setItemToDelete(null);
+    };
+  
+  
+
+    
+    const handleRowSelected = rows => {
+      setSelectedRows(rows.selectedRows);
+    };
 
 
 
@@ -83,19 +164,16 @@ function IncomeTable() {
 
     {
       cell: (row) => (
-        <div className='flex flex-wrap items-center gap-3'>
+        <div >
 
-          <button>
-              <Pen     
-              size={16}
-              color="#007bff"   />
-          </button> 
+        <button className='btn btn-ghost btn-circle'  onClick={() => handleViewIncome(row._id)}>
+              <Eye size={16} color="#007bff" />
+            </button>
 
-          <button  onClick={() => handleDeleteIncome(row._id)}>
-          <Trash
-              size={16}
-              color="#dc3545"  />
-          </button> 
+          <button className='btn btn-ghost btn-circle' onClick={() => openModal(row)}>
+            <Trash size={16} color="#dc3545" />
+          </button>
+
 
         </div>
       ),
@@ -164,6 +242,88 @@ function IncomeTable() {
           theme="solarized"
         />
       )}
+
+
+
+      <dialog id="delete_user" className="modal">
+        <div className="modal-box">
+         
+          <p className="py-4">Are you sure you want to delete this item?</p>
+          <div className="modal-action">
+            <form method="dialog">
+              <div className='w-full flex justify-end items-center gap-4'>
+                <button className="btn" onClick={() => setItemToDelete(null)} >Close</button>
+                <button className='btn bg-red-200 text-red-700'  onClick={handleConfirmDelete}>Delete</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </dialog>
+
+
+      
+      <dialog id="ViewIncome" className="modal">
+        <div className="modal-box">
+          <form method="dialog">
+            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+          </form>
+          <h3 className="font-bold text-lg mb-6">View Income</h3>
+
+          <form action="" className='flex flex-col gap-3' onSubmit={handleSaveChanges}>
+
+            <label className="input input-bordered flex items-center gap-2">
+              Type:
+              <input
+                type="text"
+                className="grow"
+                name="incomeType"
+                value={selectedIncome && selectedIncome.incomeType}
+                onChange={handleInputChange}
+                readOnly
+              />
+            </label>
+
+            <label className="input input-bordered flex items-center gap-2">
+              Category:
+              <input
+                type="text"
+                className="grow"
+                name="category"
+                value={selectedIncome && selectedIncome.category}
+                onChange={handleInputChange}
+              />
+            </label>
+
+            <select
+              className='select select-bordered w-full'
+              name="paymentMethod"
+              value={selectedIncome && selectedIncome.paymentMethod}
+              onChange={handleInputChange}
+            >
+              <option value="Cash">Cash</option>
+              <option value="Credit Card">Credit Card</option>
+              <option value="Debit Card">Debit Card</option>
+              <option value="E-wallet">E-Wallet</option>
+            </select>
+
+            <label className="input input-bordered flex items-center gap-2">
+              Amount:
+              <input
+                type="text"
+                className="grow"
+                name="amount"
+                value={selectedIncome && selectedIncome.amount}
+                onChange={handleInputChange}
+              />
+            </label>
+
+            <button className={`btn btn-primary${isFormChanged() ? '' : ' disabled'}`} disabled={!isFormChanged()}>Save Changes</button>
+
+          </form>
+
+        </div>
+      </dialog>
+
     </>
   );
 }

@@ -120,7 +120,50 @@ const updateIncome = asyncHandler(async (req, res) => {
     }
 });
 
-// Function to fetch/display all income
+
+const viewIncome = asyncHandler(async (req, res) => {
+    // Check if req.user exists and has the _id property
+    if (!req.user || !req.user._id) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+    }
+
+    const userId = req.user._id;
+
+    // Extract incomeItemId from request params
+    const incomeId = req.params.incomeId;
+
+    try {
+        // Find the income document belonging to the user
+        const income = await IncomeModel.findOne({ user: userId });
+
+    
+
+        if (income) {
+            // Find the specific income item within the income document
+            const incomeItem = income.incomeItems.find(item => item._id.toString() === incomeId);
+
+          
+            if (incomeItem) {
+                return res.status(200).json({ success: true, data: incomeItem });
+            } else {
+                return res.status(404).json({ success: false, message: 'Income item not found' });
+            }
+            
+        } else {
+            return res.status(404).json({ success: false, message: 'Income document not found' });
+        }
+    } catch (error) {
+        console.error("Error in viewIncome:", error); // Log the error
+        res.status(500).json({ success: false, error: 'Internal Server Error' });
+    }
+});
+
+
+
+
+
+
+
 const fetchIncome = asyncHandler(async (req, res) => {
     try {
         const userId = req.user._id;
@@ -225,7 +268,7 @@ const getTotalIncome = asyncHandler(async (req, res) => {
 
 
 
-export { addIncome, deleteIncome, updateIncome, fetchIncome, getTotalIncomePerMonth, getTotalIncome };
+export { addIncome,viewIncome ,deleteIncome, updateIncome, fetchIncome, getTotalIncomePerMonth, getTotalIncome };
 
 
 

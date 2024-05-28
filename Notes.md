@@ -34,21 +34,38 @@ To be fixed
 [x] View per savings item 
 
 
+
+// tnigamo jerome
+
+[] in register function add a passwordExpires
+
+[] in login function check for password expiration if not go to otp
+
+[] if password is expired go to forgot password and set again a new password expiration
+
+
 // users
 
-[] in transactions add a delete selected and delete modal
+[x] in income view and edit 
 
-[] edit transaction details
+[x] in transactions delete modal
+
+[] in expenses edit function
 
 [] in savings edit and delete savings
 
 [] dashboard total savings and goals
 
+[] download reports of the transactions
+
+[] expense-scanner / upload file - scan
+
+
 [] notifications
 
 [] settings
 
-[] download reports of the transactions
+
 
 
 // admin

@@ -81,7 +81,7 @@ const sendOTPEmail = (email, otp) => {
   });
 };
 
-const login = asyncHandler(async (req, res) => {
+const login = asyncHandler(async (req, res) => {  
   const { email, password } = req.body;
   const ipAddress = getClientIp(req);
 
@@ -172,8 +172,8 @@ const verifyOTP = asyncHandler(async (req, res) => {
     user.status = "Active";
     await user.save();
 
-    const token = jwt.sign({ userId: user._id, role: user.role, email: user.email }, process.env.KEY, { expiresIn: '1h' });
-    res.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
+    const token = jwt.sign({ userId: user._id, role: user.role, email: user.email }, process.env.KEY, { expiresIn: '7d' });
+    res.cookie('token', token, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000 }); 
 
     const responseObj = {
       status: true,
