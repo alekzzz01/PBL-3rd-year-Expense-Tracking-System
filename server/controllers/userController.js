@@ -100,6 +100,12 @@ const login = asyncHandler(async (req, res) => {
       return res.status(403).json({ status: false, message: "Account is locked. Please reset your password." });
     }
 
+     // Check if the password is expired
+     if (user.passwordExpires && Date.now() > user.passwordExpires) {
+      await Logs.create({ email, eventType: 'Error Logs', eventDetails: 'Password expired. Please reset your password.', ipAddress });
+      return res.status(401).json({ status: false, message: "Password expired. Please reset your password." });
+    }
+
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {
       user.failedLoginAttempts += 1;
@@ -197,34 +203,32 @@ const verifyOTP = asyncHandler(async (req, res) => {
 
 
 const register = asyncHandler(async (req, res) => {
-
   const ipAddress = getClientIp(req);
 
-    const {username, email, password} = req.body;
+  const { username, email, password } = req.body;
 
-    const existingEmail = await User.findOne({ email });
-    if (existingEmail) {
-        return res.status(400).json({ message: "Email already exists" });
-    }
+  const existingEmail = await User.findOne({ email });
+  if (existingEmail) {
+      return res.status(400).json({ message: "Email already exists" });
+  }
 
+  const hashpassword = await bcrypt.hash(password, 10);
 
-    const hashpassword = await bcrypt.hash(password, 10)
+  const passwordExpires = new Date();
+  passwordExpires.setMonth(passwordExpires.getMonth() + 3);
 
-    const newUser = new User ({
-        username,
-        email,
-        password: hashpassword, // Only store the hashed password
-        role: "user" 
-    })
-    
+  const newUser = new User ({
+      username,
+      email,
+      password: hashpassword,
+      role: "user",
+      passwordExpires,
+  });
 
-    await newUser.save()
+  await newUser.save();
 
-    
-    await Logs.create({ email, eventType: 'User Logs', eventDetails: 'Registration successful', ipAddress });
-    return res.json({status: true, message: "record registered"})
-
-
+  await Logs.create({ email, eventType: 'User Logs', eventDetails: 'Registration successful', ipAddress });
+  return res.json({ status: true, message: "record registered" });
 });
 
 
@@ -389,6 +393,10 @@ const resetPassword = asyncHandler(async (req, res) => {
       return res.status(400).send({ message: "New password and confirm password do not match" });
     }
 
+     // Define the new expiration time for the password (e.g., 1 minute from now)
+     const newPasswordExpiration = new Date();
+    newPasswordExpiration.setMonth(newPasswordExpiration.getMonth() + 3);
+
     // Debug log: Log the current contents of the password history
     console.log("Password History before update:", user.passwordHistory);
 
@@ -411,6 +419,7 @@ const resetPassword = asyncHandler(async (req, res) => {
     user.passwordHistory.unshift(hashedNewPassword); // Add hashed new password to history
     user.passwordHistory = user.passwordHistory.slice(0, 5); // Limit history to 5 passwords
     user.password = hashedNewPassword;
+    user.passwordExpires = newPasswordExpiration; // Set the new password expiration
     user.isLocked = false;
     await user.save();
 
