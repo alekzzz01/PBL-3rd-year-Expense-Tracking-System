@@ -102,7 +102,8 @@ import { ObjectId } from 'mongodb';
 
     // Add encrypted files to the zip archive
     backup.encryptedFiles.forEach((file, index) => {
-      const filename = `${index}.enc`; // Set a default filename or use a unique identifier
+      // const filename = `${index}.enc`; // Set a default filename or use a unique identifier
+      const filename = `${index}.json`; // Set a default filename or use a unique identifier
       console.log('Appending file:', filename);
       archive.append(file.buffer, { name: filename });
     });
@@ -126,7 +127,7 @@ import { ObjectId } from 'mongodb';
       }
   });
 
-    app.post('/cancel-daily-backup', async (req, res) => {
+  app.post('/cancel-daily-backup', async (req, res) => {
       try {
         cancelDailyBackup(); // Cancel the scheduled backup
           res.status(200).json({ success: true, message: 'Scheduled daily backup canceled successfully.' });
