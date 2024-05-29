@@ -32,7 +32,6 @@ const calculateBudgetPerFrequency = (goalAmount, startDate, finishBy, frequency,
   return remainingAmount / periods;
 };
 
-
 // Create a new saving
 const createSavings = asyncHandler(async (req, res) => {
 
@@ -119,9 +118,6 @@ const getSavingsForUser = asyncHandler(async (req, res) => {
     }
 });
   
-
-
-
 const addAmountItem = asyncHandler(async (req, res) => {
   const { amount, date, note } = req.body;
   const { savingsItemId } = req.params;
@@ -179,7 +175,6 @@ const addAmountItem = asyncHandler(async (req, res) => {
     res.status(400).json({ success: false, message: error.message });
   }
 });
-
 
 // Edit a savings item
 const editSavings = asyncHandler(async (req, res) => {
@@ -251,8 +246,6 @@ const deleteSavings = asyncHandler(async (req, res) => {
       res.status(400).json({ success: false, message: error.message });
   }
 });
-
-
 
 const getSavingsItemId = asyncHandler(async (req, res) => {
   // Check if req.user exists and has the _id property

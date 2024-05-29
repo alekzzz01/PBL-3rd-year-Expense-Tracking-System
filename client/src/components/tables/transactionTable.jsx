@@ -131,7 +131,7 @@ function TransactionTable() {
 
         
 
-          <button onClick={() => openModal(row)}>
+          <button className='btn btn-ghost btn-circle' onClick={() => openModal(row)}>
             <Trash size={16} color="#dc3545" />
           </button>
 

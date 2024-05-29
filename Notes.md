@@ -33,10 +33,6 @@ To be fixed
 
 [x] View per savings item 
 
-
-
-// alex love ikan
-
 [x] in register function add a passwordExpires
 
 [x] in login function check for password expiration
@@ -44,18 +40,22 @@ To be fixed
 [x] if password is expired go to forgot password and set again a new password expiration
 
 
-// users
+
+<!--  -->
+
+// To code in user side
 
 [x] in income view and edit 
 
 [x] in transactions delete modal
 
-[] in expenses edit function
+[x] in expenses edit function
 
-[] in savings edit and delete savings
+[x] in savings edit and delete savings
 
 
-[] dashboard total savings and goals
+[] dashboard total savings(get all the total of the amountitems of the user) and goals(number of savings) - para sayo toh jerome
+
 
 [] download reports of the transactions
 
@@ -65,7 +65,6 @@ To be fixed
 [] notifications
 
 [] settings
-
 
 
 
