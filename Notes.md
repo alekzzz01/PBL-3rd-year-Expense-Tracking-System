@@ -35,13 +35,13 @@ To be fixed
 
 
 
-// tnigamo jerome
+// alex love ikan
 
-[] in register function add a passwordExpires
+[x] in register function add a passwordExpires
 
-[] in login function check for password expiration if not go to otp
+[x] in login function check for password expiration if not go to otp
 
-[] if password is expired go to forgot password and set again a new password expiration
+[x] if password is expired go to forgot password and set again a new password expiration
 
 
 // users
