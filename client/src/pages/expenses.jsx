@@ -15,7 +15,7 @@ function Expenses() {
   
   const { getTotalExpensePerMonth, getExpenseItemsForUser, addExpense, getExpenseItemById, updateExpenseItem } = useExpenseStore();
   const [expenses, setExpenses] = useState([]);
-  const [filterType, setFilterType] = useState('Necessities');
+  const [filterType, setFilterType] = useState('');
 
   const fetchExpenseItems = async () => {
     try {
@@ -200,6 +200,7 @@ function Expenses() {
       toast.success('Expense added successfully');
       fetchExpenseItems();
       await getTotalExpensePerMonth();
+      document.getElementById('scan').close(); 
     } catch (error) {
       console.error('Error uploading file:', error);
     }
@@ -288,8 +289,8 @@ function Expenses() {
                       <select className='select select-bordered w-full' name="paymentMethod" value={formData.paymentMethod} onChange={handleChangeForm}>
                         <option selected>Payment Method</option>
                         <option value="Cash">Cash</option>
-                        <option value="Credit Card">Credit Card</option>
-                        <option value="Debit Card">Debit Card</option>
+                        <option value="Credit card">Credit card</option>
+                        <option value="Debit card">Debit card</option>
                         <option value="E-wallet">E-Wallet</option>
                       </select>
 
@@ -348,8 +349,8 @@ function Expenses() {
                       onChange={handleInputChange}
                     >
                       <option value="Cash">Cash</option>
-                      <option value="Credit Card">Credit Card</option>
-                      <option value="Debit Card">Debit Card</option>
+                      <option value="Credit card">Credit card</option>
+                      <option value="Debit card">Debit card</option>
                       <option value="E-wallet">E-Wallet</option>
                     </select>
 
@@ -440,7 +441,7 @@ function Expenses() {
                     )}
                     <button type="submit" className='btn btn-primary w-full'>Upload and Scan Receipt</button>
                   </form>
-                  {result && <pre>{JSON.stringify(result, null, 2)}</pre>}
+                  {/* {result && <pre>{JSON.stringify(result, null, 2)}</pre>} */}
                 </div>
                             
         

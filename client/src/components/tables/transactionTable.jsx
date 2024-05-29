@@ -7,15 +7,17 @@ import useExpenseStore from '../../store/expenseStore';
 
 function TransactionTable() {
   const { transactions, fetchTransactions, isLoading, isError, errorMessage } = useTransactionStore(); // Access state and actions from the store
-  const { deleteIncome } = useIncomeStore();
-  const { deleteExpense } = useExpenseStore();
+  const { deleteIncome, totalIncome, getTotalIncome } = useIncomeStore();
+  const { deleteExpense, totalExpenses, getTotalExpenses } = useExpenseStore();
   const [selectedRows, setSelectedRows] = useState([]);
   
   const [itemToDelete, setItemToDelete] = useState(null);
 
 
   useEffect(() => {
-    fetchTransactions(); // Fetch transactions when component mounts
+    fetchTransactions(); 
+    getTotalIncome();
+    getTotalExpenses();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Empty dependency array to ensure it only runs once
 
@@ -60,6 +62,8 @@ function TransactionTable() {
     } else if (itemToDelete.tableType === 'Expense') {
       handleDeleteExpense(itemToDelete._id);
     }
+    getTotalIncome();
+    getTotalExpenses();
     document.getElementById('delete_user').showModal(); 
     setItemToDelete(null);
   };

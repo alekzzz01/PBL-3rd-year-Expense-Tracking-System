@@ -59,7 +59,7 @@ To be fixed
 
 [] download reports of the transactions
 
-[] expense-scanner / upload file - scan
+[x] expense-scanner / upload file - scan
 
 
 [] notifications
