@@ -1,5 +1,5 @@
 import express from 'express';
-import { createSavings, getSavingsForUser, addAmountItem, editSavings, deleteSavings, getSavingsItemId } from '../controllers/savingsController.js';
+import { createSavings, getSavingsForUser, getTotalSavingsForUser, getTotalGoalAmountForUser, addAmountItem, editSavings, deleteSavings, getSavingsItemId } from '../controllers/savingsController.js';
 import authMiddleware from '../middleWare/checkAuth.js';
 
 const router = express.Router();
@@ -10,7 +10,8 @@ router.get('/viewSavings/:savingsItemId', authMiddleware, getSavingsItemId)
 router.post('/add-amount-item/:savingsItemId', authMiddleware, addAmountItem);
 router.put('/editSavings/:savingsItemId', authMiddleware, editSavings);
 router.delete('/deleteSavings/:savingsItemId', authMiddleware, deleteSavings);
-
+router.get('/totalSavings', authMiddleware, getTotalSavingsForUser);
+router.get('/totalGoalAmount', authMiddleware, getTotalGoalAmountForUser); 
 // Additional routes (if needed) can go here
 
 export { router as SavingsRouter };

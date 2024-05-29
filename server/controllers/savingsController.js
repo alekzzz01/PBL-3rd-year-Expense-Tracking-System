@@ -105,6 +105,8 @@ const getSavingsForUser = asyncHandler(async (req, res) => {
         // Calculate budget per frequency
         const budgetPerFrequency = calculateBudgetPerFrequency(item.goalAmount, new Date(), item.finishBy, item.frequency);
         
+
+        
         return {
           ...item.toObject(), // Convert mongoose document to plain object
           totalAmountItems: totalAmountItems,
@@ -294,8 +296,59 @@ const getSavingsItemId = asyncHandler(async (req, res) => {
   }
 });
 
+const getTotalSavingsForUser = asyncHandler(async (req, res) => {
+  if (!req.user || !req.user._id) {
+    return res.status(401).json({ success: false, message: 'Unauthorized' });
+  }
+
+  const userId = req.user._id;
+
+  try {
+    const savings = await SavingsModel.findOne({ user: userId });
+
+    if (!savings) {
+      return res.status(404).json({ success: false, message: 'Savings document not found' });
+    }
+
+    // Calculate total savings
+    let totalSavings = 0;
+    savings.savingItems.forEach(item => {
+      item.amountItems.forEach(amountItem => {
+        totalSavings += amountItem.amount;
+      });
+    });
+
+    res.status(200).json({ success: true, totalSavings: totalSavings });
+  } catch (error) {
+    res.status(500).json({ success: false, error: 'Internal Server Error' });
+  }
+});
+
+const getTotalGoalAmountForUser = asyncHandler(async (req, res) => {
+  if (!req.user || !req.user._id) {
+    return res.status(401).json({ success: false, message: 'Unauthorized' });
+  }
+
+  const userId = req.user._id;
+
+  try {
+    const savings = await SavingsModel.findOne({ user: userId });
+
+    if (!savings) {
+      return res.status(404).json({ success: false, message: 'Savings document not found' });
+    }
+
+    // Calculate total goal amount
+    let totalGoalAmount = 0;
+    savings.savingItems.forEach(item => {
+      totalGoalAmount += item.goalAmount;
+    });
+
+    res.status(200).json({ success: true, totalGoalAmount: totalGoalAmount });
+  } catch (error) {
+    res.status(500).json({ success: false, error: 'Internal Server Error' });
+  }
+});
 
 
-
-
-export { createSavings, getSavingsForUser, addAmountItem, editSavings, deleteSavings, getSavingsItemId };
+export { createSavings, getSavingsForUser, addAmountItem, editSavings, deleteSavings, getSavingsItemId, getTotalSavingsForUser, getTotalGoalAmountForUser };
