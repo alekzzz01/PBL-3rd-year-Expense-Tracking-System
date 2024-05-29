@@ -12,14 +12,8 @@ function IncomeTable() {
   const [selectedRows, setSelectedRows] = useState([]);
   const [itemToDelete, setItemToDelete] = useState(null);
 
-
-  const [selectedIncome, setSelectedIncome] = useState(null); 
-  const [selectedExpenseId, setSelectedIncomeId] = useState(null); 
-  const [initialIncomeState, setInitialIncomeState] = useState(null);
   
-  
-
-// FETCH ITESMS
+  // fetch items
 
   useEffect(() => {
     fetchTransactions(); // Fetch transactions when component mounts
@@ -31,9 +25,15 @@ function IncomeTable() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+
+  // view and edit income
+
+  const [selectedIncome, setSelectedIncome] = useState(null); 
+  const [selectedExpenseId, setSelectedIncomeId] = useState(null); 
+  const [initialIncomeState, setInitialIncomeState] = useState(null);
   
 
-
+  
   const handleViewIncome = async (incomeId) => {
     setSelectedIncomeId(incomeId);
     
@@ -81,21 +81,21 @@ function IncomeTable() {
 
 
 
-// FOR DELETE
+  // for deleting one income and multiple income
 
-  const handleDeleteIncome = (incomeId) => {
-    // Call the deleteIncome function with the incomeId
-    deleteIncome(incomeId)
-      .then((response) => {
-        fetchTransactions(); 
-        setSelectedRows([]);
-        console.log(response);
-      })
-      .catch((error) => {
-        console.error('Error deleting income:', error);
-        
-      });
-  };
+    const handleDeleteIncome = (incomeId) => {
+      // Call the deleteIncome function with the incomeId
+      deleteIncome(incomeId)
+        .then((response) => {
+          fetchTransactions(); 
+          setSelectedRows([]);
+          console.log(response);
+        })
+        .catch((error) => {
+          console.error('Error deleting income:', error);
+          
+        });
+    };
 
 
     const handleDeleteSelected = async () => {

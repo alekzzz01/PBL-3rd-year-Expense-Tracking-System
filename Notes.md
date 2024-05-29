@@ -39,7 +39,7 @@ To be fixed
 
 [x] in register function add a passwordExpires
 
-[x] in login function check for password expiration if not go to otp
+[x] in login function check for password expiration
 
 [x] if password is expired go to forgot password and set again a new password expiration
 

@@ -177,6 +177,36 @@ const useExpenseStore = create((set) => ({
     }
   },
 
+  updateExpenseItem: async (expenseItemId, expenseData) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.put(`${baseUrl}/expense/updateexpenses/${expenseItemId}`, expenseData, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.data && response.data.success) {
+        set((state) => ({
+          ...state,
+          expenses: state.expenses.map((item) =>
+            item._id === expenseItemId ? { ...item, ...expenseData } : item
+          ),
+        }));
+        toast.success('Expense item updated successfully');
+        return { success: true, data: response.data.data };
+      } else {
+        toast.error('Failed to update expense item');
+        return { success: false, error: 'Failed to update expense item' };
+      }
+    } catch (error) {
+      console.error('Error updating expense item:', error);
+      toast.error('Internal Server Error');
+      return { success: false, error: 'Internal Server Error' };
+    }
+  },
+
 
 
 

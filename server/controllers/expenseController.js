@@ -89,10 +89,10 @@ const updateExpenseItem = asyncHandler(async (req, res) => {
 
             if (expenseItem) {
                 // Update the expense item fields if provided in the request body
-                if (req.body.amount) expenseItem.amount = req.body.amount;
-                if (req.body.description) expenseItem.description = req.body.description;
                 if (req.body.expenseType) expenseItem.expenseType = req.body.expenseType;
-                if (req.body.date) expenseItem.date = req.body.date;
+                if (req.body.paymentMethod) expenseItem.paymentMethod = req.body.paymentMethod;
+                if (req.body.category) expenseItem.category = req.body.category;
+                if (req.body.amount) expenseItem.amount = req.body.amount;
 
                 // Save the updated expense document
                 await expense.save();

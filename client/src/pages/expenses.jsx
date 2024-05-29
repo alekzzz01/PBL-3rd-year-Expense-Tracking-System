@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react'
-
 import LineChart from '../components/charts/userExpense';
 import useExpenseStore from '../store/expenseStore';
 
@@ -7,30 +6,10 @@ import useExpenseStore from '../store/expenseStore';
 function Expenses() {
 
 
-  // VIEW EXPENSES
-  const { getExpenseItemById } = useExpenseStore();
-  const [selectedExpense, setSelectedExpense] = useState(null); 
-  const [selectedExpenseId, setSelectedExpenseId] = useState(null); 
   
-  
-  const handleViewExpense = async (expenseId) => {
-      setSelectedExpenseId(expenseId);
-      
-      const { success, data, error } = await getExpenseItemById(expenseId);
-      if (success) {
-        setSelectedExpense(data);
-        document.getElementById('ViewExpense').showModal(); 
-      } else {
-        console.error('Failed to fetch expense item:', error);
-      }
-    };
-
-
-
-
   // FOR GETTINGS ALL EXPENSE
   
-  const { getTotalExpensePerMonth, getExpenseItemsForUser, addExpense } = useExpenseStore();
+  const { getTotalExpensePerMonth, getExpenseItemsForUser, addExpense, getExpenseItemById, updateExpenseItem } = useExpenseStore();
   const [expenses, setExpenses] = useState([]);
   const [filterType, setFilterType] = useState('Necessities');
 
@@ -122,6 +101,60 @@ function Expenses() {
 
   const currentDate = new Date().toLocaleString('en-US', options);
 
+
+  // viewing and editing expenses
+
+  const [selectedExpense, setSelectedExpense] = useState(null); 
+  const [selectedExpenseId, setSelectedExpenseId] = useState(null); 
+  const [initialExpenseState, setInitialExpenseState] = useState(null);
+
+
+    
+  const handleViewExpense = async (expenseId) => {
+    setSelectedExpenseId(expenseId);
+    
+    const { success, data, error } = await getExpenseItemById(expenseId);
+    if (success) {
+      setSelectedExpense(data);
+      setInitialExpenseState(data);
+      document.getElementById('ViewExpense').showModal(); 
+    } else {
+      console.error('Failed to fetch expense item:', error);
+    }
+  };
+
+
+  const handleSaveChanges = async (e) => {
+    e.preventDefault(); 
+      try {
+        const { success, data, error } = await updateExpenseItem(selectedExpense._id, selectedExpense);
+        if (success) {
+          fetchExpenseItems();
+          getTotalExpensePerMonth();
+          document.getElementById('ViewExpense').close(); 
+        } else {
+          console.error('Failed to save changes:', error);
+          // Handle failure (e.g., show error message)
+        }
+      } catch (error) {
+        console.error('Error saving changes:', error);
+        
+      }
+    };
+
+  const handleInputChange = (e) => {
+      const { name, value } = e.target;
+      setSelectedExpense(prevState => ({
+        ...prevState,
+        [name]: value
+      }));
+    };
+
+    const isFormChanged = () => {
+      // Check if selectedIncome is not null and initialIncomeState is set
+      return selectedExpense && initialExpenseState && JSON.stringify(selectedExpense) !== JSON.stringify(initialExpenseState);
+    };
+  
 
 
   return (
@@ -237,13 +270,66 @@ function Expenses() {
                   </form>
                   <h3 className="font-bold text-lg mb-6">View Expense</h3>
 
-                  <div className='flex flex-col gap-3'>
-                    <p className='font-medium'>Type: <span className='font-normal'>{selectedExpense && selectedExpense.expenseType} </span> </p>
-                    <p className='font-medium'>Category: <span className='font-normal'>{selectedExpense && selectedExpense.category}</span></p>
-                    <p className='font-medium'>Payment Method: <span className='font-normal'>{selectedExpense && selectedExpense.paymentMethod}</span></p>
-                    <p className='font-medium'>Amount: <span className='font-normal'>{selectedExpense && selectedExpense.amount}</span></p>
-                    {/* Add other fields here */}
-                  </div>
+
+
+                  <form action="" onSubmit={handleSaveChanges} className='flex flex-col gap-3'>
+
+
+                    <select
+                      className='select select-bordered w-full'
+                      name="expenseType"
+                      value={selectedExpense && selectedExpense.expenseType}
+                      onChange={handleInputChange}
+                    >
+                        <option value="Necessities">Necessities</option>
+                        <option value="Savings">Savings</option>
+                        <option value="Wants">Wants</option>
+                    </select>
+
+                    <select
+                      className='select select-bordered w-full'
+                      name="paymentMethod"
+                      value={selectedExpense && selectedExpense.paymentMethod}
+                      onChange={handleInputChange}
+                    >
+                      <option value="Cash">Cash</option>
+                      <option value="Credit Card">Credit Card</option>
+                      <option value="Debit Card">Debit Card</option>
+                      <option value="E-wallet">E-Wallet</option>
+                    </select>
+
+
+
+                    <label className="input input-bordered flex items-center gap-2">
+                      Category:
+                      <input
+                        type="text"
+                        className="grow"
+                        name="category"
+                        value={selectedExpense && selectedExpense.category}
+                        onChange={handleInputChange}
+                       
+                      />
+                    </label>
+                  
+                 
+                    <label className="input input-bordered flex items-center gap-2">
+                      Amount:
+                      <input
+                        type="text"
+                        className="grow"
+                        name="amount"
+                        value={selectedExpense && selectedExpense.amount}
+                        onChange={handleInputChange}
+                       
+                      />
+                    </label>
+
+
+                    <button className={`btn btn-primary${isFormChanged() ? '' : ' disabled'}`} disabled={!isFormChanged()}>Save Changes</button>
+
+                  </form>  
+                 
                 </div>
               </dialog>
 

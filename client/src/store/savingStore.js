@@ -115,6 +115,63 @@ const useSavingsStore = create((set) => ({
         }
     },
 
+
+
+    updateSavingsItem: async (savingsItemId, updateData) => {
+        try {
+          const token = localStorage.getItem('token');
+          const response = await axios.put(`${baseUrl}/savings/editSavings/${savingsItemId}`, updateData, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          });
+    
+          if (response.data && response.data.success) {
+            set((state) => ({
+              savings: state.savings.map(savingItem =>
+                savingItem._id === savingsItemId ? { ...savingItem, ...updateData } : savingItem
+              ),
+            }));
+            toast.success('Savings item updated successfully');
+            return response.data.data;
+          } else {
+            toast.error('Failed to update savings item');
+            return { success: false, error: 'Failed to update savings item' };
+          }
+        } catch (error) {
+          console.error('Error updating savings item:', error);
+          toast.error('Internal Server Error');
+          throw error;
+        }
+      },
+    
+      deleteSavingsItem: async (savingsItemId) => {
+        try {
+          const token = localStorage.getItem('token');
+          const response = await axios.delete(`${baseUrl}/savings/deleteSavings/${savingsItemId}`, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            }
+          });
+    
+          if (response.data && response.data.success) {
+            set((state) => ({
+              savings: state.savings.filter(savingItem => savingItem._id !== savingsItemId),
+            }));
+            toast.success('Savings item deleted successfully');
+            return { success: true };
+          } else {
+            toast.error('Failed to delete savings item');
+            return { success: false, error: 'Failed to delete savings item' };
+          }
+        } catch (error) {
+          console.error('Error deleting savings item:', error);
+          toast.error('Internal Server Error');
+          throw error;
+        }
+      },
+
 }));
 
 

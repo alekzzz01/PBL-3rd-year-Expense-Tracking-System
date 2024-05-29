@@ -7,9 +7,10 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function Savings() {
 
-    const { getSavingItemsForUser, savings, getSavingItemById, addAmountItem, createSavingItem } = useSavingsStore();
+    const { getSavingItemsForUser, savings, getSavingItemById, addAmountItem, createSavingItem, updateSavingsItem, deleteSavingsItem } = useSavingsStore();
     const [selectedSavings, setSelectedSavings] = useState(null);
     const [selectedSavingsId, setSelectedSavingsId] = useState(null);
+    const [initialSavingState, setInitialSavingState] = useState(null);
     const [filterOption, setFilterOption] = useState('All');
 
 
@@ -20,8 +21,6 @@ function Savings() {
     });
     const [isFormComplete, setIsFormComplete] = useState(false);
 
-      
-    
     const [savingFormData, setSavingFormData] = useState({
         name: '',
         goalAmount: '',
@@ -36,7 +35,49 @@ function Savings() {
 
 
 
-    // for viewing individual savings
+    //  add savings
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setSavingFormData({ ...savingFormData, [name]: value });
+    };
+
+    const handleSubmitAddSavings = async (e) => {
+        e.preventDefault();
+        try {
+            console.log('Saving form data:', savingFormData); // Log saving form data before sending the request
+            const response = await createSavingItem(savingFormData);
+            console.log('Response from backend:', response); // Log the response from the backend
+            if (response.success) {
+                toast.success('Savings created successfully');
+                // Clear the form fields after successful creation
+                setSavingFormData({
+                    name: '',
+                    goalAmount: '',
+                    finishBy: '',
+                    frequency: '',
+                });
+                // Optionally, you can fetch the updated list of savings
+                getSavingItemsForUser();
+            } else {
+                toast.error('Failed to create savings');
+            }
+        } catch (error) {
+            console.error('Error creating savings:', error);
+            toast.error('Failed to create savings');
+        }
+    };
+    
+  
+
+    const formatFinishByDate = (dateString) => {
+        const options = { month: 'long', day: 'numeric', year: 'numeric' };
+        return new Date(dateString).toLocaleDateString('en-US', options);
+        
+    };
+
+    
+    // for viewing and editing individual savings
 
 
     const handleViewSaving = async (savingsItemId) => {
@@ -50,9 +91,78 @@ function Savings() {
         }
     };
 
+    const handleEditSaving = async (savingsItemId) => {
+        setSelectedSavings(savingsItemId);
+        try {
+            const data = await getSavingItemById(savingsItemId);
+            setSelectedSavings(data);
+            setInitialSavingState(data);
+            document.getElementById('EditSaving').showModal();
+        } catch (error) {
+            console.error('Failed to fetch saving item:', error);
+        }
+    };
 
 
+    const handleSaveChanges = async (e) => {
+        e.preventDefault(); 
+          try {
+            const { success, error } = await updateSavingsItem(selectedSavings._id, selectedSavings);
+            if (success) {
+
+              document.getElementById('EditSaving').close(); 
+            } else {
+              console.error('Failed to save changes:', error);
+              // Handle failure (e.g., show error message)
+            }
+          } catch (error) {
+            console.error('Error saving changes:', error);
+            
+          }
+        };
+    
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setSelectedSavings(prevState => ({
+          ...prevState,
+          [name]: value
+        }));
+      };
+
+    
+    const isFormChanged = () => {
+        // Check if selectedIncome is not null and initialIncomeState is set
+        return selectedSavings && initialSavingState && JSON.stringify(selectedSavings) !== JSON.stringify(initialSavingState);
+    };
+
+
+    // delete a saving
+
+    const [itemToDelete, setItemToDelete] = useState(null);
+
+    const openModal = (savingsItemId) => {
+      setItemToDelete(savingsItemId);
+      document.getElementById('delete_saving').showModal(); 
+    };
+  
+    const handleConfirmDelete = async (savingsItemId) => { // Make sure to mark the function as async
+      try {
+        await deleteSavingsItem(savingsItemId); // Wait for the deletion to complete
+      
+      } catch (error) {
+        console.error('Error deleting savings item:', error);
+     
+      } finally {
+        document.getElementById('delete_saving').close(); // Close the modal regardless of success or failure
+        setItemToDelete(null); // Reset the itemToDelete state
+      }
+    };
+
+
+    
     // add amount per savings 
+    
     const handleAddAmount = (savingsItemId) => {
         setSelectedSavingsId(savingsItemId);
         document.getElementById('addAmount').showModal();
@@ -95,46 +205,6 @@ function Savings() {
 
 
 
-    //  form of add 
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setSavingFormData({ ...savingFormData, [name]: value });
-    };
-
-    const handleSubmitAddSavings = async (e) => {
-        e.preventDefault();
-        try {
-            console.log('Saving form data:', savingFormData); // Log saving form data before sending the request
-            const response = await createSavingItem(savingFormData);
-            console.log('Response from backend:', response); // Log the response from the backend
-            if (response.success) {
-                toast.success('Savings created successfully');
-                // Clear the form fields after successful creation
-                setSavingFormData({
-                    name: '',
-                    goalAmount: '',
-                    finishBy: '',
-                    frequency: '',
-                });
-                // Optionally, you can fetch the updated list of savings
-                getSavingItemsForUser();
-            } else {
-                toast.error('Failed to create savings');
-            }
-        } catch (error) {
-            console.error('Error creating savings:', error);
-            toast.error('Failed to create savings');
-        }
-    };
-    
-  
-
-    const formatFinishByDate = (dateString) => {
-        const options = { month: 'long', day: 'numeric', year: 'numeric' };
-        return new Date(dateString).toLocaleDateString('en-US', options);
-        
-    };
 
     
 
@@ -205,8 +275,8 @@ function Savings() {
                                 <div className="dropdown dropdown-end">
                                     <div tabIndex={0} role="button" className="btn btn-ghost btn-circle m-1"><EllipsisVertical size={20} /></div>
                                     <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                                        <li><button>Edit</button></li>
-                                        <li><button>Delete</button></li>
+                                        <li><button   onClick={() => handleEditSaving(saving._id)}>Edit</button></li>
+                                        <li><button   onClick={() => openModal(saving._id)}>Delete</button></li>
                                       
                                     </ul>
                                 </div>
@@ -265,10 +335,6 @@ function Savings() {
             </div>
 
 
-
-
-
-            
             <dialog id="addSavings" className="modal">
                 <div className="modal-box">
 
@@ -291,7 +357,7 @@ function Savings() {
                       <input className='input input-bordered w-full' name='goalAmount'  type="text" placeholder='Amount' value={savingFormData.goalAmount}
                             onChange={handleChange} />
                       
-                      <input className='input input-bordered w-full' name='finishBy' type="date" placeholder='Date'   min={(new Date()).toISOString().split('T')[0]}value={savingFormData.finishBy}
+                      <input className='input input-bordered w-full' name='finishBy' type="date" placeholder='Date'  min={(new Date()).toISOString().split('T')[0]} value={savingFormData.finishBy}
                             onChange={handleChange}
  />
 
@@ -378,7 +444,96 @@ function Savings() {
 
                   </div>
                 </div>
-              </dialog>
+            </dialog>
+
+
+            <dialog id="EditSaving" className="modal">
+                <div className="modal-box">
+                  <form method="dialog">
+                    <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                  </form>
+                  <h3 className="font-bold text-lg mb-6">Edit Savings</h3>
+
+                 
+
+                <form action="" className='flex flex-col gap-3' onSubmit={handleSaveChanges}>
+
+                    <label className="input input-bordered flex items-center gap-2">
+                    Name:
+                    <input
+                        type="text"
+                        className="grow"
+                        name="name"
+                        value={selectedSavings && selectedSavings.name}
+                        onChange={handleInputChange}
+                      
+                    />
+                    </label>
+
+                    <label className="input input-bordered flex items-center gap-2">
+                    Goal Amount:
+                    <input
+                        type="text"
+                        className="grow"
+                        name="goalAmount"
+                        value={selectedSavings && selectedSavings.goalAmount}
+                        onChange={handleInputChange}
+                      
+                      
+                    />
+                    </label>
+
+                    <label className="input input-bordered flex items-center gap-2">
+                        Date:
+                        <input
+                            type="date"
+                            className="grow"
+                            name="finishBy"
+                            min={(new Date()).toISOString().split('T')[0]}
+                            value={selectedSavings && selectedSavings.finishBy ? selectedSavings.finishBy.split('T')[0] : ''}
+                            onChange={handleInputChange}
+                      
+                        />
+                    </label>
+
+
+                    <select
+                    className='select select-bordered w-full'
+                    name="frequency"
+                    value={selectedSavings && selectedSavings.frequency}
+                    onChange={handleInputChange}
+                    >
+        
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="monthly">Monthly</option>
+                      </select>
+
+                    <button className={`btn btn-primary${isFormChanged() ? '' : ' disabled'}`} disabled={!isFormChanged()}>Save Changes</button>
+
+
+                </form>
+
+
+
+                </div>
+            </dialog>
+
+            <dialog id="delete_saving" className="modal">
+                <div className="modal-box">
+                
+                <p className="py-4">Are you sure you want to delete this item?</p>
+                <div className="modal-action">
+                    <form method="dialog">
+                    <div className='w-full flex justify-end items-center gap-4'>
+                        <button className="btn">Close</button>
+                        <button className='btn bg-red-200 text-red-700 hover:bg-red-300'   onClick={() => handleConfirmDelete(itemToDelete)}>Delete</button>
+                    </div>
+                    </form>
+                </div>
+                </div>
+            </dialog>
+
 
 
       
