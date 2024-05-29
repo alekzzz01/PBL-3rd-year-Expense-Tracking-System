@@ -1,5 +1,5 @@
 import express from 'express';
-import { addExpense, deleteExpenseItem, updateExpenseItem, getExpenseItemsForUser, getTotalExpensePerMonth, getTotalExpenses, getExpenseItemById } from "../controllers/expenseController.js"; 
+import { addExpense, deleteExpenseItem, updateExpenseItem, getExpenseItemsForUser, getTotalExpensePerMonth, getTotalExpenses, getExpenseItemById, scanReceipt } from "../controllers/expenseController.js"; 
 import authMiddleware from '../middleWare/checkAuth.js';
 
 const router = express.Router();
@@ -11,7 +11,9 @@ router.put('/updateexpenses/:expenseItemId', authMiddleware, updateExpenseItem);
 router.get('/expenseItemUser/:expenseItemId', authMiddleware, getExpenseItemById)
 
 router.get('/expenseitems', authMiddleware, getExpenseItemsForUser);
-router.get('/monthly-total', authMiddleware, getTotalExpensePerMonth)
+router.get('/monthly-total', authMiddleware, getTotalExpensePerMonth);
+
+router.post('/scan-receipt', authMiddleware, scanReceipt);
 
 
 router.get('/', (req, res, next ) => {

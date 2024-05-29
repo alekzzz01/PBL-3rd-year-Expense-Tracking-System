@@ -1,25 +1,21 @@
 import ExpenseModel from '../models/Expense.js';
 import asyncHandler from '../middleWare/asyncHandler.js';
 import mongoose from "mongoose";
+import Tesseract from 'tesseract.js';
 
 
 const addExpense = asyncHandler(async (req, res) => {
-    // Check if req.user exists and has the _id property
-    if (!req.user || !req.user._id) {
-        return res.status(401).json({ success: false, message: 'Unauthorized' });
-    }
-
-    // Get the user ID from the authenticated user
-    const userId = req.user._id;
-
-    // Extract necessary fields from the request body
-    const {expenseType, paymentMethod, category, amount, fullName, date  } = req.body;
-
     try {
-        // Find the user's expense document
+        if (!req.user || !req.user._id) {
+            return res.status(401).json({ success: false, message: 'Unauthorized' });
+        }
+
+        const userId = req.user._id;
+
+        const { expenseType, paymentMethod, category, amount, fullName, date } = req.body;
+
         let expense = await ExpenseModel.findOne({ user: userId });
 
-        // If the user doesn't have an existing expense document, create a new one
         if (!expense) {
             expense = new ExpenseModel({
                 expenseItems: [],
@@ -27,50 +23,48 @@ const addExpense = asyncHandler(async (req, res) => {
             });
         }
 
-        // Create a new expense item and push it to the expense document's expenseItems array
         const newExpenseItem = {
-            expenseType: expenseType,
-            paymentMethod: paymentMethod,
-            category: category,
-            amount: amount,
-            fullName: fullName,
-            date: date,
-            // date: date || new Date() // Use provided date or current date if not provided
+            expenseType,
+            paymentMethod,
+            category,
+            amount,
+            fullName,
+            date
         };
 
         expense.expenseItems.push(newExpenseItem);
 
-        // Save the updated expense document
         const savedExpense = await expense.save();
-        res.status(201).json({ success: true, data: savedExpense });
+        return res.status(201).json({ success: true, data: savedExpense }); // Return response here
     } catch (error) {
-        res.status(500).json({ success: false, error: 'Internal Server Error' });
+        console.error("Error in addExpense:", error);
+        return res.status(500).json({ success: false, error: 'Internal Server Error' }); // Return error response here
     }
 });
 
+
 // Controller method to delete an expense item
 const deleteExpenseItem = asyncHandler(async (req, res) => {
-    const { expenseItemId } = req.params; // Get the expense item ID from request parameters
-
     try {
-        // Find the user's expense document
+        const { expenseItemId } = req.params;
+
         const expense = await ExpenseModel.findOne({ user: req.user._id });
 
-        // If the expense document exists, attempt to delete the expense item
-        if (expense) {
-            // Find the index of the expense item with the given ID
-            const index = expense.expenseItems.findIndex(item => item._id.toString() === expenseItemId);
-
-            // If the expense item exists, remove it from the array
-            if (index !== -1) {
-                expense.expenseItems.splice(index, 1);
-                await expense.save(); // Save the updated expense document
-                return res.status(200).json({ success: true, message: 'Expense item deleted successfully' });
-            }
+        if (!expense) {
+            return res.status(404).json({ success: false, message: 'Expense document not found' });
         }
-        // If expense document or expense item not found, return error
+
+        const index = expense.expenseItems.findIndex(item => item._id.toString() === expenseItemId);
+
+        if (index !== -1) {
+            expense.expenseItems.splice(index, 1);
+            await expense.save();
+            return res.status(200).json({ success: true, message: 'Expense item deleted successfully' });
+        }
+
         return res.status(404).json({ success: false, message: 'Expense item not found' });
     } catch (error) {
+        console.error("Error in deleteExpenseItem:", error);
         res.status(500).json({ success: false, error: 'Internal Server Error' });
     }
 });
@@ -149,9 +143,6 @@ const getExpenseItemById = asyncHandler(async (req, res) => {
 });
 
 
-
-
-
 // Controller method to fetch expenses by expense type
 const getExpenseItemsForUser = asyncHandler(async (req, res) => {
     // Check if req.user exists and has the _id property
@@ -177,7 +168,6 @@ const getExpenseItemsForUser = asyncHandler(async (req, res) => {
         res.status(500).json({ success: false, error: 'Internal Server Error' });
     }
 });
-
 
 const getTotalExpensePerMonth = asyncHandler(async (req, res) => {
     // Check if req.user exists and has the _id property
@@ -234,8 +224,6 @@ const getTotalExpensePerMonth = asyncHandler(async (req, res) => {
     }
 });
 
-
-
 const getTotalExpenses = asyncHandler(async (req, res) => {
     // Check if req.user exists and has the _id property
     if (!req.user || !req.user._id) {
@@ -264,6 +252,91 @@ const getTotalExpenses = asyncHandler(async (req, res) => {
 });
 
 
+const scanReceipt = asyncHandler(async (req, res, next) => {
+    try {
+        if (!req.user || !req.user._id) {
+            return res.status(401).json({ success: false, message: 'Unauthorized' });
+        }
+
+        const { imageData } = req.body;
+
+        console.log("Performing OCR on receipt image...");
+        const { data: { text } } = await Tesseract.recognize(
+            imageData,
+            'eng',
+            { logger: m => console.log(m) }
+        );
+        console.log("OCR completed. Extracted text:", text);
+
+        //
+
+        // const fullNameRegex = /[A-Z][a-z]*(?: [A-Z][a-z]*)+/g;
+        const expenseTypeRegex = /(?:\b(?:food|grocery|restaurant|transportation|gas|fuel)\b)/gi;
+        const dateRegex = /\d{1,2}\/\d{1,2}\/\d{4}/g;
+        const paymentMethodRegex = /(?:\b(?:cash|credit card|debit card|online payment)\b)/gi;
+        const categoryRegex = /(?:\b(?:groceries|dining|transportation|fuel)\b)/gi;
+
+        const totalAmountRegex = /Total\s*price\s*(\d+(?:,\d+)?)/gi;
+        const totalAmountMatches = [...text.matchAll(totalAmountRegex)];
+        const totalAmount = totalAmountMatches[0][1];
+ 
+        //
+
+        const expenseTypeMatches = text.match(expenseTypeRegex);
+        // const fullNameMatches = text.match(fullNameRegex);
+        const amountMatches = text.match(totalAmount);
+        const dateMatches = text.match(dateRegex);
+        const paymentMethodMatches = text.match(paymentMethodRegex);
+        const categoryMatches = text.match(categoryRegex);
+
+        // 
+        const expenseType = expenseTypeMatches ? expenseTypeMatches[0] : "Other";
+        // const fullName = fullNameMatches ? fullNameMatches.join(" ") : "Unknown";
+        const amount = amountMatches ? parseFloat(amountMatches[0].replace(/[^\d.]/g, "")) : 0;
+        const date = dateMatches ? dateMatches[0] : new Date().toLocaleDateString();
+        const paymentMethod = paymentMethodMatches ? paymentMethodMatches[0] : "Unknown";
+        const category = categoryMatches ? categoryMatches[0] : "Other";
+
+        const userId = req.user._id;
+        const newExpense = {
+            // fullName,
+            expenseType,
+            paymentMethod,
+            category,
+            amount,
+            date
+        };
+
+        // Add the expense to the database using ExpenseModel
+        let expense = await ExpenseModel.findOne({ user: userId });
+
+        if (!expense) {
+            expense = new ExpenseModel({
+                expenseItems: [],
+                user: userId
+            });
+        }
+
+        const newExpenseItem = {
+            expenseType: newExpense.expenseType,
+            paymentMethod: newExpense.paymentMethod,
+            category: newExpense.category,
+            amount: newExpense.amount,
+            // fullName: newExpense.fullName,
+            date: newExpense.date
+        };
+
+        expense.expenseItems.push(newExpenseItem);
+
+        const savedExpense = await expense.save();
+
+        // Send the response after adding the expense
+        res.status(200).json({ success: true, message: 'Expense added successfully', data: newExpense });
+    } catch (error) {
+        console.error("Error in scanning receipt:", error);
+        res.status(500).json({ success: false, error: 'Internal Server Error' });
+    }
+});
 
 
 
@@ -271,5 +344,14 @@ const getTotalExpenses = asyncHandler(async (req, res) => {
 
 
 
-export { addExpense, deleteExpenseItem, updateExpenseItem, getExpenseItemsForUser, getTotalExpensePerMonth, getTotalExpenses, getExpenseItemById};
+
+
+
+
+
+
+
+
+
+export { addExpense, deleteExpenseItem, updateExpenseItem, getExpenseItemsForUser, getTotalExpensePerMonth, getTotalExpenses, getExpenseItemById, scanReceipt};
 
