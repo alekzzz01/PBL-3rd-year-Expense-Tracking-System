@@ -54,7 +54,7 @@ To be fixed
 [x] in savings edit and delete savings
 
 
-[] dashboard total savings(get all the total of the amountitems of the user) and goals(number of savings) - para sayo toh jerome
+[x] dashboard total savings(get all the total of the amountitems of the user) and goals(number of savings) - para sayo toh jerome
 
 
 [] download reports of the transactions
