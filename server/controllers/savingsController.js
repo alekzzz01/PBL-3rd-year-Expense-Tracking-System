@@ -153,9 +153,11 @@ const addAmountItem = asyncHandler(async (req, res) => {
 
     // Calculate total amount of existing amount items
     const totalAmountItems = savingsItem.amountItems.reduce((total, amountItem) => total + amountItem.amount, 0);
-
-    // Ensure adding the new amount item doesn't exceed the goal amount
-    if (totalAmountItems + amount > savingsItem.goalAmount) {
+    
+    const amountNumber = parseFloat(amount);
+    
+    if (totalAmountItems + amountNumber > savingsItem.goalAmount) {
+      // console.log('Adding this amount would exceed the savings goal');
       return res.status(400).json({ success: false, message: 'Adding this amount would exceed the savings goal' });
     }
 

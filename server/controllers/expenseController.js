@@ -42,7 +42,6 @@ const addExpense = asyncHandler(async (req, res) => {
     }
 });
 
-
 // Controller method to delete an expense item
 const deleteExpenseItem = asyncHandler(async (req, res) => {
     try {
@@ -141,7 +140,6 @@ const getExpenseItemById = asyncHandler(async (req, res) => {
         res.status(500).json({ success: false, error: 'Internal Server Error' });
     }
 });
-
 
 // Controller method to fetch expenses by expense type
 const getExpenseItemsForUser = asyncHandler(async (req, res) => {
@@ -260,13 +258,13 @@ const scanReceipt = asyncHandler(async (req, res, next) => {
 
         const { imageData } = req.body;
 
-        // console.log("Performing OCR on receipt image...");
+        console.log("Performing OCR on receipt image...");
         const { data: { text } } = await Tesseract.recognize(
             imageData,
             'eng',
             { logger: m => console.log(m) }
         );
-        // console.log("OCR completed. Extracted text:", text);
+        console.log("OCR completed. Extracted text:", text);
 
         //
 

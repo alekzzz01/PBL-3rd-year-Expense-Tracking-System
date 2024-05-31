@@ -166,10 +166,24 @@ function Expenses() {
   const [file, setFile] = useState(null);
   const [result, setResult] = useState(null);
   const [useWebcam, setUseWebcam] = useState(false);
+  const [capturedImage, setCapturedImage] = useState(null);
+  const [isCapturing, setIsCapturing] = useState(false);
   const webcamRef = useRef(null);
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
+  };
+
+  const handleRetake = () => {
+    setIsCapturing(false); // Reset isCapturing state to allow capturing again
+  };
+  
+
+  const handleCapture = () => {
+    const imageSrc = webcamRef.current.getScreenshot();
+    setCapturedImage(imageSrc);
+    setIsCapturing(true);
+    toast.success('Image captured successfully');
   };
 
   const handleSubmitScan = async (e) => {
@@ -177,10 +191,17 @@ function Expenses() {
     let imageData;
   
     if (useWebcam) {
-      const imageSrc = webcamRef.current.getScreenshot();
-      imageData = await fetch(imageSrc).then(res => res.blob());
+      imageData = await fetch(capturedImage)
+        .then(res => res.blob())
+        .then(blob => {
+          return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+          });
+        });
     } else {
-      // Convert uploaded file to base64
       const reader = new FileReader();
       reader.readAsDataURL(file);
       imageData = await new Promise((resolve, reject) => {
@@ -188,6 +209,7 @@ function Expenses() {
         reader.onerror = error => reject(error);
       });
     }
+
   
     try {
       const token = localStorage.getItem('token');
@@ -202,6 +224,7 @@ function Expenses() {
       await getTotalExpensePerMonth();
       document.getElementById('scan').close(); 
     } catch (error) {
+      toast.error('Error uploading file')
       console.error('Error uploading file:', error);
     }
   };
@@ -389,64 +412,76 @@ function Expenses() {
                 </div>
               </dialog>
 
-              
-           <dialog id="scan" className="modal">
-                <div className="modal-box">
-                  <form method="dialog">
-                    <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-                  </form>
-                  <h3 className="font-bold text-lg mb-6">Upload or Scan Expense</h3>
+                  
+              <dialog id="scan" className="modal">
+                    <div className="modal-box">
+                      <form method="dialog">
+                        <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                      </form>
+                      <h3 className="font-bold text-lg mb-6">Upload or Scan Expense</h3>
 
-                  <div>
+                      <div>
 
-                  <div className='mb-12 flex items-center gap-4'>
-                    <label className='flex items-center gap-2'>
-                      <input
-                        type="radio"
-                        className="radio"
-                        name="uploadOption"
-                        value="upload"
-                        checked={!useWebcam}
-                        onChange={() => setUseWebcam(false)}
-                      />
-                      Upload Image
-                    </label>
-                    <label className='flex items-center gap-2'>
-                      <input
-                        type="radio"
-                        className="radio"
-                        name="uploadOption"
-                        value="scan"
-                        checked={useWebcam}
-                        onChange={() => setUseWebcam(true)}
-                      />
-                      Use Webcam
-                    </label>
-                  </div>
-
-                  <form onSubmit={handleSubmitScan}>
-                    {useWebcam ? (
-                      <div> 
-                        <Webcam
-                          audio={false}
-                          ref={webcamRef}
-                          screenshotFormat="image/jpeg"
-                        />
-                        <button type="button" className='btn w-full my-5' onClick={() => webcamRef.current.getScreenshot()}>
-                          Capture Image
-                        </button>
+                      <div className='mb-12 flex items-center gap-4'>
+                        <label className='flex items-center gap-2'>
+                          <input
+                            type="radio"
+                            className="radio"
+                            name="uploadOption"
+                            value="upload"
+                            checked={!useWebcam}
+                            onChange={() => setUseWebcam(false)}
+                          />
+                          Upload Image
+                        </label>
+                        <label className='flex items-center gap-2'>
+                          <input
+                            type="radio"
+                            className="radio"
+                            name="uploadOption"
+                            value="scan"
+                            checked={useWebcam}
+                            onChange={() => setUseWebcam(true)}
+                          />
+                          Use Webcam
+                        </label>
                       </div>
-                    ) : (
-                      <input type="file" className="file-input file-input-bordered w-full mb-20" onChange={handleFileChange} />
-                    )}
-                    <button type="submit" className='btn btn-primary w-full'>Upload and Scan Receipt</button>
-                  </form>
-                  {/* {result && <pre>{JSON.stringify(result, null, 2)}</pre>} */}
-                </div>
-                            
-        
-                </div>
-          </dialog>
+
+                      <form onSubmit={handleSubmitScan}>
+                        {useWebcam ? (
+                          <div> 
+                            <div>
+                              <Webcam
+                                audio={false}
+                                ref={webcamRef}
+                                screenshotFormat="image/jpeg"
+                              />
+                              {!isCapturing ? (
+                                <button type="button" className="btn w-full my-5" onClick={handleCapture}>Capture Image</button>
+                              ) : (
+                                <>
+                                  
+                                  <button type="button" className="btn w-full my-5" onClick={handleRetake}>Retake</button>
+                                  <img src={capturedImage} alt="Captured" className='my-5' />
+                                  <p className='text-center mb-5'>Captured Image</p>
+                                 
+                                </>
+                              )}
+                            </div>
+
+                          
+                          </div>
+                        ) : (
+                          <input type="file" className="file-input file-input-bordered w-full mb-20" onChange={handleFileChange} />
+                        )}
+                        <button type="submit" className='btn btn-primary w-full'>Upload and Scan Receipt</button>
+                      </form>
+                      {/* {result && <pre>{JSON.stringify(result, null, 2)}</pre>} */}
+                    </div>
+                                
+            
+                    </div>
+              </dialog>
 
       
 

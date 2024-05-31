@@ -109,8 +109,7 @@ function Savings() {
           try {
             const { success, error } = await updateSavingsItem(selectedSavings._id, selectedSavings);
             if (success) {
-
-              document.getElementById('EditSaving').close(); 
+              document.getElementById('EditSaving').showModal(); 
             } else {
               console.error('Failed to save changes:', error);
               // Handle failure (e.g., show error message)
@@ -206,7 +205,7 @@ function Savings() {
 
 
 
-    
+    const formatCurrency = (amount) => new Intl.NumberFormat('en-US', { style: 'decimal', minimumFractionDigits: 2 }).format(amount);
 
   return (
 
@@ -294,7 +293,7 @@ function Savings() {
 
                                 <div>
                                     <p className='text-sm font-normal'>Saving Goal</p>
-                                    <p className='text-xl font-semibold'>$ {saving.goalAmount}</p>
+                                    <p className='text-xl font-semibold'>$ {formatCurrency(saving.goalAmount)}</p>
                                 </div>
 
                             </div>
