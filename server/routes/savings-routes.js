@@ -12,6 +12,5 @@ router.put('/editSavings/:savingsItemId', authMiddleware, editSavings);
 router.delete('/deleteSavings/:savingsItemId', authMiddleware, deleteSavings);
 router.get('/totalSavings', authMiddleware, getTotalSavingsForUser);
 router.get('/totalGoalAmount', authMiddleware, getTotalGoalAmountForUser); 
-// Additional routes (if needed) can go here
 
 export { router as SavingsRouter };

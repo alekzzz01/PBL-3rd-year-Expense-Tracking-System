@@ -260,13 +260,13 @@ const scanReceipt = asyncHandler(async (req, res, next) => {
 
         const { imageData } = req.body;
 
-        console.log("Performing OCR on receipt image...");
+        // console.log("Performing OCR on receipt image...");
         const { data: { text } } = await Tesseract.recognize(
             imageData,
             'eng',
             { logger: m => console.log(m) }
         );
-        console.log("OCR completed. Extracted text:", text);
+        // console.log("OCR completed. Extracted text:", text);
 
         //
 

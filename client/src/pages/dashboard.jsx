@@ -4,22 +4,29 @@ import TransactionTable from '../components/tables/transactionTable';
 
 import useIncomeStore from '../store/incomeStore';
 import useExpenseStore from '../store/expenseStore';
+import useSavingStore from '../store/savingStore';
 
 
 function Dashboard() {
 
   const { totalIncome, getTotalIncome } = useIncomeStore();
-  const { totalExpenses, getTotalExpenses } = useExpenseStore(); // Destructure the totalIncome state variable and getTotalIncome action
+  const { totalExpenses, getTotalExpenses } = useExpenseStore();
+  const { totalSavings, totalGoalAmount, getTotalSavingsForUser, getTotalGoalAmountForUser } = useSavingStore();
 
   useEffect(() => {
     // Fetch total income when the component mounts
     getTotalIncome();
     getTotalExpenses();
+    getTotalSavingsForUser();
+    getTotalGoalAmountForUser();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const formattedTotalIncome = totalIncome.toFixed(2);
-  const formattedTotalExpenses = totalExpenses.toFixed(2);
+  const formattedTotalIncome = new Intl.NumberFormat('en-US', { style: 'decimal', minimumFractionDigits: 2 }).format(totalIncome);
+  const formattedTotalExpenses = new Intl.NumberFormat('en-US', { style: 'decimal', minimumFractionDigits: 2 }).format(totalExpenses);
+  const formattedTotalSavings = new Intl.NumberFormat('en-US', { style: 'decimal', minimumFractionDigits: 2 }).format(totalSavings);
+  const formattedTotalGoals = new Intl.NumberFormat('en-US', { style: 'decimal', minimumFractionDigits: 2 }).format(totalGoalAmount);
+  
 
 
   return (
@@ -58,13 +65,13 @@ function Dashboard() {
 
                       <div className='p-4 rounded-lg flex flex-col gap-6' style={{ backgroundColor:"#D8EAEA", color: "#3D4E35"}}>
                               <p className='text-sm font-normal'>Total Save</p>
-                              <p className='text-2xl font-semibold'>$16,000.00</p>
+                              <p className='text-2xl font-semibold'>$ {formattedTotalSavings}</p>
                       </div>
                        
 
                       <div className='p-4 rounded-lg flex flex-col gap-6' style={{ backgroundColor:"#D8DCEA", color: "#35364E"}}>
                               <p className='text-sm font-normal'>Goals</p>
-                              <p className='text-2xl font-semibold'>$16,000.00</p>
+                              <p className='text-2xl font-semibold'>$ {formattedTotalGoals}</p>
                       </div>
                        
          

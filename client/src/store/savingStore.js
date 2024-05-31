@@ -9,6 +9,8 @@ import { baseUrl } from '../store/url.js';
 const useSavingsStore = create((set) => ({
 
     savings: [], // state to store savings data
+    totalSavings: 0,
+    totalGoalAmount: 0,
 
 
     
@@ -171,6 +173,52 @@ const useSavingsStore = create((set) => ({
           throw error;
         }
       },
+
+      getTotalSavingsForUser: async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.get(`${baseUrl}/savings/totalSavings`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                }
+            });
+    
+            if (response.data && response.data.success) {
+                set({ totalSavings: response.data.totalSavings });
+                return response.data.totalSavings;
+            } else {
+                toast.error('Failed to fetch total savings');
+                return { success: false, error: 'Failed to fetch total savings' };
+            }
+        } catch (error) {
+            console.error('Error fetching total savings:', error);
+            toast.error('Internal Server Error');
+            throw error;
+        }
+    },
+
+    getTotalGoalAmountForUser: async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.get(`${baseUrl}/savings/totalGoalAmount`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                }
+            });
+    
+            if (response.data && response.data.success) {
+                set({ totalGoalAmount: response.data.totalGoalAmount });
+                return response.data.totalGoalAmount;
+            } else {
+                toast.error('Failed to fetch total goal amount');
+                return { success: false, error: 'Failed to fetch total goal amount' };
+            }
+        } catch (error) {
+            console.error('Error fetching total goal amount:', error);
+            toast.error('Internal Server Error');
+            throw error;
+        }
+    },
 
 }));
 
